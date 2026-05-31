@@ -72,23 +72,27 @@
         >
           <div class="rw-shop__card-media">
             {%- if product.featured_image != blank -%}
-              <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
-                {{
-                  product.featured_image
-                  | image_url: width: 600
-                  | image_tag: loading: 'lazy', class: 'rw-shop__card-img', alt: product.featured_image.alt
-                  | default: product.title
-                }}
-              </a>
+              <div class="rw-shop__card-img-wrap">
+                <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
+                  {{
+                    product.featured_image
+                    | image_url: width: 600
+                    | image_tag: loading: 'lazy', class: 'rw-shop__card-img', alt: product.featured_image.alt
+                    | default: product.title
+                  }}
+                </a>
+              </div>
             {%- else -%}
-              <a
-                href="{{ product.url }}"
-                class="rw-shop__card-ph-link"
-                aria-label="{{ product.title | escape }}"
-                tabindex="-1"
-              >
-                <div class="rw-shop__card-ph">{{ 'product-1' | placeholder_svg_tag: 'rw-shop__ph-svg' }}</div>
-              </a>
+              <div class="rw-shop__card-img-wrap">
+                <a
+                  href="{{ product.url }}"
+                  class="rw-shop__card-ph-link"
+                  aria-label="{{ product.title | escape }}"
+                  tabindex="-1"
+                >
+                  <div class="rw-shop__card-ph">{{ 'product-1' | placeholder_svg_tag: 'rw-shop__ph-svg' }}</div>
+                </a>
+              </div>
             {%- endif -%}
 
             {%- if tag_label != blank -%}
@@ -223,7 +227,7 @@
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(var(--color-foreground), 0.62);
+    color: rgba(var(--color-foreground-rgb), 0.62);
     margin-bottom: 10px;
   }
   .rw-shop__heading {
@@ -240,7 +244,7 @@
     display: flex;
     gap: 4px;
     padding: 4px;
-    border: 1px solid rgb(var(--color-foreground));
+    border: 1px solid var(--color-foreground);
     border-radius: 999px;
     flex-shrink: 0;
   }
@@ -249,7 +253,7 @@
     border-radius: 999px;
     border: 0;
     background: transparent;
-    color: rgb(var(--color-foreground));
+    color: var(--color-foreground);
     font-family: var(--font-accent--family);
     font-size: 11px;
     letter-spacing: 0.08em;
@@ -259,11 +263,11 @@
     line-height: 1;
   }
   .rw-shop__filter.is-active {
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    background: var(--color-foreground);
+    color: var(--color-background);
   }
   .rw-shop__filter:not(.is-active):hover {
-    background: rgba(var(--color-foreground), 0.08);
+    background: rgba(var(--color-foreground-rgb), 0.08);
   }
 
   /* ── Product grid ── */
@@ -285,6 +289,10 @@
   .rw-shop__card-media {
     aspect-ratio: 4 / 5;
     position: relative;
+  }
+  .rw-shop__card-img-wrap {
+    position: absolute;
+    inset: 0;
     overflow: hidden;
   }
   .rw-shop__card-img {
@@ -305,9 +313,9 @@
   .rw-shop__card-ph {
     width: 100%;
     height: 100%;
-    background: repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
-      rgb(var(--color-background));
-    border: 1px solid rgba(var(--color-foreground), 0.18);
+    background: repeating-linear-gradient(135deg, rgba(var(--color-foreground-rgb), 0.06) 0 14px, transparent 14px 28px),
+      var(--color-background);
+    border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
   }
   .rw-shop__ph-svg {
     width: 100%;
@@ -322,9 +330,9 @@
     top: 12px;
     left: 12px;
     padding: 6px 10px;
-    background: rgb(var(--color-background));
-    color: rgb(var(--color-foreground));
-    border: 1px solid rgb(var(--color-foreground));
+    background: var(--color-background);
+    color: var(--color-foreground);
+    border: 1px solid var(--color-foreground);
     font-family: var(--font-accent--family);
     font-size: 10px;
     font-weight: 600;
@@ -336,11 +344,11 @@
   .rw-shop__tag--new {
     background: rgb(var(--color-button));
     color: rgb(var(--color-button-label));
-    border-color: rgb(var(--color-foreground));
+    border-color: var(--color-foreground);
   }
   .rw-shop__tag--sold {
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    background: var(--color-foreground);
+    color: var(--color-background);
   }
 
   /* ── Quick-add panel ── */
@@ -358,8 +366,8 @@
     transform: translateY(0);
   }
   .rw-shop__qa-inner {
-    background: rgba(var(--color-background), 0.96);
-    border: 1px solid rgb(var(--color-foreground));
+    background: rgba(var(--color-background-rgb), 0.96);
+    border: 1px solid var(--color-foreground);
     padding: 10px 12px;
     display: flex;
     justify-content: space-between;
@@ -375,9 +383,9 @@
   .rw-shop__size-btn {
     width: 34px;
     height: 30px;
-    border: 1px solid rgb(var(--color-foreground));
+    border: 1px solid var(--color-foreground);
     background: transparent;
-    color: rgb(var(--color-foreground));
+    color: var(--color-foreground);
     font-family: var(--font-accent--family);
     font-size: 11px;
     letter-spacing: 0.04em;
@@ -385,17 +393,17 @@
     transition: background 0.15s ease, color 0.15s ease;
   }
   .rw-shop__size-btn.is-active {
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    background: var(--color-foreground);
+    color: var(--color-background);
   }
   .rw-shop__size-btn:disabled {
     opacity: 0.35;
     cursor: not-allowed;
   }
   .rw-shop__add-btn {
-    border: 1px solid rgb(var(--color-foreground));
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    border: 1px solid var(--color-foreground);
+    background: var(--color-foreground);
+    color: var(--color-background);
     padding: 8px 14px;
     font-family: var(--font-accent--family);
     font-size: 11px;
@@ -430,7 +438,7 @@
     font-size: 14px;
     font-weight: 600;
     line-height: 1.3;
-    color: rgb(var(--color-foreground));
+    color: var(--color-foreground);
     text-decoration: none;
   }
   .rw-shop__card-title:hover {
@@ -447,7 +455,7 @@
     font-family: var(--font-accent--family);
     font-size: 11px;
     letter-spacing: 0.04em;
-    color: rgba(var(--color-foreground), 0.62);
+    color: rgba(var(--color-foreground-rgb), 0.62);
   }
   .rw-shop__swatches {
     display: inline-flex;
@@ -457,7 +465,7 @@
     display: inline-block;
     width: 10px;
     height: 10px;
-    border: 1px solid rgb(var(--color-foreground));
+    border: 1px solid var(--color-foreground);
     flex-shrink: 0;
   }
   .rw-shop__card-price {
@@ -471,7 +479,7 @@
   .rw-shop__price-was {
     font-family: var(--font-accent--family);
     font-size: 11px;
-    color: rgba(var(--color-foreground), 0.62);
+    color: rgba(var(--color-foreground-rgb), 0.62);
     text-decoration: line-through;
     margin-top: 4px;
   }
@@ -482,12 +490,12 @@
   }
   .rw-shop__stock-bar {
     height: 2px;
-    background: rgba(var(--color-foreground), 0.18);
+    background: rgba(var(--color-foreground-rgb), 0.18);
     overflow: hidden;
   }
   .rw-shop__stock-fill {
     height: 100%;
-    background: rgb(var(--color-foreground));
+    background: var(--color-foreground);
     transition: width 0.3s ease;
   }
   .rw-shop__stock-fill--low {
@@ -498,7 +506,7 @@
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(var(--color-foreground), 0.62);
+    color: rgba(var(--color-foreground-rgb), 0.62);
     margin-top: 6px;
   }
 
@@ -512,7 +520,7 @@
     font-family: var(--font-accent--family);
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    border: 1px solid rgb(var(--color-foreground));
+    border: 1px solid var(--color-foreground);
     border-radius: 999px;
     display: inline-flex;
     align-items: center;
@@ -521,7 +529,7 @@
     padding: 18px 28px;
     font-size: 14px;
     background: transparent;
-    color: rgb(var(--color-foreground));
+    color: var(--color-foreground);
     transition: transform 0.2s ease;
     cursor: pointer;
     white-space: nowrap;
@@ -535,7 +543,7 @@
   .rw-shop__empty {
     grid-column: 1 / -1;
     font-family: var(--font-accent--family);
-    color: rgba(var(--color-foreground), 0.62);
+    color: rgba(var(--color-foreground-rgb), 0.62);
     padding: 48px 0;
     text-align: center;
   }
