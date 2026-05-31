@@ -313,8 +313,8 @@
             "accent_color": "#7baf2c",
             "image": "shopify://shop_images/CHAOS_B_MySwamp.png",
             "cta_label": "See the drop",
-            "cta_link": "",
-            "story_link": ""
+            "cta_link": "shopify://products/my-swamp",
+            "story_link": "shopify://products/my-swamp"
           }
         },
         "ch_02": {
@@ -328,8 +328,8 @@
             "accent_color": "#3f6f8c",
             "image": "shopify://shop_images/CHAOS_B_MONSTERS_DRINK_FRONT.png",
             "cta_label": "See the drop",
-            "cta_link": "",
-            "story_link": ""
+            "cta_link": "shopify://products/monsters-drink",
+            "story_link": "shopify://products/monsters-drink"
           }
         },
         "ch_03": {
@@ -343,8 +343,8 @@
             "accent_color": "#0098a2",
             "image": "shopify://shop_images/CHAOS_B_ANIMEFAN_FRONT.png",
             "cta_label": "See the drop",
-            "cta_link": "",
-            "story_link": ""
+            "cta_link": "shopify://products/anime-fan",
+            "story_link": "shopify://products/anime-fan"
           }
         },
         "ch_04": {
@@ -358,8 +358,8 @@
             "accent_color": "#e6d63a",
             "image": "shopify://shop_images/CHAOS_B_Bottom_Bada.png",
             "cta_label": "See the drop",
-            "cta_link": "",
-            "story_link": ""
+            "cta_link": "shopify://products/bottom-badass",
+            "story_link": "shopify://products/bottom-badass"
           }
         }
       },
