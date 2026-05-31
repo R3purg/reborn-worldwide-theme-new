@@ -184,8 +184,20 @@
         "color_scheme": "scheme-4"
       }
     },
-    "product_list_fa6P9H": {
+    "rw_shop_floor": {
+      "type": "rw-shop-floor",
+      "settings": {
+        "kicker": "// CURRENTLY IN STOCK",
+        "heading": "The shop floor",
+        "collection": "all",
+        "max_products": 8,
+        "cta_label": "View all pieces",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "product_list_fa6P9H_disabled": {
       "type": "product-list",
+      "disabled": true,
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
@@ -393,6 +405,7 @@
         "body": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>",
         "cta_primary_label": "Read the full story",
         "cta_secondary_label": "Studio visits",
+        "orange_bg": true,
         "color_scheme": "scheme-1"
       }
     },
@@ -435,7 +448,7 @@
     "rw_hero_HmBRt6",
     "marquee_kJxPqY",
     "rw_chapters_vNwDk2",
-    "product_list_fa6P9H",
+    "rw_shop_floor",
     "rw_manifesto_cLpFs8",
     "rw_lookbook_mRtGj3",
     "rw_newsletter_xKbPq1"

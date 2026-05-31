@@ -39,7 +39,7 @@
           <select
             name="country_code"
             class="rw-announce__select"
-            aria-label="{{ 'accessibility.select_country' | t | default: 'Select country' }}"
+            aria-label="Select country"
             onchange="this.form.submit()"
           >
             {%- for country in localization.available_countries -%}

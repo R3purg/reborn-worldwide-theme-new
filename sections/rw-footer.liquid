@@ -78,7 +78,8 @@
         {{ s.legal_name | default: 'REBORN WORLDWIDE' }} — KRAKÓW · BERLIN · LISBON
       </div>
       <div class="rw-footer__social" aria-label="Social">
-        {%- for network in 'IG,TT,YT,DC' | split: ',' -%}
+        {%- assign rw_social_networks = 'IG,TT,YT,DC' | split: ',' -%}
+        {%- for network in rw_social_networks -%}
           {%- liquid
             if network == 'IG'
               assign social_url = s.social_instagram | default: '#'

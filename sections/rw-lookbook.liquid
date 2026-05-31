@@ -4,7 +4,6 @@
 
 <section class="rw-lookbook color-{{ s.color_scheme }}" id="lookbook">
   <div class="rw-lookbook__inner">
-
     <div class="rw-lookbook__header">
       <div>
         <div class="rw-lookbook__kicker">{{ s.kicker }}</div>
@@ -16,7 +15,9 @@
           class="rw-btn rw-btn--md rw-btn--ghost"
           target="_blank"
           rel="noopener noreferrer"
-        >{{ s.cta_label }} →</a>
+        >
+          {{- s.cta_label }} →</a
+        >
       {%- endif -%}
     </div>
 
@@ -45,10 +46,8 @@
               {{
                 block.settings.image
                 | image_url: width: 600
-                | image_tag:
-                  loading: 'lazy',
-                  class: 'rw-lookbook__img',
-                  alt: block.settings.caption | default: ''
+                | image_tag: loading: 'lazy', class: 'rw-lookbook__img', alt: block.settings.caption
+                | default: ''
               }}
             {%- else -%}
               <div class="rw-lookbook__ph"></div>
@@ -57,11 +56,14 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
-
   </div>
 </section>
 
 {% stylesheet %}
+  /* ── Lookbook section ──────────────────────────────────────── */
+  .rw-lookbook .rw-btn--ghost {
+    border-color: rgb(var(--color-foreground));
+  }
   .rw-lookbook {
     padding: 96px 24px;
   }
@@ -121,17 +123,23 @@
   .rw-lookbook__ph {
     width: 100%;
     height: 100%;
-    background:
-      repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
+    background: repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
       rgb(var(--color-background));
     border: 1px solid rgba(var(--color-foreground), 0.18);
   }
   @media (max-width: 989px) {
-    .rw-lookbook__grid { column-count: 2; }
+    .rw-lookbook__grid {
+      column-count: 2;
+    }
   }
   @media (max-width: 749px) {
-    .rw-lookbook { padding: 64px 16px; }
-    .rw-lookbook__grid { column-count: 2; column-gap: 10px; }
+    .rw-lookbook {
+      padding: 64px 16px;
+    }
+    .rw-lookbook__grid {
+      column-count: 2;
+      column-gap: 10px;
+    }
   }
 {% endstylesheet %}
 
@@ -186,10 +194,10 @@
           "id": "height",
           "label": "Tile height",
           "options": [
-            { "value": "short",  "label": "Short (200px)" },
+            { "value": "short", "label": "Short (200px)" },
             { "value": "medium", "label": "Medium (260px)" },
-            { "value": "tall",   "label": "Tall (400px)" },
-            { "value": "hero",   "label": "Hero (520px)" }
+            { "value": "tall", "label": "Tall (400px)" },
+            { "value": "hero", "label": "Hero (520px)" }
           ],
           "default": "medium"
         },

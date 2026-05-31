@@ -7,7 +7,6 @@
   data-section-id="{{ section.id }}"
 >
   <div class="rw-hero__inner">
-
     <div class="rw-hero__meta">
       <span>{{ s.meta_line }}</span>
       <span>RW—{{ s.edition_date }}</span>
@@ -36,17 +35,13 @@
     </div>
 
     <div class="rw-hero__split{% if s.layout == 'full' %} rw-hero__split--full{% endif %}">
-
       <div class="rw-hero__media">
         {%- if s.image != blank -%}
           {{
             s.image
             | image_url: width: 1400
-            | image_tag:
-              loading: 'eager',
-              preload: true,
-              class: 'rw-hero__img',
-              alt: s.image.alt | default: 'Reborn Worldwide'
+            | image_tag: loading: 'eager', preload: true, class: 'rw-hero__img', alt: s.image.alt
+            | default: 'Reborn Worldwide'
           }}
         {%- else -%}
           <div class="rw-hero__media-ph">
@@ -57,7 +52,6 @@
 
       {%- unless s.layout == 'full' -%}
         <div class="rw-hero__aside">
-
           <div class="rw-hero__cd" id="rw-cd-{{ section.id }}" data-target="{{ s.countdown_date }}">
             <div class="rw-hero__cd-label">{{ s.countdown_label }}</div>
             <div class="rw-hero__cd-grid">
@@ -90,7 +84,6 @@
             <div class="rw-hero__manifesto-kicker">// MANIFESTO</div>
             <p class="rw-hero__manifesto-body">{{ s.manifesto_quote }}</p>
           </div>
-
         </div>
       {%- endunless -%}
     </div>
@@ -106,11 +99,14 @@
       </div>
       <div class="rw-hero__cta-meta">04 CHAPTERS · 250 PIECES EACH · NO RESTOCKS</div>
     </div>
-
   </div>
 </section>
 
 {% stylesheet %}
+  /* ── Hero section ──────────────────────────────────────────── */
+  .rw-hero .rw-btn--ghost {
+    border-color: rgb(var(--color-foreground));
+  }
   .rw-hero {
     padding: 24px 24px 0;
     overflow: hidden;
@@ -179,19 +175,27 @@
     animation: rw-wobble 0.6s ease-in-out infinite;
   }
   @keyframes rw-wobble {
-    0%   { transform: rotate(var(--_rot)); }
-    50%  { transform: rotate(calc(var(--_rot) + 10deg)); }
-    100% { transform: rotate(var(--_rot)); }
+    0% {
+      transform: rotate(var(--_rot));
+    }
+    50% {
+      transform: rotate(calc(var(--_rot) + 10deg));
+    }
+    100% {
+      transform: rotate(var(--_rot));
+    }
   }
   .rw-hero__sticker--1 {
-    top: 6%; right: 4%;
+    top: 6%;
+    right: 4%;
     --_rot: -8deg;
     transform: rotate(-8deg);
     background: rgb(var(--color-button));
     color: rgb(var(--color-button-label));
   }
   .rw-hero__sticker--2 {
-    bottom: -10px; left: 38%;
+    bottom: -10px;
+    left: 38%;
     --_rot: 7deg;
     transform: rotate(7deg);
     background: rgb(var(--color-foreground));
@@ -228,8 +232,7 @@
   }
   .rw-hero__media-ph {
     aspect-ratio: 16 / 11;
-    background:
-      repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
+    background: repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
       rgb(var(--color-background));
     border: 1px solid rgba(var(--color-foreground), 0.18);
   }
@@ -342,45 +345,37 @@
     text-transform: uppercase;
     color: rgba(var(--color-foreground), 0.62);
   }
-  /* Shared RW button system */
-  .rw-btn {
-    font-family: var(--font-accent--family);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border: 1px solid rgb(var(--color-foreground));
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
-    cursor: pointer;
-    white-space: nowrap;
-    line-height: 1;
-  }
-  .rw-btn--sm  { padding: 10px 16px; font-size: 12px; }
-  .rw-btn--md  { padding: 14px 22px; font-size: 13px; }
-  .rw-btn--lg  { padding: 18px 28px; font-size: 14px; }
-  .rw-btn--solid  { background: rgb(var(--color-foreground)); color: rgb(var(--color-background)); }
-  .rw-btn--ghost  { background: transparent; color: rgb(var(--color-foreground)); }
-  .rw-btn--bone   { background: rgb(var(--color-background)); color: rgb(var(--color-foreground)); }
-  .rw-btn--orange { background: rgb(var(--color-button)); color: rgb(var(--color-button-label)); border-color: rgb(var(--color-foreground)); }
-  .rw-btn:hover   { transform: translateY(-2px); }
   /* Mobile */
   @media (max-width: 749px) {
-    .rw-hero { padding: 16px 16px 0; }
-    .rw-hero__split { grid-template-columns: 1fr; }
+    .rw-hero {
+      padding: 16px 16px 0;
+    }
+    .rw-hero__split {
+      grid-template-columns: 1fr;
+    }
     .rw-hero__sticker--1,
-    .rw-hero__sticker--2 { display: none; }
-    .rw-hero__meta { flex-direction: column; align-items: flex-start; gap: 4px; }
-    .rw-hero__cta-meta { display: none; }
-    .rw-hero__cd-grid { grid-template-columns: repeat(2, 1fr); }
+    .rw-hero__sticker--2 {
+      display: none;
+    }
+    .rw-hero__meta {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+    }
+    .rw-hero__cta-meta {
+      display: none;
+    }
+    .rw-hero__cd-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 {% endstylesheet %}
 
 {% javascript %}
   (function () {
-    function pad(n) { return String(n).padStart(2, '0'); }
+    function pad(n) {
+      return String(n).padStart(2, '0');
+    }
 
     function initCountdown(section) {
       var el = section.querySelector('[id^="rw-cd-"]');
@@ -440,7 +435,7 @@
       "label": "Layout",
       "options": [
         { "value": "split", "label": "Split (image + sidebar)" },
-        { "value": "full",  "label": "Full bleed" }
+        { "value": "full", "label": "Full bleed" }
       ],
       "default": "split"
     },

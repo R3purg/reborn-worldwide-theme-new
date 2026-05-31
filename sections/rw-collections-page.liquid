@@ -108,14 +108,11 @@
               {%- comment -%} Image {%- endcomment -%}
               <div class="rw-col-card__media">
                 {%- if collection.featured_image != blank -%}
+                  {%- assign img_alt = collection.featured_image.alt | default: collection.title | escape -%}
                   {{
                     collection.featured_image
                     | image_url: width: 1200
-                    | image_tag:
-                    loading: 'lazy',
-                    class: 'rw-col-card__img',
-                    alt: collection.featured_image.alt | default: collection.title | escape,
-                    widths: '600, 900, 1200'
+                    | image_tag: loading: 'lazy', class: 'rw-col-card__img', alt: img_alt, widths: '600, 900, 1200'
                   }}
                 {%- else -%}
                   <div class="rw-col-card__ph" aria-hidden="true"></div>
@@ -180,7 +177,7 @@
                   <span class="rw-col-card__index-num">0{{ i }}</span>
                 </div>
                 <div class="rw-col-card__footer">
-                  <h2 class="rw-col-card__title">{{ 'onboarding.collection_title' | t }}</h2>
+                  <h2 class="rw-col-card__title">Sample Collection</h2>
                 </div>
               </div>
             </li>
@@ -412,10 +409,6 @@
   }
 
   /* ── Collection card ───────────────────────────────────────── */
-  .rw-col-card-wrap {
-    /* wrapper li — no visual style */
-  }
-
   .rw-col-card {
     display: flex;
     flex-direction: column;

@@ -2,9 +2,8 @@
   assign s = section.settings
 %}
 
-<section class="rw-manifesto color-{{ s.color_scheme }}" id="about">
+<section class="rw-manifesto color-{{ s.color_scheme }}{% if s.orange_bg %} rw-manifesto--orange{% endif %}" id="about">
   <div class="rw-manifesto__inner">
-
     <div class="rw-manifesto__grid">
       <div class="rw-manifesto__content">
         <div class="rw-manifesto__kicker">{{ s.kicker }}</div>
@@ -29,10 +28,8 @@
           {{
             s.image
             | image_url: width: 800
-            | image_tag:
-              loading: 'lazy',
-              class: 'rw-manifesto__img',
-              alt: s.image.alt | default: 'Reborn Worldwide studio'
+            | image_tag: loading: 'lazy', class: 'rw-manifesto__img', alt: s.image.alt
+            | default: 'Reborn Worldwide studio'
           }}
         {%- else -%}
           <div class="rw-manifesto__ph"></div>
@@ -50,7 +47,6 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
-
   </div>
 </section>
 
@@ -85,7 +81,9 @@
     line-height: 0.95;
     text-wrap: balance;
   }
-  .rw-manifesto__heading p { margin: 0; }
+  .rw-manifesto__heading p {
+    margin: 0;
+  }
   .rw-manifesto__body {
     font-size: 18px;
     line-height: 1.55;
@@ -93,7 +91,9 @@
     max-width: 560px;
     font-weight: 500;
   }
-  .rw-manifesto__body p { margin: 0; }
+  .rw-manifesto__body p {
+    margin: 0;
+  }
   .rw-manifesto__btns {
     display: flex;
     gap: 10px;
@@ -113,8 +113,7 @@
   .rw-manifesto__ph {
     width: 100%;
     height: 100%;
-    background:
-      repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0 14px, transparent 14px 28px),
+    background: repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0 14px, transparent 14px 28px),
       rgb(var(--color-button));
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
@@ -141,10 +140,37 @@
     opacity: 0.75;
     margin-top: 8px;
   }
+  .rw-manifesto.rw-manifesto--orange {
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-label));
+    border-top-color: rgb(var(--color-button-label));
+    border-bottom-color: rgb(var(--color-button-label));
+  }
+  .rw-manifesto.rw-manifesto--orange .rw-manifesto__stat-lbl {
+    opacity: 0.75;
+  }
+  .rw-manifesto.rw-manifesto--orange .rw-manifesto__stats {
+    border-top-color: currentColor;
+  }
+  .rw-manifesto.rw-manifesto--orange .rw-manifesto__ph {
+    background: rgba(0, 0, 0, 0.15);
+    border-color: rgba(0, 0, 0, 0.2);
+  }
+  .rw-manifesto.rw-manifesto--orange .rw-btn--ghost {
+    color: rgb(var(--color-button-label));
+    border-color: rgb(var(--color-button-label));
+  }
   @media (max-width: 749px) {
-    .rw-manifesto { padding: 64px 16px; }
-    .rw-manifesto__grid { grid-template-columns: 1fr; gap: 32px; }
-    .rw-manifesto__stats { grid-template-columns: repeat(2, 1fr); }
+    .rw-manifesto {
+      padding: 64px 16px;
+    }
+    .rw-manifesto__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .rw-manifesto__stats {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 {% endstylesheet %}
 
@@ -205,6 +231,13 @@
     {
       "type": "header",
       "content": "Style"
+    },
+    {
+      "type": "checkbox",
+      "id": "orange_bg",
+      "label": "Orange accent background",
+      "info": "Overrides background with the button/accent colour",
+      "default": false
     },
     {
       "type": "color_scheme",
