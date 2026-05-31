@@ -370,19 +370,27 @@
     border: 1px solid var(--color-foreground);
     padding: 10px 12px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 8px;
-    flex-wrap: wrap;
+    overflow: hidden;
   }
   .rw-shop__sizes {
     display: flex;
     gap: 6px;
-    flex-wrap: wrap;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .rw-shop__sizes::-webkit-scrollbar {
+    display: none;
   }
   .rw-shop__size-btn {
-    width: 34px;
+    flex-shrink: 0;
     height: 30px;
+    min-width: 30px;
+    padding: 0 8px;
     border: 1px solid var(--color-foreground);
     background: transparent;
     color: var(--color-foreground);
@@ -391,6 +399,7 @@
     letter-spacing: 0.04em;
     cursor: pointer;
     transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
   }
   .rw-shop__size-btn.is-active {
     background: var(--color-foreground);
