@@ -103,19 +103,58 @@
               <div class="rw-shop__quick-add" aria-hidden="true">
                 <div class="rw-shop__qa-inner">
                   {%- unless has_one_variant -%}
+                    {%- liquid
+                      assign size_option_idx = null
+                      for opt in product.options_with_values
+                        assign opt_lower = opt.name | downcase
+                        if opt_lower == 'size' or opt_lower == 'sizes'
+                          assign size_option_idx = forloop.index0
+                        endif
+                      endfor
+                    -%}
                     <div class="rw-shop__sizes" role="group" aria-label="Select size">
-                      {%- for variant in product.variants -%}
-                        <button
-                          class="rw-shop__size-btn"
-                          type="button"
-                          data-variant-id="{{ variant.id }}"
-                          {% unless variant.available %}
-                            disabled
-                          {% endunless %}
-                        >
-                          {{ variant.option1 }}
-                        </button>
-                      {%- endfor -%}
+                      {%- if size_option_idx != null -%}
+                        {%- assign size_opt = product.options_with_values[size_option_idx] -%}
+                        {%- for size_val in size_opt.values -%}
+                          {%- liquid
+                            assign size_variant = null
+                            for v in product.variants
+                              if v.options[size_option_idx] == size_val
+                                if size_variant == null
+                                  assign size_variant = v
+                                elsif v.available and size_variant.available == false
+                                  assign size_variant = v
+                                endif
+                              endif
+                            endfor
+                          -%}
+                          {%- if size_variant != null -%}
+                            <button
+                              class="rw-shop__size-btn"
+                              type="button"
+                              data-variant-id="{{ size_variant.id }}"
+                              {% unless size_variant.available %}
+                                disabled
+                              {% endunless %}
+                            >
+                              {{ size_val }}
+                            </button>
+                          {%- endif -%}
+                        {%- endfor -%}
+                      {%- else -%}
+                        {%- for variant in product.variants -%}
+                          <button
+                            class="rw-shop__size-btn"
+                            type="button"
+                            data-variant-id="{{ variant.id }}"
+                            {% unless variant.available %}
+                              disabled
+                            {% endunless %}
+                          >
+                            {{ variant.option1 }}
+                          </button>
+                        {%- endfor -%}
+                      {%- endif -%}
                     </div>
                   {%- endunless -%}
                   <button
@@ -289,6 +328,7 @@
   .rw-shop__card-media {
     aspect-ratio: 4 / 5;
     position: relative;
+    overflow: hidden;
   }
   .rw-shop__card-img-wrap {
     position: absolute;
