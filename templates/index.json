@@ -377,6 +377,18 @@
         "color_scheme": "scheme-4"
       }
     },
+    "rw_shop_floor_qBnXm1": {
+      "type": "rw-shop-floor",
+      "settings": {
+        "kicker": "// CURRENTLY IN STOCK",
+        "heading": "The shop floor",
+        "collection": "",
+        "max_products": 8,
+        "cta_label": "View all 47 pieces",
+        "cta_url": "/collections/all",
+        "color_scheme": "scheme-1"
+      }
+    },
     "rw_manifesto_pX7kQm": {
       "type": "rw-manifesto",
       "blocks": {
@@ -419,6 +431,7 @@
         "kicker": "// MANIFESTO — 002",
         "heading": "<p>We make clothes for people who were told to sit down. We don’t sit down.</p>",
         "body": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it’s gone, it’s gone. That’s the whole pitch.</p>",
+        "image": "shopify://shop_images/activewear-products-4.jpg",
         "cta_primary_label": "Read the full story",
         "cta_primary_url": "",
         "cta_secondary_label": "Studio visits",
@@ -534,17 +547,6 @@
         "success_message": "YOU'RE IN. SEE YOU AT THE NEXT DROP.",
         "bg_text": "REBORN // WORLDWIDE",
         "color_scheme": "scheme-4"
-      }
-    },
-    "rw_shop_floor_qBnXm1": {
-      "type": "rw-shop-floor",
-      "settings": {
-        "kicker": "// CURRENTLY IN STOCK",
-        "heading": "The shop floor",
-        "max_products": 8,
-        "cta_label": "View all 47 pieces",
-        "cta_url": "/collections/all",
-        "color_scheme": "scheme-1"
       }
     }
   },
