@@ -377,198 +377,54 @@
         "color_scheme": "scheme-4"
       }
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "rw_manifesto_pX7kQm": {
+      "type": "rw-manifesto",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "stat_01": {
+          "type": "stat",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+            "number": "04",
+            "label": "chapters / year"
+          }
         },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "stat_02": {
+          "type": "stat",
           "settings": {
-            "product_card_gap": 4,
-            "inherit_color_scheme": true,
-            "color_scheme": "",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "color": "var(--color-foreground)",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
+            "number": "250",
+            "label": "pieces / chapter"
+          }
+        },
+        "stat_03": {
+          "type": "stat",
+          "settings": {
+            "number": "00",
+            "label": "restocks. ever."
+          }
+        },
+        "stat_04": {
+          "type": "stat",
+          "settings": {
+            "number": "12",
+            "label": "cities shipped"
+          }
         }
       },
-      "name": "The shop floor",
+      "block_order": [
+        "stat_01",
+        "stat_02",
+        "stat_03",
+        "stat_04"
+      ],
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "color_scheme": "scheme-1",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "kicker": "// MANIFESTO — 002",
+        "heading": "<p>We make clothes for people who were told to sit down. We don’t sit down.</p>",
+        "body": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it’s gone, it’s gone. That’s the whole pitch.</p>",
+        "cta_primary_label": "Read the full story",
+        "cta_primary_url": "",
+        "cta_secondary_label": "Studio visits",
+        "cta_secondary_url": "",
+        "orange_bg": true,
+        "color_scheme": "scheme-1"
       }
     },
     "rw_lookbook_mRtGj3": {
@@ -679,13 +535,25 @@
         "bg_text": "REBORN // WORLDWIDE",
         "color_scheme": "scheme-4"
       }
+    },
+    "rw_shop_floor_qBnXm1": {
+      "type": "rw-shop-floor",
+      "settings": {
+        "kicker": "// CURRENTLY IN STOCK",
+        "heading": "The shop floor",
+        "max_products": 8,
+        "cta_label": "View all 47 pieces",
+        "cta_url": "/collections/all",
+        "color_scheme": "scheme-1"
+      }
     }
   },
   "order": [
     "rw_hero_HmBRt6",
     "marquee_kJxPqY",
     "rw_chapters_vNwDk2",
-    "product_list_fa6P9H",
+    "rw_shop_floor_qBnXm1",
+    "rw_manifesto_pX7kQm",
     "rw_lookbook_mRtGj3",
     "rw_newsletter_xKbPq1"
   ]
