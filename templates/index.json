@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "rw_hero_HmBRt6": {
@@ -15,7 +24,9 @@
         "countdown_time_label": "FRI 22:00 CET",
         "manifesto_quote": "Built for the kid that never asked permission. Four chapters a year. Two hundred fifty pieces each. No restocks.",
         "cta_primary_label": "Shop chapter 04",
+        "cta_primary_url": "",
         "cta_secondary_label": "Read the lookbook",
+        "cta_secondary_url": "",
         "color_scheme": "scheme-1"
       }
     },
@@ -26,93 +37,257 @@
           "type": "text",
           "settings": {
             "text": "<h2>LIMITED AS F*CK</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_1": { "type": "_divider", "settings": {} },
+        "div_1": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_2": {
           "type": "text",
           "settings": {
             "text": "<h2>FREE WORLDWIDE OVER €120</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_2": { "type": "_divider", "settings": {} },
+        "div_2": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_3": {
           "type": "text",
           "settings": {
             "text": "<h2>250 PIECES PER CHAPTER</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_3": { "type": "_divider", "settings": {} },
+        "div_3": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_4": {
           "type": "text",
           "settings": {
             "text": "<h2>NO RESTOCKS</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_4": { "type": "_divider", "settings": {} },
+        "div_4": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_5": {
           "type": "text",
           "settings": {
             "text": "<h2>FROM EASTERN EUROPE WITH LOVE</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_5": { "type": "_divider", "settings": {} },
+        "div_5": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_6": {
           "type": "text",
           "settings": {
             "text": "<h2>SS26 // VOL.04</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         },
-        "div_6": { "type": "_divider", "settings": {} },
+        "div_6": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
         "txt_7": {
           "type": "text",
           "settings": {
             "text": "<h2>REBORN.WXRLDWIDE</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
             "type_preset": "h2",
             "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
             "case": "uppercase",
             "wrap": "nowrap",
-            "width": "fit-content"
-          }
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "txt_1", "div_1",
-        "txt_2", "div_2",
-        "txt_3", "div_3",
-        "txt_4", "div_4",
-        "txt_5", "div_5",
-        "txt_6", "div_6",
+        "txt_1",
+        "div_1",
+        "txt_2",
+        "div_2",
+        "txt_3",
+        "div_3",
+        "txt_4",
+        "div_4",
+        "txt_5",
+        "div_5",
+        "txt_6",
+        "div_6",
         "txt_7"
       ],
       "settings": {
@@ -134,8 +309,11 @@
             "title": "MY SWAMP",
             "kicker": "Chapter 01 — The Anti-Hero Awakens",
             "body": "He doesn't live in the swamp. He owns it. Cheap cigarettes, cheaper dreams, and a lease nobody signed.",
-            "accent_color": "#7BAF2C",
-            "cta_label": "See the drop"
+            "accent_color": "#7baf2c",
+            "image": "shopify://shop_images/CHAOS_B_MySwamp.png",
+            "cta_label": "See the drop",
+            "cta_link": "",
+            "story_link": ""
           }
         },
         "ch_02": {
@@ -146,8 +324,11 @@
             "title": "MONSTERS DRINK",
             "kicker": "Chapter 02 — The Door Was Never Locked",
             "body": "They don't knock. They walk in, smoke in hand, like the place is still theirs. He always knew the light meant home.",
-            "accent_color": "#3F6F8C",
-            "cta_label": "See the drop"
+            "accent_color": "#3f6f8c",
+            "image": "shopify://shop_images/CHAOS_B_MONSTERS_DRINK_FRONT.png",
+            "cta_label": "See the drop",
+            "cta_link": "",
+            "story_link": ""
           }
         },
         "ch_03": {
@@ -158,8 +339,11 @@
             "title": "ANIME FAN",
             "kicker": "Chapter 03 — Broadcast From a Better World",
             "body": "In the morning she sat in silence, but her soul was loud. Through every winter, every power cut, she held on.",
-            "accent_color": "#0098A2",
-            "cta_label": "See the drop"
+            "accent_color": "#0098a2",
+            "image": "shopify://shop_images/CHAOS_B_ANIMEFAN_FRONT.png",
+            "cta_label": "See the drop",
+            "cta_link": "",
+            "story_link": ""
           }
         },
         "ch_04": {
@@ -170,12 +354,20 @@
             "title": "BIKINI BLING",
             "kicker": "Chapter 04 — Pineapple Under The Concrete",
             "body": "Crawled out of the deep end with a chain thicker than your leash. Even Gary's going fast up in this bitch.",
-            "accent_color": "#E6D63A",
-            "cta_label": "See the drop"
+            "accent_color": "#e6d63a",
+            "image": "shopify://shop_images/CHAOS_B_Bottom_Bada.png",
+            "cta_label": "See the drop",
+            "cta_link": "",
+            "story_link": ""
           }
         }
       },
-      "block_order": ["ch_01", "ch_02", "ch_03", "ch_04"],
+      "block_order": [
+        "ch_01",
+        "ch_02",
+        "ch_03",
+        "ch_04"
+      ],
       "settings": {
         "kicker": "// SS26 — FOUR CHAPTERS",
         "heading": "The lookbook",
@@ -184,20 +376,8 @@
         "color_scheme": "scheme-4"
       }
     },
-    "rw_shop_floor": {
-      "type": "rw-shop-floor",
-      "settings": {
-        "kicker": "// CURRENTLY IN STOCK",
-        "heading": "The shop floor",
-        "collection": "all",
-        "max_products": 8,
-        "cta_label": "View all pieces",
-        "color_scheme": "scheme-1"
-      }
-    },
-    "product_list_fa6P9H_disabled": {
+    "product_list_fa6P9H": {
       "type": "product-list",
-      "disabled": true,
       "blocks": {
         "static-header": {
           "type": "_product-list-content",
@@ -390,41 +570,97 @@
         "padding-block-end": 48
       }
     },
-    "rw_manifesto_cLpFs8": {
-      "type": "rw-manifesto",
-      "blocks": {
-        "stat_1": { "type": "stat", "settings": { "number": "04", "label": "chapters / year" } },
-        "stat_2": { "type": "stat", "settings": { "number": "250", "label": "pieces / chapter" } },
-        "stat_3": { "type": "stat", "settings": { "number": "00", "label": "restocks. ever." } },
-        "stat_4": { "type": "stat", "settings": { "number": "12", "label": "cities shipped" } }
-      },
-      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4"],
-      "settings": {
-        "kicker": "// MANIFESTO — 002",
-        "heading": "<p>We make clothes for people who were told to sit down. We don't sit down.</p>",
-        "body": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>",
-        "cta_primary_label": "Read the full story",
-        "cta_secondary_label": "Studio visits",
-        "orange_bg": true,
-        "color_scheme": "scheme-1"
-      }
-    },
     "rw_lookbook_mRtGj3": {
       "type": "rw-lookbook",
       "blocks": {
-        "tile_1": { "type": "tile", "settings": { "height": "hero" } },
-        "tile_2": { "type": "tile", "settings": { "height": "short" } },
-        "tile_3": { "type": "tile", "settings": { "height": "medium" } },
-        "tile_4": { "type": "tile", "settings": { "height": "short" } },
-        "tile_5": { "type": "tile", "settings": { "height": "medium" } },
-        "tile_6": { "type": "tile", "settings": { "height": "tall" } },
-        "tile_7": { "type": "tile", "settings": { "height": "short" } },
-        "tile_8": { "type": "tile", "settings": { "height": "hero" } }
+        "tile_1": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-bold-3.jpg",
+            "height": "hero",
+            "caption": ""
+          }
+        },
+        "tile_yhrmqU": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-products-2.jpg",
+            "height": "medium",
+            "caption": ""
+          }
+        },
+        "tile_2": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-products-4.jpg",
+            "height": "short",
+            "caption": ""
+          }
+        },
+        "tile_3": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-natural-2.jpg",
+            "height": "medium",
+            "caption": ""
+          }
+        },
+        "tile_4": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-natural-5.jpg",
+            "height": "short",
+            "caption": ""
+          }
+        },
+        "tile_5": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-bold-2.jpg",
+            "height": "medium",
+            "caption": ""
+          }
+        },
+        "tile_6": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-natural-3.jpg",
+            "height": "tall",
+            "caption": ""
+          }
+        },
+        "tile_7": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-bold-4.jpg",
+            "height": "short",
+            "caption": ""
+          }
+        },
+        "tile_8": {
+          "type": "tile",
+          "settings": {
+            "image": "shopify://shop_images/activewear-natural-4.jpg",
+            "height": "hero",
+            "caption": ""
+          }
+        }
       },
-      "block_order": ["tile_1","tile_2","tile_3","tile_4","tile_5","tile_6","tile_7","tile_8"],
+      "block_order": [
+        "tile_1",
+        "tile_yhrmqU",
+        "tile_2",
+        "tile_3",
+        "tile_4",
+        "tile_5",
+        "tile_6",
+        "tile_7",
+        "tile_8"
+      ],
       "settings": {
         "kicker": "// FROM INSTAGRAM",
         "heading": "@reborn.wxrldwide",
+        "instagram_url": "https://www.instagram.com/reborn.worldwide/",
         "cta_label": "Follow us",
         "color_scheme": "scheme-2"
       }
@@ -448,8 +684,7 @@
     "rw_hero_HmBRt6",
     "marquee_kJxPqY",
     "rw_chapters_vNwDk2",
-    "rw_shop_floor",
-    "rw_manifesto_cLpFs8",
+    "product_list_fa6P9H",
     "rw_lookbook_mRtGj3",
     "rw_newsletter_xKbPq1"
   ]
