@@ -1,0 +1,218 @@
+{% liquid
+  assign s = section.settings
+  assign center_items = 'NEXT DROP // CHAPTER 04 — FRI 22:00 CET,STUDIO // KRAKÓW · BERLIN · LISBON' | split: ','
+  if s.center_messages != blank
+    assign center_items = s.center_messages | newline_to_br | split: '<br />'
+  endif
+%}
+
+<div
+  class="rw-announce color-{{ s.color_scheme }}"
+  data-section-id="{{ section.id }}"
+  id="rw-announce-{{ section.id }}"
+>
+  <div class="rw-announce__inner">
+    {%- comment -%} Left — shipping threshold {%- endcomment -%}
+    <div class="rw-announce__left">
+      {{ s.left_text | default: 'SHIP // WORLDWIDE — FREE OVER €120' }}
+    </div>
+
+    {%- comment -%} Center — rotating messages {%- endcomment -%}
+    <div class="rw-announce__center" aria-live="polite" aria-atomic="true">
+      {%- for msg in center_items -%}
+        <span
+          class="rw-announce__msg{% if forloop.first %} is-active{% endif %}"
+          data-index="{{ forloop.index0 }}"
+        >
+          {{- msg | strip -}}
+        </span>
+        {%- unless forloop.last -%}
+          <span class="rw-announce__sep" aria-hidden="true"> /// </span>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} Right — localization + language {%- endcomment -%}
+    <div class="rw-announce__right">
+      {%- if localization.available_countries.size > 1 -%}
+        {% form 'localization', id: 'rw-announce-loc-{{ section.id }}', class: 'rw-announce__loc-form' %}
+          <select
+            name="country_code"
+            class="rw-announce__select"
+            aria-label="{{ 'accessibility.select_country' | t | default: 'Select country' }}"
+            onchange="this.form.submit()"
+          >
+            {%- for country in localization.available_countries -%}
+              <option
+                value="{{ country.iso_code }}"
+                {%- if country.iso_code == localization.country.iso_code %}
+                  selected
+                {%- endif -%}
+              >
+                {{ country.currency.iso_code }}
+                {{ country.currency.symbol }}
+              </option>
+            {%- endfor -%}
+          </select>
+        {% endform %}
+      {%- else -%}
+        <span>
+          {{- localization.country.currency.iso_code }}
+          {{ localization.country.currency.symbol -}}
+        </span>
+      {%- endif -%}
+      <span class="rw-announce__lang">{{ request.locale.iso_code | upcase | slice: 0, 2 }}</span>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .rw-announce {
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb, var(--color-foreground)), 0.15);
+  }
+
+  .rw-announce__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .rw-announce__left,
+  .rw-announce__right,
+  .rw-announce__center,
+  .rw-announce__sep,
+  .rw-announce__lang {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .rw-announce__left {
+    opacity: 0.85;
+    white-space: nowrap;
+  }
+
+  .rw-announce__center {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex: 1;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+    opacity: 0.85;
+  }
+
+  .rw-announce__sep {
+    opacity: 0.4;
+    margin-inline: 8px;
+  }
+
+  .rw-announce__right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    white-space: nowrap;
+  }
+
+  .rw-announce__lang {
+    opacity: 0.6;
+  }
+
+  .rw-announce__select {
+    background: transparent;
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-family: inherit;
+    font-size: 11px;
+    letter-spacing: inherit;
+    text-transform: uppercase;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .rw-announce__loc-form {
+    display: inline-flex;
+  }
+
+  @media (max-width: 749px) {
+    .rw-announce__inner {
+      padding-inline: 16px;
+    }
+
+    .rw-announce__left {
+      display: none;
+    }
+
+    .rw-announce__center {
+      justify-content: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const INTERVAL = 4000;
+
+    document.querySelectorAll('[id^="rw-announce-"]').forEach(function (bar) {
+      const msgs = bar.querySelectorAll('.rw-announce__msg');
+      const seps = bar.querySelectorAll('.rw-announce__sep');
+      if (msgs.length < 2) return;
+
+      let current = 0;
+
+      function rotate() {
+        msgs[current].classList.remove('is-active');
+        if (seps[current]) seps[current].classList.remove('is-active');
+        current = (current + 1) % msgs.length;
+        msgs[current].classList.add('is-active');
+        if (seps[current]) seps[current].classList.add('is-active');
+      }
+
+      setInterval(rotate, INTERVAL);
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "RW Announcement",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-4"
+    },
+    {
+      "type": "text",
+      "id": "left_text",
+      "label": "Left text",
+      "default": "SHIP // WORLDWIDE — FREE OVER €120"
+    },
+    {
+      "type": "textarea",
+      "id": "center_messages",
+      "label": "Centre messages (one per line)",
+      "info": "Each line rotates every 4 s. Leave blank for defaults.",
+      "placeholder": "NEXT DROP // CHAPTER 04 — FRI 22:00 CET\nSTUDIO // KRAKÓW · BERLIN · LISBON"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Announcement"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,762 @@
+{% liquid
+  assign s = section.settings
+  assign col_count = collections | size
+  assign ratio_val = '1/1'
+  if s.image_ratio == 'portrait'
+    assign ratio_val = '3/4'
+  elsif s.image_ratio == 'wide'
+    assign ratio_val = '4/3'
+  endif
+%}
+
+<section
+  class="rw-collections color-{{ s.color_scheme }}"
+  data-section-id="{{ section.id }}"
+  id="rw-collections-{{ section.id }}"
+  style="--rw-cols: {{ s.columns }}; --rw-ratio: {{ ratio_val }};"
+>
+  {%- comment -%} ── HERO ──────────────────────────────────────────────── {%- endcomment -%}
+  <div class="rw-collections__hero">
+    <div class="rw-collections__inner">
+      <nav class="rw-collections__breadcrumb" aria-label="Breadcrumb">
+        <a href="{{ routes.root_url }}">HOME</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">COLLECTIONS</span>
+      </nav>
+
+      <div class="rw-collections__hero-body">
+        <div>
+          <div class="rw-collections__kicker">// THE FULL CATALOGUE</div>
+          <h1 class="rw-collections__heading" aria-label="Collections">
+            COLL<span class="rw-collections__heading-accent">E</span>CTIONS
+          </h1>
+        </div>
+        {%- if s.description != blank -%}
+          <p class="rw-collections__desc">{{ s.description }}</p>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  {%- comment -%} ── TICKER ────────────────────────────────────────────── {%- endcomment -%}
+  <div class="rw-collections__ticker" aria-hidden="true">
+    <div class="rw-collections__ticker-track">
+      {%- assign ticker_items = 'EIGHT COLLECTIONS,FOUR CHAPTERS,NO RESTOCKS,SS26 // VOL.04,FROM EASTERN EUROPE'
+        | split: ','
+      -%}
+      {%- for _pass in (1..2) -%}
+        {%- for item in ticker_items -%}
+          <span class="rw-collections__ticker-item">
+            <span class="rw-collections__ticker-text">{{ item }}</span>
+            <span class="rw-collections__ticker-diamond" aria-hidden="true"></span>
+          </span>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  {%- comment -%} ── SORT BAR ──────────────────────────────────────────── {%- endcomment -%}
+  <div class="rw-collections__sortbar" id="rw-sortbar-{{ section.id }}">
+    <div class="rw-collections__inner">
+      <span class="rw-collections__count">{{ col_count }} COLLECTIONS</span>
+      <label class="rw-collections__sort-label" for="rw-sort-{{ section.id }}">
+        SORT BY
+        <select
+          id="rw-sort-{{ section.id }}"
+          class="rw-collections__sort-select"
+          data-collections-sort="{{ section.id }}"
+          data-default-sort="{{ s.sort_default }}"
+        >
+          <option value="alphabetical">A–Z</option>
+          <option value="alphabetical_reversed">Z–A</option>
+          <option value="date_reversed">Newest</option>
+          <option value="date">Oldest</option>
+          <option value="products_high">Most pieces</option>
+          <option value="products_low">Fewest pieces</option>
+        </select>
+      </label>
+    </div>
+  </div>
+
+  {%- comment -%} ── GRID ──────────────────────────────────────────────── {%- endcomment -%}
+  <div class="rw-collections__grid-wrap">
+    <div class="rw-collections__inner">
+      <ul
+        class="rw-collections__grid"
+        id="rw-grid-{{ section.id }}"
+        data-collections-grid="{{ section.id }}"
+        role="list"
+      >
+        {%- for collection in collections -%}
+          {%- liquid
+            assign accent_color = collection.metafields.custom.accent_color | default: 'rgba(var(--color-button), 1)'
+            assign count_str = collection.products_count | prepend: '00'
+            assign count_display = count_str | slice: -2, 2
+            assign pub_date = collection.published_at | date: '%Y-%m-%d'
+          -%}
+          <li
+            class="rw-col-card-wrap"
+            data-title="{{ collection.title | downcase | escape }}"
+            data-date="{{ pub_date }}"
+            data-count="{{ collection.products_count }}"
+          >
+            <a
+              href="{{ collection.url }}"
+              class="rw-col-card"
+              aria-label="{{ collection.title | escape }}"
+            >
+              {%- comment -%} Image {%- endcomment -%}
+              <div class="rw-col-card__media">
+                {%- if collection.featured_image != blank -%}
+                  {{
+                    collection.featured_image
+                    | image_url: width: 1200
+                    | image_tag:
+                    loading: 'lazy',
+                    class: 'rw-col-card__img',
+                    alt: collection.featured_image.alt | default: collection.title | escape,
+                    widths: '600, 900, 1200'
+                  }}
+                {%- else -%}
+                  <div class="rw-col-card__ph" aria-hidden="true"></div>
+                {%- endif -%}
+
+                {%- comment -%} Hover tint overlay {%- endcomment -%}
+                <div
+                  class="rw-col-card__tint"
+                  style="--rw-card-accent: {{ accent_color }};"
+                  aria-hidden="true"
+                ></div>
+              </div>
+
+              {%- comment -%} Count chip — top right {%- endcomment -%}
+              <div class="rw-col-card__count" aria-label="{{ collection.products_count }} pieces">
+                {{ count_display }} PIECES
+              </div>
+
+              {%- comment -%} Index dot + number — top left {%- endcomment -%}
+              <div class="rw-col-card__index" aria-hidden="true">
+                <span
+                  class="rw-col-card__dot"
+                  style="background: {{ accent_color }};"
+                ></span>
+                <span class="rw-col-card__index-num">
+                  {%- assign idx_str = forloop.index | prepend: '00' -%}
+                  {{ idx_str | slice: -2, 2 }}
+                </span>
+              </div>
+
+              {%- comment -%} Title + CTA — bleed from bottom {%- endcomment -%}
+              <div class="rw-col-card__footer">
+                <h2 class="rw-col-card__title">{{ collection.title }}</h2>
+                <div class="rw-col-card__cta" aria-hidden="true">
+                  <span>Shop collection</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    aria-hidden="true"
+                  >
+                    <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+                  </svg>
+                </div>
+              </div>
+            </a>
+          </li>
+        {%- else -%}
+          {%- comment -%} Onboarding placeholders {%- endcomment -%}
+          {%- for i in (1..6) -%}
+            <li class="rw-col-card-wrap">
+              <div class="rw-col-card rw-col-card--placeholder">
+                <div class="rw-col-card__media">
+                  <div class="rw-col-card__ph" aria-hidden="true"></div>
+                </div>
+                <div class="rw-col-card__count">— PIECES</div>
+                <div class="rw-col-card__index" aria-hidden="true">
+                  <span class="rw-col-card__dot"></span>
+                  <span class="rw-col-card__index-num">0{{ i }}</span>
+                </div>
+                <div class="rw-col-card__footer">
+                  <h2 class="rw-col-card__title">{{ 'onboarding.collection_title' | t }}</h2>
+                </div>
+              </div>
+            </li>
+          {%- endfor -%}
+        {%- endfor -%}
+      </ul>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  /* ── Container ─────────────────────────────────────────────── */
+  .rw-collections {
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-collections__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .rw-collections__hero {
+    padding: 40px 0 0;
+  }
+
+  .rw-collections__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+    margin-bottom: 22px;
+  }
+
+  .rw-collections__breadcrumb a {
+    color: rgba(var(--color-foreground), 0.62);
+    text-decoration: none;
+  }
+
+  .rw-collections__breadcrumb a:hover {
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-collections__breadcrumb span[aria-current] {
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-collections__hero-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-bottom: 40px;
+  }
+
+  .rw-collections__kicker {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-button), 1);
+    margin-bottom: 14px;
+  }
+
+  .rw-collections__heading {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: -0.01em;
+    line-height: 0.82;
+    font-size: clamp(60px, 12vw, 200px);
+    margin: 0;
+  }
+
+  .rw-collections__heading-accent {
+    color: rgba(var(--color-button), 1);
+  }
+
+  .rw-collections__desc {
+    max-width: 380px;
+    font-size: 16px;
+    line-height: 1.5;
+    color: rgba(var(--color-foreground), 0.62);
+    margin: 0;
+    text-wrap: pretty;
+    align-self: flex-end;
+  }
+
+  /* ── Ticker ────────────────────────────────────────────────── */
+  .rw-collections__ticker {
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+    padding: 16px 0;
+    overflow: hidden;
+    border-top: 1px solid rgb(var(--color-foreground));
+    border-bottom: 1px solid rgb(var(--color-foreground));
+  }
+
+  @keyframes rw-ticker-x {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .rw-collections__ticker-track {
+    display: flex;
+    gap: 0;
+    width: max-content;
+    animation: rw-ticker-x 40s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rw-collections__ticker-track {
+      animation: none;
+    }
+  }
+
+  .rw-collections__ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 48px;
+    padding-inline: 24px;
+  }
+
+  .rw-collections__ticker-text {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 40px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .rw-collections__ticker-diamond {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background: rgba(var(--color-button), 1);
+    border: 1px solid rgb(var(--color-background));
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+
+  /* ── Sort bar ──────────────────────────────────────────────── */
+  .rw-collections__sortbar {
+    position: sticky;
+    top: var(--header-group-height, 63px);
+    z-index: 40;
+    background: rgb(var(--color-background));
+    border-bottom: 1px solid rgb(var(--color-foreground));
+  }
+
+  .rw-collections__sortbar .rw-collections__inner {
+    padding-block: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .rw-collections__count {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .rw-collections__sort-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .rw-collections__sort-select {
+    background: transparent;
+    border: 1px solid rgb(var(--color-foreground));
+    border-radius: 999px;
+    padding: 9px 14px;
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground));
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 32px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%230E0E0E' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+  }
+
+  .rw-collections__sort-select:focus-visible {
+    outline: 2px solid rgba(var(--color-button), 1);
+    outline-offset: 2px;
+  }
+
+  /* ── Grid ──────────────────────────────────────────────────── */
+  .rw-collections__grid-wrap {
+    padding: 40px 0 80px;
+    background: rgb(var(--color-background));
+    min-height: 40vh;
+  }
+
+  .rw-collections__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--rw-cols, 3), 1fr);
+    gap: 24px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* ── Collection card ───────────────────────────────────────── */
+  .rw-col-card-wrap {
+    /* wrapper li — no visual style */
+  }
+
+  .rw-col-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+  }
+
+  .rw-col-card__media {
+    aspect-ratio: var(--rw-ratio, 1/1);
+    position: relative;
+    overflow: hidden;
+    background: #1a1a1a;
+    /* placeholder diagonal pattern when no image */
+    background-image: repeating-linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.06) 0 14px,
+        rgba(255, 255, 255, 0) 14px 28px
+      ),
+      #1a1a1a;
+  }
+
+  .rw-col-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .rw-col-card:hover .rw-col-card__img {
+    transform: scale(1.04);
+  }
+
+  /* placeholder when no image */
+  .rw-col-card__ph {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Hover tint overlay */
+  .rw-col-card__tint {
+    position: absolute;
+    inset: 0;
+    background: var(--rw-card-accent, rgba(var(--color-button), 1));
+    opacity: 0;
+    mix-blend-mode: multiply;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  .rw-col-card:hover .rw-col-card__tint {
+    opacity: 0.22;
+  }
+
+  /* Count chip — top right */
+  .rw-col-card__count {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 6px 11px;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    border: 1px solid rgb(var(--color-foreground));
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  /* Index dot + number — top left */
+  .rw-col-card__index {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .rw-col-card__dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: rgba(var(--color-button), 1);
+    border-radius: 999px;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.35);
+    flex-shrink: 0;
+  }
+
+  .rw-col-card__index-num {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--color-background));
+  }
+
+  /* Title + CTA footer — bleed from bottom of image */
+  .rw-col-card__footer {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .rw-col-card__title {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: clamp(26px, 2.6vw, 42px);
+    line-height: 0.9;
+    color: rgb(var(--color-background));
+    margin: 0;
+  }
+
+  .rw-col-card__cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--color-background));
+    transform: translateY(6px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .rw-col-card:hover .rw-col-card__cta {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  /* Placeholder card */
+  .rw-col-card--placeholder .rw-col-card__title {
+    opacity: 0.4;
+  }
+
+  /* ── Hover lift ────────────────────────────────────────────── */
+  .rw-col-card__media {
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .rw-col-card:hover .rw-col-card__media {
+    transform: translateY(-4px);
+  }
+
+  /* ── Mobile ────────────────────────────────────────────────── */
+  @media (max-width: 749px) {
+    .rw-collections__inner {
+      padding-inline: 16px;
+    }
+
+    .rw-collections__grid {
+      --rw-cols: 2 !important;
+      gap: 12px;
+    }
+
+    .rw-collections__hero-body {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .rw-collections__desc {
+      max-width: 100%;
+    }
+
+    .rw-collections__ticker-text {
+      font-size: 28px;
+    }
+
+    .rw-collections__heading {
+      font-size: clamp(48px, 18vw, 100px);
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const sectionId = document.currentScript
+      ? document.currentScript.closest('[data-section-id]')?.dataset.sectionId
+      : null;
+
+    function initSort(rootEl) {
+      const select = rootEl.querySelector('[data-collections-sort]');
+      const grid = rootEl.querySelector('[data-collections-grid]');
+      if (!select || !grid) return;
+
+      // Read persisted sort from URL, fall back to section default
+      const params = new URLSearchParams(window.location.search);
+      const urlSort = params.get('sort_by');
+      const defaultSort = select.dataset.defaultSort || 'alphabetical';
+      const initialSort = urlSort && select.querySelector('option[value="' + urlSort + '"]') ? urlSort : defaultSort;
+
+      if (initialSort !== select.value) {
+        select.value = initialSort;
+      }
+      applySort(grid, initialSort);
+
+      select.addEventListener('change', function () {
+        applySort(grid, this.value);
+        // Persist to URL without reload
+        const url = new URL(window.location.href);
+        url.searchParams.set('sort_by', this.value);
+        history.replaceState(null, '', url.toString());
+      });
+    }
+
+    function applySort(grid, sortKey) {
+      const items = Array.from(grid.querySelectorAll('.rw-col-card-wrap'));
+
+      items.sort(function (a, b) {
+        switch (sortKey) {
+          case 'alphabetical':
+            return a.dataset.title.localeCompare(b.dataset.title);
+          case 'alphabetical_reversed':
+            return b.dataset.title.localeCompare(a.dataset.title);
+          case 'date_reversed':
+            return b.dataset.date.localeCompare(a.dataset.date);
+          case 'date':
+            return a.dataset.date.localeCompare(b.dataset.date);
+          case 'products_high':
+            return Number(b.dataset.count) - Number(a.dataset.count);
+          case 'products_low':
+            return Number(a.dataset.count) - Number(b.dataset.count);
+          default:
+            return 0;
+        }
+      });
+
+      // Re-append in sorted order (no clone needed — moves nodes)
+      items.forEach(function (item) {
+        grid.appendChild(item);
+      });
+    }
+
+    function init() {
+      const root =
+        document.getElementById('rw-collections-' + sectionId) || document.querySelector('[data-section-id]');
+      if (root) initSort(root);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+
+    // Shopify theme editor re-init on section:load
+    document.addEventListener('shopify:section:load', function (e) {
+      if (e.detail && e.detail.sectionId) {
+        const root = document.getElementById('rw-collections-' + e.detail.sectionId);
+        if (root) initSort(root);
+      }
+    });
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "RW Collections Page",
+  "class": "rw-section-collections",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Hero"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Every chapter, every regular, every last piece. Eight collections, four stories, one studio. Browse by drop or by what's left."
+    },
+    {
+      "type": "header",
+      "content": "Grid"
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "label": "Columns (desktop)",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "label": "Image ratio",
+      "options": [
+        { "value": "square", "label": "Square (1:1)" },
+        { "value": "portrait", "label": "Portrait (3:4)" },
+        { "value": "wide", "label": "Wide (4:3)" }
+      ],
+      "default": "square"
+    },
+    {
+      "type": "header",
+      "content": "Sort"
+    },
+    {
+      "type": "select",
+      "id": "sort_default",
+      "label": "Default sort",
+      "options": [
+        { "value": "alphabetical", "label": "A–Z" },
+        { "value": "alphabetical_reversed", "label": "Z–A" },
+        { "value": "date_reversed", "label": "Newest" },
+        { "value": "date", "label": "Oldest" },
+        { "value": "products_high", "label": "Most pieces" },
+        { "value": "products_low", "label": "Fewest pieces" }
+      ],
+      "default": "alphabetical"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Collections Page"
+    }
+  ]
+}
+{% endschema %}

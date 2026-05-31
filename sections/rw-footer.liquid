@@ -1,0 +1,361 @@
+{% liquid
+  assign s = section.settings
+  assign menu_shop = linklists[s.menu_shop]
+  assign menu_studio = linklists[s.menu_studio]
+  assign menu_help = linklists[s.menu_help]
+%}
+
+<footer
+  class="rw-footer color-{{ s.color_scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="rw-footer__inner">
+    {%- comment -%} ── Top grid ──────────────────────────────────── {%- endcomment -%}
+    <div class="rw-footer__grid">
+      {%- comment -%} Brand column {%- endcomment -%}
+      <div class="rw-footer__brand">
+        <a href="{{ routes.root_url }}" class="rw-footer__logo" aria-label="{{ shop.name }}">
+          <span class="rw-footer__logo-main">REBORN</span>
+          <span class="rw-footer__logo-sub">// WW</span>
+        </a>
+        {%- if s.tagline != blank -%}
+          <p class="rw-footer__tagline">{{ s.tagline }}</p>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Nav columns {%- endcomment -%}
+      {%- assign col_menus = 'shop,studio,help' | split: ',' -%}
+      {%- for col_key in col_menus -%}
+        {%- liquid
+          if col_key == 'shop'
+            assign col_menu = menu_shop
+            assign col_label = s.label_shop | default: 'Shop'
+          elsif col_key == 'studio'
+            assign col_menu = menu_studio
+            assign col_label = s.label_studio | default: 'Studio'
+          else
+            assign col_menu = menu_help
+            assign col_label = s.label_help | default: 'Help'
+          endif
+        -%}
+        <nav class="rw-footer__col" aria-label="{{ col_label }}">
+          <div class="rw-footer__col-heading">// {{ col_label | upcase }}</div>
+          {%- if col_menu != null and col_menu.links.size > 0 -%}
+            <ul class="rw-footer__links" role="list">
+              {%- for link in col_menu.links -%}
+                <li>
+                  <a href="{{ link.url }}" class="rw-footer__link">{{ link.title }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- else -%}
+            {%- comment -%} Fallback placeholder links {%- endcomment -%}
+            {%- liquid
+              if col_key == 'shop'
+                assign fallback = 'New arrivals,Chapter 04,Chapter 03,Chapter 02,Sale,Gift cards' | split: ','
+              elsif col_key == 'studio'
+                assign fallback = 'About,Manifesto,Stockists,Press kit,Careers' | split: ','
+              else
+                assign fallback = 'Contact,Shipping,Returns,Size guide,FAQ' | split: ','
+              endif
+            -%}
+            <ul class="rw-footer__links" role="list">
+              {%- for item in fallback -%}
+                <li>
+                  <a href="#" class="rw-footer__link">{{ item }}</a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </nav>
+      {%- endfor -%}
+    </div>
+
+    {%- comment -%} ── Bottom bar ────────────────────────────────── {%- endcomment -%}
+    <div class="rw-footer__bottom">
+      <div class="rw-footer__copy">
+        © {{ 'now' | date: '%Y' }}
+        {{ s.legal_name | default: 'REBORN WORLDWIDE' }} — KRAKÓW · BERLIN · LISBON
+      </div>
+      <div class="rw-footer__social" aria-label="Social">
+        {%- for network in 'IG,TT,YT,DC' | split: ',' -%}
+          {%- liquid
+            if network == 'IG'
+              assign social_url = s.social_instagram | default: '#'
+            elsif network == 'TT'
+              assign social_url = s.social_tiktok | default: '#'
+            elsif network == 'YT'
+              assign social_url = s.social_youtube | default: '#'
+            else
+              assign social_url = s.social_discord | default: '#'
+            endif
+          -%}
+          <a href="{{ social_url }}" class="rw-footer__social-link">{{ network }}</a>
+        {%- endfor -%}
+      </div>
+      <div class="rw-footer__payments" aria-label="Payment methods">VISA · MC · APPLE PAY · KLARNA · BLIK</div>
+    </div>
+  </div>
+</footer>
+
+{% stylesheet %}
+  .rw-footer {
+    border-top: 1px solid rgba(var(--color-border-rgb, var(--color-foreground)), 0.18);
+    padding: 64px 0 24px;
+  }
+
+  .rw-footer__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding-inline: 24px;
+  }
+
+  /* ── Grid ──────────────────────────────────────────────────── */
+  .rw-footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* ── Brand ─────────────────────────────────────────────────── */
+  .rw-footer__logo {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
+    text-decoration: none;
+    color: inherit;
+    line-height: 0.9;
+    margin-bottom: 18px;
+  }
+
+  .rw-footer__logo-main {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    font-size: 64px;
+    text-transform: uppercase;
+    line-height: 0.9;
+  }
+
+  .rw-footer__logo-sub {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(var(--color-button), 1);
+    margin-left: 8px;
+    line-height: 1;
+    align-self: flex-end;
+    padding-bottom: 6px;
+  }
+
+  .rw-footer__tagline {
+    max-width: 340px;
+    margin: 18px 0 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  /* ── Nav columns ───────────────────────────────────────────── */
+  .rw-footer__col-heading {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+    margin-bottom: 14px;
+  }
+
+  .rw-footer__links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .rw-footer__link {
+    font-size: 14px;
+    color: rgb(var(--color-foreground));
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .rw-footer__link:hover {
+    opacity: 0.6;
+  }
+
+  /* ── Bottom bar ─────────────────────────────────────────────── */
+  .rw-footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(var(--color-foreground), 0.18);
+  }
+
+  .rw-footer__copy,
+  .rw-footer__payments {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+
+  .rw-footer__social {
+    display: flex;
+    gap: 18px;
+  }
+
+  .rw-footer__social-link {
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .rw-footer__social-link:hover {
+    color: rgb(var(--color-foreground));
+  }
+
+  /* ── Mobile ────────────────────────────────────────────────── */
+  @media (max-width: 989px) {
+    .rw-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .rw-footer__brand {
+      grid-column: 1 / -1;
+    }
+
+    .rw-footer__logo-main {
+      font-size: 48px;
+    }
+  }
+
+  @media (max-width: 749px) {
+    .rw-footer__inner {
+      padding-inline: 16px;
+    }
+
+    .rw-footer__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .rw-footer__bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Footer",
+  "class": "rw-section-footer",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:settings.color_scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "header",
+      "content": "Brand"
+    },
+    {
+      "type": "textarea",
+      "id": "tagline",
+      "label": "Brand tagline",
+      "default": "Independent streetwear studio. Four chapters a year, 250 pieces each, no restocks. Made in Eastern Europe, shipped worldwide."
+    },
+    {
+      "type": "text",
+      "id": "legal_name",
+      "label": "Legal name (for © line)",
+      "default": "REBORN WORLDWIDE"
+    },
+    {
+      "type": "header",
+      "content": "Navigation menus"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_shop",
+      "label": "Shop column menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "label_shop",
+      "label": "Shop column label",
+      "default": "Shop"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_studio",
+      "label": "Studio column menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "label_studio",
+      "label": "Studio column label",
+      "default": "Studio"
+    },
+    {
+      "type": "link_list",
+      "id": "menu_help",
+      "label": "Help column menu",
+      "default": "footer"
+    },
+    {
+      "type": "text",
+      "id": "label_help",
+      "label": "Help column label",
+      "default": "Help"
+    },
+    {
+      "type": "header",
+      "content": "Social links"
+    },
+    {
+      "type": "url",
+      "id": "social_instagram",
+      "label": "Instagram"
+    },
+    {
+      "type": "url",
+      "id": "social_tiktok",
+      "label": "TikTok"
+    },
+    {
+      "type": "url",
+      "id": "social_youtube",
+      "label": "YouTube"
+    },
+    {
+      "type": "url",
+      "id": "social_discord",
+      "label": "Discord"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Footer"
+    }
+  ]
+}
+{% endschema %}

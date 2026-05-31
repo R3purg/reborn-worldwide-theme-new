@@ -1,0 +1,551 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section
+  class="rw-hero color-{{ s.color_scheme }}"
+  data-section-id="{{ section.id }}"
+>
+  <div class="rw-hero__inner">
+
+    <div class="rw-hero__meta">
+      <span>{{ s.meta_line }}</span>
+      <span>RW—{{ s.edition_date }}</span>
+    </div>
+
+    <div class="rw-hero__title-wrap">
+      <h1 class="rw-hero__title">
+        REBORN<br>
+        <span class="rw-hero__title-row2">
+          <span class="rw-hero__slash" aria-hidden="true">/</span>
+          <span class="rw-hero__worldwide">WORLDWIDE</span>
+        </span>
+      </h1>
+
+      {%- if s.show_stickers -%}
+        <div class="rw-hero__sticker rw-hero__sticker--1" aria-hidden="true">
+          <div class="rw-hero__sticker-main">{{ s.sticker_1_text }}</div>
+          {%- if s.sticker_1_sub != blank -%}
+            <div class="rw-hero__sticker-sub">{{ s.sticker_1_sub }}</div>
+          {%- endif -%}
+        </div>
+        <div class="rw-hero__sticker rw-hero__sticker--2" aria-hidden="true">
+          <div class="rw-hero__sticker-main">{{ s.sticker_2_text }}</div>
+        </div>
+      {%- endif -%}
+    </div>
+
+    <div class="rw-hero__split{% if s.layout == 'full' %} rw-hero__split--full{% endif %}">
+
+      <div class="rw-hero__media">
+        {%- if s.image != blank -%}
+          {{
+            s.image
+            | image_url: width: 1400
+            | image_tag:
+              loading: 'eager',
+              preload: true,
+              class: 'rw-hero__img',
+              alt: s.image.alt | default: 'Reborn Worldwide'
+          }}
+        {%- else -%}
+          <div class="rw-hero__media-ph">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'rw-hero__ph-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+
+      {%- unless s.layout == 'full' -%}
+        <div class="rw-hero__aside">
+
+          <div class="rw-hero__cd" id="rw-cd-{{ section.id }}" data-target="{{ s.countdown_date }}">
+            <div class="rw-hero__cd-label">{{ s.countdown_label }}</div>
+            <div class="rw-hero__cd-grid">
+              <div class="rw-hero__cd-unit">
+                <div class="rw-hero__cd-num" data-unit="days">00</div>
+                <div class="rw-hero__cd-lbl">DAYS</div>
+              </div>
+              <div class="rw-hero__cd-unit">
+                <div class="rw-hero__cd-num" data-unit="hrs">00</div>
+                <div class="rw-hero__cd-lbl">HRS</div>
+              </div>
+              <div class="rw-hero__cd-unit">
+                <div class="rw-hero__cd-num" data-unit="min">00</div>
+                <div class="rw-hero__cd-lbl">MIN</div>
+              </div>
+              <div class="rw-hero__cd-unit">
+                <div class="rw-hero__cd-num" data-unit="sec">00</div>
+                <div class="rw-hero__cd-lbl">SEC</div>
+              </div>
+            </div>
+            <div class="rw-hero__cd-footer">
+              <span>{{ s.countdown_time_label }}</span>
+              <a href="{{ s.cta_primary_url | default: '/collections/all' }}" class="rw-btn rw-btn--sm rw-btn--orange">
+                Notify me →
+              </a>
+            </div>
+          </div>
+
+          <div class="rw-hero__manifesto">
+            <div class="rw-hero__manifesto-kicker">// MANIFESTO</div>
+            <p class="rw-hero__manifesto-body">{{ s.manifesto_quote }}</p>
+          </div>
+
+        </div>
+      {%- endunless -%}
+    </div>
+
+    <div class="rw-hero__cta-row">
+      <div class="rw-hero__cta-btns">
+        <a href="{{ s.cta_primary_url | default: '/collections/all' }}" class="rw-btn rw-btn--lg rw-btn--solid">
+          {{ s.cta_primary_label }} →
+        </a>
+        <a href="{{ s.cta_secondary_url | default: '#' }}" class="rw-btn rw-btn--lg rw-btn--ghost">
+          {{ s.cta_secondary_label }}
+        </a>
+      </div>
+      <div class="rw-hero__cta-meta">04 CHAPTERS · 250 PIECES EACH · NO RESTOCKS</div>
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-hero {
+    padding: 24px 24px 0;
+    overflow: hidden;
+  }
+  .rw-hero__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  /* Meta line */
+  .rw-hero__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgba(var(--color-foreground), 0.62);
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  /* Title */
+  .rw-hero__title-wrap {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .rw-hero__title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(72px, 16.5vw, 280px);
+    line-height: 0.82;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .rw-hero__title-row2 {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.18em;
+  }
+  .rw-hero__slash {
+    display: inline-block;
+    width: 0.6em;
+    text-align: center;
+    color: rgb(var(--color-button));
+    font-family: var(--font-accent--family);
+  }
+  .rw-hero__worldwide {
+    color: rgba(var(--color-foreground), 0.72);
+  }
+  /* Stickers */
+  .rw-hero__sticker {
+    position: absolute;
+    padding: 10px 14px;
+    border: 1px solid rgb(var(--color-foreground));
+    border-radius: 4px;
+    box-shadow: 3px 3px 0 rgb(var(--color-foreground));
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    z-index: 2;
+    cursor: default;
+  }
+  .rw-hero__sticker:hover {
+    animation: rw-wobble 0.6s ease-in-out infinite;
+  }
+  @keyframes rw-wobble {
+    0%   { transform: rotate(var(--_rot)); }
+    50%  { transform: rotate(calc(var(--_rot) + 10deg)); }
+    100% { transform: rotate(var(--_rot)); }
+  }
+  .rw-hero__sticker--1 {
+    top: 6%; right: 4%;
+    --_rot: -8deg;
+    transform: rotate(-8deg);
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-label));
+  }
+  .rw-hero__sticker--2 {
+    bottom: -10px; left: 38%;
+    --_rot: 7deg;
+    transform: rotate(7deg);
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+  }
+  .rw-hero__sticker-sub {
+    font-size: 9px;
+    opacity: 0.8;
+    margin-top: 2px;
+  }
+  /* Split grid */
+  .rw-hero__split {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+  .rw-hero__split--full {
+    grid-template-columns: 1fr;
+  }
+  /* Media */
+  .rw-hero__media {
+    overflow: hidden;
+  }
+  .rw-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 16 / 11;
+    display: block;
+  }
+  .rw-hero__split--full .rw-hero__img {
+    aspect-ratio: 21 / 9;
+  }
+  .rw-hero__media-ph {
+    aspect-ratio: 16 / 11;
+    background:
+      repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
+      rgb(var(--color-background));
+    border: 1px solid rgba(var(--color-foreground), 0.18);
+  }
+  .rw-hero__ph-svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  /* Sidebar */
+  .rw-hero__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  /* Countdown */
+  .rw-hero__cd {
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+    padding: 22px 22px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    flex: 1;
+    min-height: 220px;
+  }
+  .rw-hero__cd-label {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  .rw-hero__cd-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .rw-hero__cd-unit {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 8px;
+  }
+  .rw-hero__cd-num {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: 48px;
+    line-height: 1;
+  }
+  .rw-hero__cd-lbl {
+    font-family: var(--font-accent--family);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.55;
+    margin-top: 4px;
+  }
+  .rw-hero__cd-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .rw-hero__cd-footer > span {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+  /* Manifesto blurb */
+  .rw-hero__manifesto {
+    padding: 20px 22px;
+    border: 1px solid rgba(var(--color-foreground), 0.18);
+    background: rgb(var(--color-background));
+  }
+  .rw-hero__manifesto-kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+    margin-bottom: 8px;
+  }
+  .rw-hero__manifesto-body {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+  /* CTA row */
+  .rw-hero__cta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 0;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .rw-hero__cta-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .rw-hero__cta-meta {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+  }
+  /* Shared RW button system */
+  .rw-btn {
+    font-family: var(--font-accent--family);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid rgb(var(--color-foreground));
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+    line-height: 1;
+  }
+  .rw-btn--sm  { padding: 10px 16px; font-size: 12px; }
+  .rw-btn--md  { padding: 14px 22px; font-size: 13px; }
+  .rw-btn--lg  { padding: 18px 28px; font-size: 14px; }
+  .rw-btn--solid  { background: rgb(var(--color-foreground)); color: rgb(var(--color-background)); }
+  .rw-btn--ghost  { background: transparent; color: rgb(var(--color-foreground)); }
+  .rw-btn--bone   { background: rgb(var(--color-background)); color: rgb(var(--color-foreground)); }
+  .rw-btn--orange { background: rgb(var(--color-button)); color: rgb(var(--color-button-label)); border-color: rgb(var(--color-foreground)); }
+  .rw-btn:hover   { transform: translateY(-2px); }
+  /* Mobile */
+  @media (max-width: 749px) {
+    .rw-hero { padding: 16px 16px 0; }
+    .rw-hero__split { grid-template-columns: 1fr; }
+    .rw-hero__sticker--1,
+    .rw-hero__sticker--2 { display: none; }
+    .rw-hero__meta { flex-direction: column; align-items: flex-start; gap: 4px; }
+    .rw-hero__cta-meta { display: none; }
+    .rw-hero__cd-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function pad(n) { return String(n).padStart(2, '0'); }
+
+    function initCountdown(section) {
+      var el = section.querySelector('[id^="rw-cd-"]');
+      if (!el) return;
+      var target = Date.parse(el.dataset.target);
+      if (isNaN(target)) return;
+
+      function tick() {
+        var diff = Math.max(0, target - Date.now());
+        var d = Math.floor(diff / 86400000);
+        var h = Math.floor(diff / 3600000) % 24;
+        var m = Math.floor(diff / 60000) % 60;
+        var s = Math.floor(diff / 1000) % 60;
+        var map = { days: d, hrs: h, min: m, sec: s };
+        Object.keys(map).forEach(function (k) {
+          var node = el.querySelector('[data-unit="' + k + '"]');
+          if (node) node.textContent = pad(map[k]);
+        });
+        if (diff > 0) setTimeout(tick, 1000);
+      }
+      tick();
+    }
+
+    document.querySelectorAll('.rw-hero').forEach(initCountdown);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "RW Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "meta_line",
+      "label": "Meta line",
+      "default": "VOL.04 — SS26 // FROM THE STREETS OF EASTERN EUROPE"
+    },
+    {
+      "type": "text",
+      "id": "edition_date",
+      "label": "Edition date label",
+      "default": "SS26"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Hero image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Split (image + sidebar)" },
+        { "value": "full",  "label": "Full bleed" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "header",
+      "content": "Stickers"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stickers",
+      "label": "Show stickers",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sticker_1_text",
+      "label": "Sticker 1 text",
+      "default": "LIMITED AS F*CK"
+    },
+    {
+      "type": "text",
+      "id": "sticker_1_sub",
+      "label": "Sticker 1 subtext",
+      "default": "ED. 250 / DROP"
+    },
+    {
+      "type": "text",
+      "id": "sticker_2_text",
+      "label": "Sticker 2 text",
+      "default": "// SS26 LOOKBOOK"
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
+    },
+    {
+      "type": "text",
+      "id": "countdown_date",
+      "label": "Drop date (ISO 8601)",
+      "info": "e.g. 2026-12-06T22:00:00+01:00",
+      "default": "2026-12-06T22:00:00+01:00"
+    },
+    {
+      "type": "text",
+      "id": "countdown_label",
+      "label": "Countdown label",
+      "default": "NEXT DROP // CHAPTER 04 — BIKINI BLING"
+    },
+    {
+      "type": "text",
+      "id": "countdown_time_label",
+      "label": "Drop time label",
+      "default": "FRI 22:00 CET"
+    },
+    {
+      "type": "header",
+      "content": "Manifesto blurb"
+    },
+    {
+      "type": "textarea",
+      "id": "manifesto_quote",
+      "label": "Manifesto quote",
+      "default": "Built for the kid that never asked permission. Four chapters a year. Two hundred fifty pieces each. No restocks."
+    },
+    {
+      "type": "header",
+      "content": "CTAs"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary CTA label",
+      "default": "Shop chapter 04"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Primary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary CTA label",
+      "default": "Read the lookbook"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Hero"
+    }
+  ]
+}
+{% endschema %}

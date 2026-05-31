@@ -1,0 +1,35 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */{
+  "type": "footer",
+  "name": "Footer",
+  "sections": {
+    "rw_footer": {
+      "type": "rw-footer",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "tagline": "Independent streetwear studio. Four chapters a year, 250 pieces each, no restocks. Made in Eastern Europe, shipped worldwide.",
+        "legal_name": "REBORN WORLDWIDE",
+        "menu_shop": "footer",
+        "label_shop": "Shop",
+        "menu_studio": "footer",
+        "label_studio": "Studio",
+        "menu_help": "footer",
+        "label_help": "Help",
+        "social_instagram": "",
+        "social_tiktok": "",
+        "social_youtube": "",
+        "social_discord": ""
+      }
+    }
+  },
+  "order": [
+    "rw_footer"
+  ]
+}

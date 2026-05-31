@@ -1,0 +1,523 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section
+  class="rw-chapters color-{{ s.color_scheme }}"
+  data-section-id="{{ section.id }}"
+  data-auto-rotate="{{ s.auto_rotate }}"
+  id="chapters"
+>
+  <div class="rw-chapters__inner">
+
+    <div class="rw-chapters__header">
+      <div>
+        <div class="rw-chapters__kicker">{{ s.kicker }}</div>
+        <h2 class="rw-chapters__heading">{{ s.heading }}</h2>
+      </div>
+      {%- if s.sub_copy != blank -%}
+        <p class="rw-chapters__sub">{{ s.sub_copy }}</p>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+
+      <div class="rw-chapters__tabs" data-tabs="{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <button
+            class="rw-chapters__tab{% if forloop.first %} is-active{% endif %}"
+            type="button"
+            data-index="{{ forloop.index0 }}"
+            data-accent="{{ block.settings.accent_color }}"
+            {{ block.shopify_attributes }}
+          >
+            <span class="rw-chapters__tab-meta">CH.{{ block.settings.chapter_number }} / {{ block.settings.chapter_code }}</span>
+            <span class="rw-chapters__tab-title">{{ block.settings.title }}</span>
+          </button>
+        {%- endfor -%}
+      </div>
+
+      <div class="rw-chapters__cards" data-cards="{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <div
+            class="rw-chapters__card{% if forloop.first %} is-active{% endif %}"
+            data-index="{{ forloop.index0 }}"
+            {{ block.shopify_attributes }}
+          >
+            <div class="rw-chapters__card-media">
+              {%- if block.settings.image != blank -%}
+                {{
+                  block.settings.image
+                  | image_url: width: 900
+                  | image_tag:
+                    loading: 'lazy',
+                    class: 'rw-chapters__card-img',
+                    alt: block.settings.title
+                }}
+              {%- else -%}
+                <div class="rw-chapters__card-ph"></div>
+              {%- endif -%}
+              <div class="rw-chapters__card-badge">
+                <span class="rw-chapters__card-dot" style="background: {{ block.settings.accent_color }};"></span>
+                <span>CHAPTER {{ block.settings.chapter_number }} // {{ block.settings.chapter_code }}</span>
+              </div>
+              <div class="rw-chapters__card-title">{{ block.settings.title }}</div>
+            </div>
+
+            <div class="rw-chapters__card-body">
+              <div>
+                <div class="rw-chapters__card-kicker" style="color: {{ block.settings.accent_color }};">{{ block.settings.kicker }}</div>
+                <p class="rw-chapters__card-text">{{ block.settings.body }}</p>
+              </div>
+              <div class="rw-chapters__card-footer">
+                <div class="rw-chapters__card-meta">
+                  <span>15 PIECES</span><span>·</span><span>EDITION OF 250</span><span>·</span><span>NO RESTOCKS</span>
+                </div>
+                <div class="rw-chapters__card-btns">
+                  <a href="{{ block.settings.cta_link | default: '/collections/all' }}" class="rw-btn rw-btn--md rw-btn--bone">
+                    {{ block.settings.cta_label | default: 'See the drop' }} →
+                  </a>
+                  <a href="{{ block.settings.story_link | default: '#' }}" class="rw-btn rw-btn--md rw-btn--dark-ghost">
+                    Read story
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+
+      <div class="rw-chapters__dots" data-dots="{{ section.id }}">
+        {%- for block in section.blocks -%}
+          <span class="rw-chapters__dot{% if forloop.first %} is-active{% endif %}" data-index="{{ forloop.index0 }}"></span>
+        {%- endfor -%}
+      </div>
+
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-chapters {
+    padding: 96px 24px;
+  }
+  .rw-chapters__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-chapters__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .rw-chapters__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 10px;
+  }
+  .rw-chapters__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(40px, 6vw, 84px);
+    line-height: 0.86;
+    margin: 0;
+  }
+  .rw-chapters__sub {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    max-width: 420px;
+    margin: 0;
+  }
+  /* Tab strip */
+  .rw-chapters__tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid rgba(var(--color-background), 0.18);
+  }
+  .rw-chapters__tab {
+    padding: 16px 18px;
+    text-align: left;
+    border: 0;
+    border-right: 1px solid rgba(var(--color-background), 0.18);
+    background: transparent;
+    color: rgb(var(--color-background));
+    cursor: pointer;
+    transition: background 0.3s ease, color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .rw-chapters__tab:last-child { border-right: 0; }
+  .rw-chapters__tab.is-active { color: #0e0e0e; }
+  .rw-chapters__tab-meta { opacity: 0.7; }
+  .rw-chapters__tab-title { font-weight: 600; font-size: 13px; }
+  /* Chapter cards */
+  .rw-chapters__cards { margin-top: 24px; }
+  .rw-chapters__card {
+    display: none;
+    grid-template-columns: 1.4fr 1fr;
+    min-height: 520px;
+  }
+  .rw-chapters__card.is-active { display: grid; }
+  /* Card media */
+  .rw-chapters__card-media {
+    position: relative;
+    overflow: hidden;
+    background:
+      repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 14px, transparent 14px 28px),
+      #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-right: 0;
+  }
+  .rw-chapters__card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-chapters__card-ph {
+    width: 100%;
+    height: 100%;
+    min-height: 520px;
+  }
+  .rw-chapters__card-badge {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--color-background));
+  }
+  .rw-chapters__card-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+  }
+  .rw-chapters__card-title {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(56px, 8vw, 128px);
+    line-height: 0.85;
+    color: rgb(var(--color-background));
+    max-width: 90%;
+  }
+  /* Card body */
+  .rw-chapters__card-body {
+    background: #1a1a1a;
+    padding: 40px 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .rw-chapters__card-kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .rw-chapters__card-text {
+    font-size: 22px;
+    line-height: 1.4;
+    margin: 0;
+    font-weight: 400;
+    color: rgb(var(--color-background));
+    text-wrap: pretty;
+  }
+  .rw-chapters__card-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 36px;
+  }
+  .rw-chapters__card-meta {
+    display: flex;
+    gap: 12px;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.6);
+    flex-wrap: wrap;
+  }
+  .rw-chapters__card-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  /* Ghost button override for dark card background */
+  .rw-btn--dark-ghost {
+    background: transparent;
+    color: rgb(var(--color-background));
+    border-color: rgba(var(--color-background), 0.5);
+  }
+  /* Progress dots */
+  .rw-chapters__dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 18px;
+    justify-content: flex-end;
+  }
+  .rw-chapters__dot {
+    height: 3px;
+    width: 18px;
+    background: rgba(var(--color-background), 0.25);
+    transition: width 0.4s ease, background 0.4s ease;
+    display: block;
+  }
+  .rw-chapters__dot.is-active { width: 40px; }
+  /* Mobile */
+  @media (max-width: 989px) {
+    .rw-chapters__tabs {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .rw-chapters__tab:nth-child(2) { border-right: 0; }
+    .rw-chapters__tab:nth-child(3) {
+      border-right: 1px solid rgba(var(--color-background), 0.18);
+      border-top: 1px solid rgba(var(--color-background), 0.18);
+    }
+    .rw-chapters__tab:nth-child(4) {
+      border-right: 0;
+      border-top: 1px solid rgba(var(--color-background), 0.18);
+    }
+    .rw-chapters__card.is-active { grid-template-columns: 1fr; }
+    .rw-chapters__card-media { border-right: 1px solid rgba(255, 255, 255, 0.12); min-height: 320px; }
+  }
+  @media (max-width: 749px) {
+    .rw-chapters { padding: 64px 16px; }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    function initChapters(section) {
+      var id = section.dataset.sectionId;
+      var tabs  = Array.from(section.querySelectorAll('[data-tabs="' + id + '"] .rw-chapters__tab'));
+      var cards = Array.from(section.querySelectorAll('[data-cards="' + id + '"] .rw-chapters__card'));
+      var dots  = Array.from(section.querySelectorAll('[data-dots="' + id + '"] .rw-chapters__dot'));
+      var active = 0;
+      var timer = null;
+
+      function activate(i) {
+        active = i;
+        var accent = tabs[i] ? tabs[i].dataset.accent : '';
+
+        tabs.forEach(function (t, n) {
+          var on = n === i;
+          t.classList.toggle('is-active', on);
+          t.style.background = on ? (accent || '') : '';
+        });
+        cards.forEach(function (c, n) { c.classList.toggle('is-active', n === i); });
+        dots.forEach(function (d, n) {
+          var on = n === i;
+          d.classList.toggle('is-active', on);
+          d.style.background = on ? (accent || '') : '';
+        });
+      }
+
+      tabs.forEach(function (t, n) {
+        t.addEventListener('click', function () {
+          clearInterval(timer);
+          activate(n);
+        });
+      });
+
+      if (section.dataset.autoRotate !== 'false' && tabs.length > 1) {
+        timer = setInterval(function () {
+          activate((active + 1) % tabs.length);
+        }, 6500);
+      }
+
+      activate(0);
+    }
+
+    document.querySelectorAll('.rw-chapters').forEach(initChapters);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "RW Chapters",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// SS26 — FOUR CHAPTERS"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "The lookbook"
+    },
+    {
+      "type": "textarea",
+      "id": "sub_copy",
+      "label": "Sub copy",
+      "default": "Each chapter ships once and disappears. Read them like a comic — in order, or in the order you find them."
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate chapters",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "chapter",
+      "name": "Chapter",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "chapter_number",
+          "label": "Chapter number",
+          "default": "01"
+        },
+        {
+          "type": "text",
+          "id": "chapter_code",
+          "label": "Chapter code",
+          "default": "MS-001"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "MY SWAMP"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Kicker line",
+          "default": "Chapter 01 — The Anti-Hero Awakens"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "label": "Body text",
+          "default": "He doesn't live in the swamp. He owns it. Cheap cigarettes, cheaper dreams, and a lease nobody signed."
+        },
+        {
+          "type": "color",
+          "id": "accent_color",
+          "label": "Accent color",
+          "default": "#7BAF2C"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Chapter image"
+        },
+        {
+          "type": "text",
+          "id": "cta_label",
+          "label": "CTA label",
+          "default": "See the drop"
+        },
+        {
+          "type": "url",
+          "id": "cta_link",
+          "label": "CTA link"
+        },
+        {
+          "type": "url",
+          "id": "story_link",
+          "label": "Story link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Chapters",
+      "blocks": [
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_number": "01",
+            "chapter_code": "MS-001",
+            "title": "MY SWAMP",
+            "kicker": "Chapter 01 — The Anti-Hero Awakens",
+            "body": "He doesn't live in the swamp. He owns it. Cheap cigarettes, cheaper dreams, and a lease nobody signed.",
+            "accent_color": "#7BAF2C",
+            "cta_label": "See the drop"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_number": "02",
+            "chapter_code": "MD-014",
+            "title": "MONSTERS DRINK",
+            "kicker": "Chapter 02 — The Door Was Never Locked",
+            "body": "They don't knock. They walk in, smoke in hand, like the place is still theirs. He always knew the light meant home.",
+            "accent_color": "#3F6F8C",
+            "cta_label": "See the drop"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_number": "03",
+            "chapter_code": "AF-208",
+            "title": "ANIME FAN",
+            "kicker": "Chapter 03 — Broadcast From a Better World",
+            "body": "In the morning she sat in silence, but her soul was loud. Through every winter, every power cut, she held on.",
+            "accent_color": "#0098A2",
+            "cta_label": "See the drop"
+          }
+        },
+        {
+          "type": "chapter",
+          "settings": {
+            "chapter_number": "04",
+            "chapter_code": "BB-077",
+            "title": "BIKINI BLING",
+            "kicker": "Chapter 04 — Pineapple Under The Concrete",
+            "body": "Crawled out of the deep end with a chain thicker than your leash. Even Gary's going fast up in this bitch.",
+            "accent_color": "#E6D63A",
+            "cta_label": "See the drop"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

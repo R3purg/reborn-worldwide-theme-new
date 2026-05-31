@@ -1,0 +1,220 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-lookbook color-{{ s.color_scheme }}" id="lookbook">
+  <div class="rw-lookbook__inner">
+
+    <div class="rw-lookbook__header">
+      <div>
+        <div class="rw-lookbook__kicker">{{ s.kicker }}</div>
+        <h2 class="rw-lookbook__heading">{{ s.heading }}</h2>
+      </div>
+      {%- if s.instagram_url != blank -%}
+        <a
+          href="{{ s.instagram_url }}"
+          class="rw-btn rw-btn--md rw-btn--ghost"
+          target="_blank"
+          rel="noopener noreferrer"
+        >{{ s.cta_label }} →</a>
+      {%- endif -%}
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="rw-lookbook__grid">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign h = 260
+            case block.settings.height
+              when 'short'
+                assign h = 200
+              when 'medium'
+                assign h = 260
+              when 'tall'
+                assign h = 400
+              when 'hero'
+                assign h = 520
+            endcase
+          -%}
+          <div
+            class="rw-lookbook__tile"
+            style="height: {{ h }}px;"
+            {{ block.shopify_attributes }}
+          >
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 600
+                | image_tag:
+                  loading: 'lazy',
+                  class: 'rw-lookbook__img',
+                  alt: block.settings.caption | default: ''
+              }}
+            {%- else -%}
+              <div class="rw-lookbook__ph"></div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-lookbook {
+    padding: 96px 24px;
+  }
+  .rw-lookbook__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-lookbook__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .rw-lookbook__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground), 0.62);
+    margin-bottom: 10px;
+  }
+  .rw-lookbook__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(40px, 6vw, 84px);
+    line-height: 0.86;
+    margin: 0;
+  }
+  .rw-lookbook__grid {
+    column-count: 4;
+    column-gap: 16px;
+  }
+  .rw-lookbook__tile {
+    break-inside: avoid;
+    margin-bottom: 16px;
+    overflow: hidden;
+    display: block;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rw-lookbook__tile:hover {
+    transform: translateY(-4px);
+  }
+  .rw-lookbook__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rw-lookbook__tile:hover .rw-lookbook__img {
+    transform: scale(1.03);
+  }
+  .rw-lookbook__ph {
+    width: 100%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(135deg, rgba(var(--color-foreground), 0.06) 0 14px, transparent 14px 28px),
+      rgb(var(--color-background));
+    border: 1px solid rgba(var(--color-foreground), 0.18);
+  }
+  @media (max-width: 989px) {
+    .rw-lookbook__grid { column-count: 2; }
+  }
+  @media (max-width: 749px) {
+    .rw-lookbook { padding: 64px 16px; }
+    .rw-lookbook__grid { column-count: 2; column-gap: 10px; }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Lookbook",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// FROM INSTAGRAM"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "@reborn.wxrldwide"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_label",
+      "label": "CTA label",
+      "default": "Follow us"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tile",
+      "name": "Photo tile",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "height",
+          "label": "Tile height",
+          "options": [
+            { "value": "short",  "label": "Short (200px)" },
+            { "value": "medium", "label": "Medium (260px)" },
+            { "value": "tall",   "label": "Tall (400px)" },
+            { "value": "hero",   "label": "Hero (520px)" }
+          ],
+          "default": "medium"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Alt text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Lookbook",
+      "blocks": [
+        { "type": "tile", "settings": { "height": "hero" } },
+        { "type": "tile", "settings": { "height": "short" } },
+        { "type": "tile", "settings": { "height": "medium" } },
+        { "type": "tile", "settings": { "height": "short" } },
+        { "type": "tile", "settings": { "height": "medium" } },
+        { "type": "tile", "settings": { "height": "tall" } },
+        { "type": "tile", "settings": { "height": "short" } },
+        { "type": "tile", "settings": { "height": "hero" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

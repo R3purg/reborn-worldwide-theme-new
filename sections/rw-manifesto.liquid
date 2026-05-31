@@ -1,0 +1,249 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-manifesto color-{{ s.color_scheme }}" id="about">
+  <div class="rw-manifesto__inner">
+
+    <div class="rw-manifesto__grid">
+      <div class="rw-manifesto__content">
+        <div class="rw-manifesto__kicker">{{ s.kicker }}</div>
+        <div class="rw-manifesto__heading">{{ s.heading }}</div>
+        <div class="rw-manifesto__body">{{ s.body }}</div>
+        <div class="rw-manifesto__btns">
+          {%- if s.cta_primary_label != blank -%}
+            <a href="{{ s.cta_primary_url | default: '/pages/about' }}" class="rw-btn rw-btn--md rw-btn--solid">
+              {{ s.cta_primary_label }} →
+            </a>
+          {%- endif -%}
+          {%- if s.cta_secondary_label != blank -%}
+            <a href="{{ s.cta_secondary_url | default: '#' }}" class="rw-btn rw-btn--md rw-btn--ghost">
+              {{ s.cta_secondary_label }}
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="rw-manifesto__media">
+        {%- if s.image != blank -%}
+          {{
+            s.image
+            | image_url: width: 800
+            | image_tag:
+              loading: 'lazy',
+              class: 'rw-manifesto__img',
+              alt: s.image.alt | default: 'Reborn Worldwide studio'
+          }}
+        {%- else -%}
+          <div class="rw-manifesto__ph"></div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="rw-manifesto__stats">
+        {%- for block in section.blocks -%}
+          <div class="rw-manifesto__stat" {{ block.shopify_attributes }}>
+            <div class="rw-manifesto__stat-num">{{ block.settings.number }}</div>
+            <div class="rw-manifesto__stat-lbl">{{ block.settings.label }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-manifesto {
+    padding: 96px 24px;
+    border-top: 1px solid rgb(var(--color-foreground));
+    border-bottom: 1px solid rgb(var(--color-foreground));
+  }
+  .rw-manifesto__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-manifesto__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    align-items: start;
+  }
+  .rw-manifesto__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .rw-manifesto__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(36px, 5vw, 72px);
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+  .rw-manifesto__heading p { margin: 0; }
+  .rw-manifesto__body {
+    font-size: 18px;
+    line-height: 1.55;
+    margin-top: 28px;
+    max-width: 560px;
+    font-weight: 500;
+  }
+  .rw-manifesto__body p { margin: 0; }
+  .rw-manifesto__btns {
+    display: flex;
+    gap: 10px;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .rw-manifesto__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+  }
+  .rw-manifesto__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-manifesto__ph {
+    width: 100%;
+    height: 100%;
+    background:
+      repeating-linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0 14px, transparent 14px 28px),
+      rgb(var(--color-button));
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  .rw-manifesto__stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    border-top: 1px solid rgb(var(--color-foreground));
+    padding-top: 32px;
+    margin-top: 64px;
+  }
+  .rw-manifesto__stat-num {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.9;
+  }
+  .rw-manifesto__stat-lbl {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    margin-top: 8px;
+  }
+  @media (max-width: 749px) {
+    .rw-manifesto { padding: 64px 16px; }
+    .rw-manifesto__grid { grid-template-columns: 1fr; gap: 32px; }
+    .rw-manifesto__stats { grid-template-columns: repeat(2, 1fr); }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Manifesto",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// MANIFESTO — 002"
+    },
+    {
+      "type": "richtext",
+      "id": "heading",
+      "label": "Heading",
+      "default": "<p>We make clothes for people who were told to sit down. We don't sit down.</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "body",
+      "label": "Body text",
+      "default": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Studio image"
+    },
+    {
+      "type": "header",
+      "content": "CTAs"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary CTA label",
+      "default": "Read the full story"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Primary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary CTA label",
+      "default": "Studio visits"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "04"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "chapters / year"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Manifesto",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "04", "label": "chapters / year" } },
+        { "type": "stat", "settings": { "number": "250", "label": "pieces / chapter" } },
+        { "type": "stat", "settings": { "number": "00", "label": "restocks. ever." } },
+        { "type": "stat", "settings": { "number": "12", "label": "cities shipped" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
