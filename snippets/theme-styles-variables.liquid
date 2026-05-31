@@ -685,4 +685,14 @@
     --cart-secondary-font-style: var(--font-{{ settings.cart_price_font }}--style);
     --cart-secondary-font-weight: var(--font-{{ settings.cart_price_font }}--weight);
   }
+
+  /* ── RW font overrides: Anton for headings, JetBrains Mono for accent ── */
+  :root {
+    --font-heading--family: 'Anton', 'Oswald', 'Bebas Neue', sans-serif;
+    --font-heading--style: normal;
+    --font-heading--weight: 400;
+    --font-accent--family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+    --font-accent--style: normal;
+    --font-accent--weight: 400;
+  }
 {% endstyle %}

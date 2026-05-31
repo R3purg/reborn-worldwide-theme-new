@@ -87,6 +87,10 @@
         --font-h5--color: var(--color-foreground-heading);
         --font-h6--color: var(--color-foreground-heading);
 
+        /* RW compatibility: --color-button / --color-button-label aliases */
+        --color-button: {{ scheme.settings.primary_button_background.rgb }};
+        --color-button-label: {{ scheme.settings.primary_button_text.rgb }};
+
         /* Shadows */
         {% if settings.drawer_drop_shadow %}
           --shadow-drawer: 0px 4px 20px rgb(var(--color-shadow-rgb) / var(--opacity-15));
