@@ -274,6 +274,17 @@
             "padding-inline-end": 0
           },
           "blocks": {}
+        },
+        "divider_FmMRL8": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
         }
       },
       "block_order": [
@@ -289,7 +300,8 @@
         "div_5",
         "txt_6",
         "div_6",
-        "txt_7"
+        "txt_7",
+        "divider_FmMRL8"
       ],
       "settings": {
         "movement_direction": "reverse",
