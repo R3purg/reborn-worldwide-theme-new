@@ -12,20 +12,20 @@
     "rw_hero_HmBRt6": {
       "type": "rw-hero",
       "settings": {
-        "meta_line": "VOL.04 — SS26 // FROM THE STREETS OF EASTERN EUROPE",
-        "edition_date": "SS26",
+        "meta_line": "VOL.01 - SS01 // FROM THE STREETS OF EASTERN EUROPE",
+        "edition_date": "SS01",
         "image": "shopify://shop_images/hero-1.png",
         "layout": "split",
         "show_stickers": true,
         "sticker_1_text": "LIMITED AS F*CK",
-        "sticker_1_sub": "ED. 250 / DROP",
-        "sticker_2_text": "// SS26 LOOKBOOK",
+        "sticker_1_sub": "ED. 001 / DROP",
+        "sticker_2_text": "// SS01 LOOKBOOK",
         "countdown_date": "2026-07-01T00:00:00+03:00",
-        "countdown_label": "NEXT DROP // CHAPTER 04 — BIKINI BLING",
+        "countdown_label": "NEXT DROP // SEASON 02 - ?",
         "countdown_time_label": "WED 00:00 EET",
         "manifesto_quote": "Built for the kid that never asked permission. Four chapters a year. Two hundred fifty pieces each. No restocks.",
-        "cta_primary_label": "Shop chapter 04",
-        "cta_primary_url": "shopify://collections",
+        "cta_primary_label": "Shop chapter 01",
+        "cta_primary_url": "shopify://collections/chapter-01",
         "cta_secondary_label": "Read the lookbook",
         "cta_secondary_url": "",
         "color_scheme": "scheme-1"
@@ -109,7 +109,7 @@
         "txt_3": {
           "type": "text",
           "settings": {
-            "text": "<h2>250 PIECES PER CHAPTER</h2>",
+            "text": "<h2>8 PIECES PER CHAPTER</h2>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -217,7 +217,7 @@
         "txt_6": {
           "type": "text",
           "settings": {
-            "text": "<h2>SS26 // VOL.04</h2>",
+            "text": "<h2>SS01 // VOL.01</h2>",
             "width": "fit-content",
             "max_width": "normal",
             "alignment": "left",
@@ -370,9 +370,9 @@
         "ch_04"
       ],
       "settings": {
-        "kicker": "// SS26 — FOUR CHAPTERS",
+        "kicker": "// SS01 - FOUR CHAPTERS",
         "heading": "The lookbook",
-        "sub_copy": "Each chapter ships once and disappears. Read them like a comic — in order, or in the order you find them.",
+        "sub_copy": "Each chapter ships once and disappears. Read them like a comic - in order, or in the order you find them.",
         "auto_rotate": true,
         "color_scheme": "scheme-4"
       }
@@ -382,9 +382,9 @@
       "settings": {
         "kicker": "// CURRENTLY IN STOCK",
         "heading": "The shop floor",
-        "collection": "",
-        "max_products": 8,
-        "cta_label": "View all 47 pieces",
+        "collection": "chapter-01",
+        "max_products": 12,
+        "cta_label": "View all pieces",
         "cta_url": "/collections/all",
         "color_scheme": "scheme-1"
       }
@@ -395,15 +395,15 @@
         "stat_01": {
           "type": "stat",
           "settings": {
-            "number": "04",
+            "number": "16",
             "label": "chapters / year"
           }
         },
         "stat_02": {
           "type": "stat",
           "settings": {
-            "number": "250",
-            "label": "pieces / chapter"
+            "number": "1",
+            "label": "piece / chapter"
           }
         },
         "stat_03": {
@@ -428,9 +428,9 @@
         "stat_04"
       ],
       "settings": {
-        "kicker": "// MANIFESTO — 002",
+        "kicker": "// MANIFESTO - 001",
         "heading": "<p>We make clothes for people who were told to sit down. We don’t sit down.</p>",
-        "body": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it’s gone, it’s gone. That’s the whole pitch.</p>",
+        "body": "<p>Reborn is a five-person studio working out of a garage in Lithuania. Every piece is small-batch, screen-printed by hand and never restocked. When it’s gone, it’s gone. That’s the whole pitch.</p>",
         "image": "shopify://shop_images/activewear-products-4.jpg",
         "cta_primary_label": "Read the full story",
         "cta_primary_url": "",
@@ -541,7 +541,7 @@
         "kicker": "// SUBSCRIBE FOR NOTHING",
         "heading_line_1": "Drops first.",
         "heading_line_2": "Spam never.",
-        "subtext": "One email per chapter — 24 hours before the public drop. You'll know when. Nobody else will.",
+        "subtext": "One email per chapter - 24 hours before the public drop. You'll know when. Nobody else will.",
         "placeholder": "you@somewhere.cool",
         "submit_label": "Get on the list",
         "success_message": "YOU'RE IN. SEE YOU AT THE NEXT DROP.",
