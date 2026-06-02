@@ -2,6 +2,7 @@
   assign s = section.settings
 %}
 
+{% paginate collection.products by s.products_per_page %}
 <section class="rw-col-main color-{{ s.color_scheme }}">
   <div class="rw-col-main__inner">
     {%- comment %} Sticky filter/sort bar {%- endcomment %}
@@ -69,6 +70,30 @@
         </div>
       </div>
     </div>
+
+    {%- comment %} Active filter chips {%- endcomment %}
+    {%- liquid
+      assign has_active_filters = false
+      for filter in collection.all_filters
+        if filter.active_values.size > 0
+          assign has_active_filters = true
+        endif
+      endfor
+    -%}
+    {%- if has_active_filters -%}
+      <div class="rw-col-main__chips">
+        <span class="rw-col-main__chips-label">ACTIVE:</span>
+        {%- for filter in collection.all_filters -%}
+          {%- for active_value in filter.active_values -%}
+            <a href="{{ active_value.url_to_remove }}" class="rw-col-main__chip">
+              {{ active_value.label }}
+              <svg width="10" height="10" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+            </a>
+          {%- endfor -%}
+        {%- endfor -%}
+        <a href="{{ collection.url }}" class="rw-col-main__chip-clear">Clear all</a>
+      </div>
+    {%- endif -%}
 
     {%- comment %} Product grid {%- endcomment %}
     <div class="rw-col-main__grid" style="--col-count: {{ s.columns }}">
@@ -269,9 +294,82 @@
       {%- endif -%}
     </div>
 
-    {%- comment %} Pagination can be implemented separately via template wrapping if needed. All products currently shown. {%- endcomment %}
+    {%- if paginate.pages > 1 -%}
+      <div class="rw-col-main__pagination">
+        {%- if paginate.previous -%}
+          <a href="{{ paginate.previous.url }}" class="rw-col-main__page-btn">PREV</a>
+        {%- else -%}
+          <span class="rw-col-main__page-btn rw-col-main__page-btn--disabled">PREV</span>
+        {%- endif -%}
+
+        {%- for part in paginate.parts -%}
+          {%- if part.title == '...' -%}
+            <span class="rw-col-main__page-ellipsis">&#8230;</span>
+          {%- elsif part.is_link -%}
+            <a href="{{ part.url }}" class="rw-col-main__page-btn">{{ part.title }}</a>
+          {%- else -%}
+            <span class="rw-col-main__page-btn rw-col-main__page-btn--active">{{ part.title }}</span>
+          {%- endif -%}
+        {%- endfor -%}
+
+        {%- if paginate.next -%}
+          <a href="{{ paginate.next.url }}" class="rw-col-main__page-btn">NEXT</a>
+        {%- else -%}
+          <span class="rw-col-main__page-btn rw-col-main__page-btn--disabled">NEXT</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
   </div>
 </section>
+{% endpaginate %}
+
+{% javascript %}
+  (function () {
+    document.querySelectorAll('.rw-col-main').forEach(function (section) {
+      section.addEventListener('click', function (e) {
+        /* size button: select, enable add */
+        var sizeBtn = e.target.closest('.rw-col__size-btn');
+        if (sizeBtn && !sizeBtn.disabled) {
+          var card = sizeBtn.closest('.rw-col__card');
+          card.querySelectorAll('.rw-col__size-btn').forEach(function (b) {
+            b.classList.remove('is-active');
+          });
+          sizeBtn.classList.add('is-active');
+          var addBtn = card.querySelector('.rw-col__add-btn');
+          if (addBtn) {
+            addBtn.dataset.variantId = sizeBtn.dataset.variantId;
+            addBtn.removeAttribute('disabled');
+          }
+          return;
+        }
+
+        /* add button: cart/add.js */
+        var addBtn = e.target.closest('.rw-col__add-btn');
+        if (addBtn && addBtn.dataset.variantId && !addBtn.disabled) {
+          e.preventDefault();
+          var label = addBtn.innerHTML;
+          addBtn.disabled = true;
+          addBtn.textContent = '...';
+          fetch(window.Shopify.routes.root + 'cart/add.js', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({ id: parseInt(addBtn.dataset.variantId, 10), quantity: 1 })
+          })
+            .then(function (r) { return r.json(); })
+            .then(function () {
+              addBtn.textContent = '+';
+              document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
+              setTimeout(function () { addBtn.innerHTML = label; addBtn.disabled = false; }, 1800);
+            })
+            .catch(function () {
+              addBtn.textContent = '!';
+              setTimeout(function () { addBtn.innerHTML = label; addBtn.disabled = false; }, 1800);
+            });
+        }
+      });
+    });
+  })();
+{% endjavascript %}
 
 {% stylesheet %}
   .rw-col-main {
@@ -287,7 +385,7 @@
     position: sticky;
     top: var(--header-height, 60px);
     z-index: 40;
-    background: rgb(var(--color-background));
+    background: var(--color-background);
     border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     padding: 16px 24px;
   }
@@ -351,7 +449,7 @@
     top: calc(100% + 6px);
     left: 0;
     min-width: 200px;
-    background: rgb(var(--color-background));
+    background: var(--color-background);
     border: 1px solid var(--color-foreground);
     border-radius: 4px;
     box-shadow: 4px 4px 0 var(--color-foreground);
@@ -468,7 +566,7 @@
     width: 100%;
     height: 100%;
     background: repeating-linear-gradient(135deg, rgba(var(--color-foreground-rgb), 0.06) 0 14px, transparent 14px 28px),
-      rgb(var(--color-background));
+      var(--color-background);
   }
   .rw-col__ph-svg {
     width: 100%;
@@ -483,7 +581,7 @@
     top: 12px;
     left: 12px;
     padding: 6px 10px;
-    background: rgb(var(--color-background));
+    background: var(--color-background);
     color: var(--color-foreground);
     border: 1px solid var(--color-foreground);
     font-family: var(--font-accent--family);
@@ -500,7 +598,7 @@
   }
   .rw-col__tag--sold {
     background: var(--color-foreground);
-    color: rgb(var(--color-background));
+    color: var(--color-background);
   }
 
   /* ── Quick-add panel ── */
@@ -555,7 +653,7 @@
   }
   .rw-col__size-btn.is-active {
     background: var(--color-foreground);
-    color: rgb(var(--color-background));
+    color: var(--color-background);
   }
   .rw-col__size-btn:disabled {
     opacity: 0.35;
@@ -565,7 +663,7 @@
     flex-shrink: 0;
     border: 1px solid var(--color-foreground);
     background: var(--color-foreground);
-    color: rgb(var(--color-background));
+    color: var(--color-background);
     padding: 8px 14px;
     font-family: var(--font-accent--family);
     font-size: 11px;
@@ -683,8 +781,55 @@
     margin-top: 12px;
   }
 
+  /* ── Active chips ── */
+  .rw-col-main__chips {
+    padding: 0 24px 14px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .rw-col-main__chips-label {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+  .rw-col-main__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-foreground);
+    border-radius: 999px;
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-accent--family);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .rw-col-main__chip:hover {
+    background: rgba(var(--color-foreground-rgb), 0.08);
+  }
+  .rw-col-main__chip-clear {
+    background: transparent;
+    border: 0;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    cursor: pointer;
+    padding: 0;
+  }
+
   /* ── Pagination ── */
-  /* Pagination styles — for future template wrapper implementation */
   .rw-col-main__pagination {
     display: flex;
     justify-content: center;
@@ -712,11 +857,21 @@
   }
   .rw-col-main__page-btn:hover:not(:disabled) {
     background: var(--color-foreground);
-    color: rgb(var(--color-background));
+    color: var(--color-background);
   }
   .rw-col-main__page-btn--active {
     background: var(--color-foreground);
-    color: rgb(var(--color-background));
+    color: var(--color-background);
+  }
+  .rw-col-main__page-btn--disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+  .rw-col-main__page-ellipsis {
+    font-family: var(--font-accent--family);
+    font-size: 14px;
+    color: rgba(var(--color-foreground-rgb), 0.35);
+    padding: 0 4px;
   }
 
   /* ── Responsive ── */

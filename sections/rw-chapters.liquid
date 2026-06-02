@@ -142,15 +142,15 @@
   .rw-chapters__tabs {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    border: 1px solid rgba(var(--color-background), 0.18);
+    border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
   }
   .rw-chapters__tab {
     padding: 16px 18px;
     text-align: left;
     border: 0;
-    border-right: 1px solid rgba(var(--color-background), 0.18);
+    border-right: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     background: transparent;
-    color: rgb(var(--color-background));
+    color: var(--color-background);
     cursor: pointer;
     transition: background 0.3s ease, color 0.3s ease;
     display: flex;
@@ -205,7 +205,7 @@
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: rgb(var(--color-background));
+    color: var(--color-background);
   }
   .rw-chapters__card-dot {
     display: inline-block;
@@ -224,7 +224,7 @@
     text-transform: uppercase;
     font-size: clamp(56px, 8vw, 128px);
     line-height: 0.85;
-    color: rgb(var(--color-background));
+    color: var(--color-background);
     max-width: 90%;
   }
   /* Card body */
@@ -248,7 +248,7 @@
     line-height: 1.4;
     margin: 0;
     font-weight: 400;
-    color: rgb(var(--color-background));
+    color: var(--color-background);
     text-wrap: pretty;
   }
   .rw-chapters__card-footer {
@@ -275,8 +275,8 @@
   /* Ghost button override for dark card background */
   .rw-btn--dark-ghost {
     background: transparent;
-    color: rgb(var(--color-background));
-    border-color: rgba(var(--color-background), 0.5);
+    color: var(--color-background);
+    border-color: rgba(var(--color-foreground-rgb), 0.5);
   }
   /* Progress dots */
   .rw-chapters__dots {
@@ -288,7 +288,7 @@
   .rw-chapters__dot {
     height: 3px;
     width: 18px;
-    background: rgba(var(--color-background), 0.25);
+    background: rgba(var(--color-foreground-rgb), 0.25);
     transition: width 0.4s ease, background 0.4s ease;
     display: block;
   }
@@ -300,12 +300,12 @@
     }
     .rw-chapters__tab:nth-child(2) { border-right: 0; }
     .rw-chapters__tab:nth-child(3) {
-      border-right: 1px solid rgba(var(--color-background), 0.18);
-      border-top: 1px solid rgba(var(--color-background), 0.18);
+      border-right: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+      border-top: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     }
     .rw-chapters__tab:nth-child(4) {
       border-right: 0;
-      border-top: 1px solid rgba(var(--color-background), 0.18);
+      border-top: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     }
     .rw-chapters__card.is-active { grid-template-columns: 1fr; }
     .rw-chapters__card-media { border-right: 1px solid rgba(255, 255, 255, 0.12); min-height: 320px; }

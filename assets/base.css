@@ -4247,7 +4247,7 @@ product-recommendations:has([data-has-recommendations='false']) {
 .header-actions .cart-bubble {
   background: rgba(var(--color-button), 1) !important;
   color: rgb(var(--color-button-text, var(--color-foreground))) !important;
-  border: 1px solid rgb(var(--color-foreground)) !important;
+  border: 1px solid var(--color-foreground) !important;
   border-radius: 999px !important;
   font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace) !important;
   font-size: 10px !important;
@@ -4272,13 +4272,13 @@ product-recommendations:has([data-has-recommendations='false']) {
   display: flex !important;
   justify-content: space-between !important;
   align-items: center !important;
-  border-bottom: 1px solid rgba(var(--color-foreground), 0.18) !important;
+  border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18) !important;
 }
 
 /* RW free-shipping progress bar */
 .rw-cart-progress {
   padding: 14px 24px;
-  border-bottom: 1px solid rgba(var(--color-foreground), 0.18);
+  border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
 }
 
 .rw-cart-progress__label {
@@ -4286,13 +4286,13 @@ product-recommendations:has([data-has-recommendations='false']) {
   font-size: 11px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(var(--color-foreground), 0.62);
+  color: rgba(var(--color-foreground-rgb), 0.62);
   margin-bottom: 8px;
 }
 
 .rw-cart-progress__track {
   height: 4px;
-  background: rgba(var(--color-foreground), 0.12);
+  background: rgba(var(--color-foreground-rgb), 0.12);
   overflow: hidden;
 }
 
@@ -4304,7 +4304,7 @@ product-recommendations:has([data-has-recommendations='false']) {
 
 /* Cart drawer dialog — border-left ink */
 .cart-drawer__dialog {
-  border-left: 1px solid rgb(var(--color-foreground)) !important;
+  border-left: 1px solid var(--color-foreground) !important;
 }
 
 /* Checkout button in drawer — full width */
@@ -4323,14 +4323,14 @@ product-recommendations:has([data-has-recommendations='false']) {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   text-align: center;
-  color: rgba(var(--color-foreground), 0.55);
+  color: rgba(var(--color-foreground-rgb), 0.55);
   margin-top: 12px;
 }
 
 /* ── Qty pill in cart line items ─────────────────────────────── */
 .cart-items .quantity {
   border-radius: 999px !important;
-  border: 1px solid rgb(var(--color-foreground)) !important;
+  border: 1px solid var(--color-foreground) !important;
   overflow: hidden;
 }
 
@@ -4343,7 +4343,7 @@ product-recommendations:has([data-has-recommendations='false']) {
   font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid rgb(var(--color-foreground));
+  border: 1px solid var(--color-foreground);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
@@ -4357,9 +4357,9 @@ product-recommendations:has([data-has-recommendations='false']) {
 .rw-btn--sm  { padding: 10px 16px; font-size: 12px; }
 .rw-btn--md  { padding: 14px 22px; font-size: 13px; }
 .rw-btn--lg  { padding: 18px 28px; font-size: 14px; }
-.rw-btn--solid  { background: rgb(var(--color-foreground)); color: rgb(var(--color-background)); }
-.rw-btn--ghost  { background: transparent; color: rgb(var(--color-foreground)); }
-.rw-btn--bone   { background: rgb(var(--color-background)); color: rgb(var(--color-foreground)); }
-.rw-btn--orange { background: rgb(var(--color-button)); color: rgb(var(--color-button-label)); border-color: rgb(var(--color-foreground)); }
+.rw-btn--solid  { background: var(--color-foreground); color: var(--color-background); }
+.rw-btn--ghost  { background: transparent; color: var(--color-foreground); }
+.rw-btn--bone   { background: var(--color-background); color: var(--color-foreground); }
+.rw-btn--orange { background: rgb(var(--color-button)); color: rgb(var(--color-button-label)); border-color: var(--color-foreground); }
 .rw-btn:hover   { transform: translateY(-2px); }
 
