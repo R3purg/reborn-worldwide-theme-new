@@ -36,7 +36,7 @@
     "rw_col_main_zPqRs2": {
       "type": "rw-main-collection",
       "settings": {
-        "columns": 4,
+        "columns": "4",
         "products_per_page": 24,
         "color_scheme": "scheme-1"
       }
