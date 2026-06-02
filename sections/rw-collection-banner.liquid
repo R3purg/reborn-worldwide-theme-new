@@ -1,0 +1,292 @@
+{% liquid
+  assign s = section.settings
+  assign col_title = s.heading_override | default: collection.title
+  assign col_desc = s.subtext | default: collection.description
+  assign product_count = collection.products_count
+%}
+
+<section class="rw-col-banner color-{{ s.color_scheme }}">
+  <div class="rw-col-banner__inner">
+    {%- if s.banner_style == 'minimal' -%}
+      {%- comment %} Minimal mode: breadcrumb + giant h1 only {%- endcomment %}
+      <div class="rw-col-banner__breadcrumb">
+        <a href="{{ routes.root_url }}">HOME</a>
+        <span>/</span>
+        <a href="{{ routes.all_products_collection_url }}">SHOP</a>
+        <span>/</span>
+        <span class="rw-col-banner__current">{{ col_title }}</span>
+      </div>
+      <h1 class="rw-col-banner__h1-minimal">{{ col_title }}</h1>
+
+    {%- else -%}
+      {%- comment %} Editorial mode: two-column grid {%- endcomment %}
+      <div class="rw-col-banner__breadcrumb">
+        <a href="{{ routes.root_url }}">HOME</a>
+        <span>/</span>
+        <a href="{{ routes.all_products_collection_url }}">SHOP</a>
+        <span>/</span>
+        <span class="rw-col-banner__current">{{ col_title }}</span>
+      </div>
+
+      <div class="rw-col-banner__grid">
+        <div class="rw-col-banner__content">
+          {%- if s.kicker != blank -%}
+            <div class="rw-col-banner__kicker">{{ s.kicker }}</div>
+          {%- endif -%}
+
+          <h1 class="rw-col-banner__h1">{{ col_title }}</h1>
+
+          {%- if col_desc != blank -%}
+            <p class="rw-col-banner__description">{{ col_desc }}</p>
+          {%- endif -%}
+
+          {%- if s.show_stats -%}
+            <div class="rw-col-banner__stats">
+              <span>{{ product_count }} PIECES</span>
+              <span>·</span>
+              <span>4 CHAPTERS</span>
+              <span>·</span>
+              <span>SHIP WORLDWIDE</span>
+            </div>
+          {%- endif -%}
+        </div>
+
+        <div class="rw-col-banner__media">
+          {%- if collection.image -%}
+            {{
+              collection.image
+              | image_url: width: 800
+              | image_tag: loading: 'eager', preload: true, class: 'rw-col-banner__img', alt: collection.image.alt
+              | default: col_title
+            }}
+          {%- else -%}
+            <div class="rw-col-banner__media-ph">
+              {{ 'lifestyle-1' | placeholder_svg_tag: 'rw-col-banner__ph-svg' }}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-col-banner {
+    padding: 56px 24px;
+  }
+  .rw-col-banner__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+
+  /* ── Breadcrumb ── */
+  .rw-col-banner__breadcrumb {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  .rw-col-banner__breadcrumb a {
+    text-decoration: none;
+    transition: opacity 0.2s ease;
+  }
+  .rw-col-banner__breadcrumb a:hover {
+    opacity: 0.7;
+  }
+  .rw-col-banner__current {
+    color: var(--color-foreground);
+  }
+
+  /* ── Minimal mode ── */
+  .rw-col-banner__h1-minimal {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(56px, 11vw, 160px);
+    line-height: 0.82;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--color-foreground);
+  }
+
+  /* ── Editorial mode ── */
+  .rw-col-banner__grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+    margin-top: 32px;
+  }
+
+  .rw-col-banner__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .rw-col-banner__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--color-button));
+    margin-bottom: 16px;
+  }
+
+  .rw-col-banner__h1 {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(52px, 8.5vw, 150px);
+    line-height: 0.82;
+    letter-spacing: -0.01em;
+    margin: 0 0 16px;
+    color: var(--color-foreground);
+  }
+
+  .rw-col-banner__description {
+    font-size: 18px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin: 0;
+    max-width: 560px;
+    color: var(--color-foreground);
+  }
+
+  .rw-col-banner__stats {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    display: flex;
+    gap: 24px;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  .rw-col-banner__media {
+    aspect-ratio: 4 / 5;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  }
+
+  .rw-col-banner__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .rw-col-banner__media-ph {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(135deg, rgba(var(--color-foreground-rgb), 0.06) 0 14px, transparent 14px 28px),
+      rgb(var(--color-background));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .rw-col-banner__ph-svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.25;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 989px) {
+    .rw-col-banner {
+      padding: 48px 24px;
+    }
+    .rw-col-banner__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .rw-col-banner__media {
+      aspect-ratio: 16 / 9;
+    }
+  }
+  @media (max-width: 749px) {
+    .rw-col-banner {
+      padding: 40px 16px;
+    }
+    .rw-col-banner__h1 {
+      font-size: clamp(40px, 8vw, 100px);
+    }
+    .rw-col-banner__description {
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Collection Banner",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "select",
+      "id": "banner_style",
+      "label": "Banner style",
+      "options": [
+        {
+          "value": "editorial",
+          "label": "Editorial (two-column)"
+        },
+        {
+          "value": "minimal",
+          "label": "Minimal (heading only)"
+        }
+      ],
+      "default": "editorial"
+    },
+    {
+      "type": "text",
+      "id": "heading_override",
+      "label": "Heading (leave blank to use collection title)"
+    },
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// COLLECTION — VOL.04"
+    },
+    {
+      "type": "textarea",
+      "id": "subtext",
+      "label": "Description (leave blank to use collection description)"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stats",
+      "label": "Show stats row",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Collection Banner"
+    }
+  ]
+}
+{% endschema %}
