@@ -1,0 +1,1557 @@
+{% liquid
+  assign s = section.settings
+  assign current_variant = product.selected_or_first_available_variant
+
+  assign chapter_num   = product.metafields.custom.chapter | default: ''
+  assign chapter_name  = product.metafields.custom.chapter_name | default: ''
+  assign chapter_color = product.metafields.custom.chapter_color | default: ''
+  assign edition_info  = product.metafields.custom.edition | default: ''
+
+  assign color_opt_idx = nil
+  assign size_opt_idx  = nil
+  for option in product.options
+    assign lo = option | downcase
+    if lo == 'color' or lo == 'colour'
+      assign color_opt_idx = forloop.index0
+    endif
+    if lo == 'size'
+      assign size_opt_idx = forloop.index0
+    endif
+  endfor
+
+  assign has_compare = false
+  for variant in product.variants
+    if variant.compare_at_price > variant.price
+      assign has_compare = true
+    endif
+  endfor
+%}
+
+<script type="application/ld+json">
+  {{ product | structured_data }}
+</script>
+
+{%- comment -%} Serialise product variants for JS {%- endcomment -%}
+<script>
+  window.RW_PRODUCT_{{ section.id | replace: '-', '_' }} = {
+    id: {{ product.id }},
+    handle: {{ product.handle | json }},
+    colorOptIdx: {{ color_opt_idx | default: -1 }},
+    sizeOptIdx: {{ size_opt_idx | default: -1 }},
+    variants: [
+      {%- for v in product.variants -%}
+        {
+          id: {{ v.id }},
+          title: {{ v.title | json }},
+          price: {{ v.price }},
+          compareAt: {{ v.compare_at_price | default: 0 }},
+          available: {{ v.available }},
+          options: {{ v.options | json }},
+          inventoryQty: {{ v.inventory_quantity | default: 0 }},
+          inventoryMgmt: {{ v.inventory_management | json }}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  };
+</script>
+
+<rw-product-page data-section="{{ section.id }}" style="display:contents">
+
+{%- comment -%} ── Breadcrumb ──────────────────────────────────────────────── {%- endcomment -%}
+<nav class="rw-pdp-bc" aria-label="{{ 'general.breadcrumbs.title' | t }}">
+  <div class="rw-pdp-bc__inner">
+    <a href="/" class="rw-pdp-bc__crumb">HOME</a>
+    <span class="rw-pdp-bc__sep">/</span>
+    <a href="/collections" class="rw-pdp-bc__crumb">COLLECTIONS</a>
+    {%- if collection != blank -%}
+      <span class="rw-pdp-bc__sep">/</span>
+      <a href="{{ collection.url }}" class="rw-pdp-bc__crumb">{{ collection.title | upcase }}</a>
+    {%- elsif chapter_num != blank -%}
+      <span class="rw-pdp-bc__sep">/</span>
+      <span class="rw-pdp-bc__crumb">CHAPTER {{ chapter_num }}{% if chapter_name != blank %} — {{ chapter_name | upcase }}{% endif %}</span>
+    {%- endif -%}
+    <span class="rw-pdp-bc__sep">/</span>
+    <span class="rw-pdp-bc__crumb rw-pdp-bc__crumb--current">{{ product.title | upcase }}</span>
+  </div>
+</nav>
+
+{%- comment -%} ── Two-column product layout ───────────────────────────────── {%- endcomment -%}
+<section class="rw-pdp-main color-{{ s.color_scheme }}" aria-label="{{ product.title | escape }}">
+  <div class="rw-pdp-main__inner">
+
+    {%- comment -%} ── Gallery ──────────────────────────────────────────────── {%- endcomment -%}
+    <div class="rw-pdp-gallery" id="rw-gallery-{{ section.id }}" data-gallery="{{ section.id }}">
+      {%- if product.media.size > 1 -%}
+        <div class="rw-pdp-gallery__thumbs" role="list">
+          {%- for media in product.media limit: 8 -%}
+            <button
+              class="rw-pdp-gallery__thumb{% if forloop.first %} is-active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+              aria-label="{{ media.alt | default: product.title | escape }}"
+              type="button"
+              role="listitem"
+            >
+              {{
+                media
+                | image_url: width: 168
+                | image_tag: loading: 'lazy', alt: media.alt | default: product.title | escape
+              }}
+            </button>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      <div class="rw-pdp-gallery__main">
+        {%- if product.media.size > 0 -%}
+          {%- for media in product.media limit: 8 -%}
+            <div
+              class="rw-pdp-gallery__slide{% if forloop.first %} is-active{% endif %}"
+              data-index="{{ forloop.index0 }}"
+            >
+              {%- if media.media_type == 'image' -%}
+                {{
+                  media
+                  | image_url: width: 1400
+                  | image_tag:
+                    loading: forloop.first | yesno: 'eager', 'lazy',
+                    preload: forloop.first,
+                    alt: media.alt | default: product.title | escape,
+                    class: 'rw-pdp-gallery__img'
+                }}
+              {%- elsif media.media_type == 'video' -%}
+                {{
+                  media
+                  | video_tag:
+                    image_size: '1400x',
+                    autoplay: false,
+                    loop: true,
+                    controls: true,
+                    muted: true
+                }}
+              {%- else -%}
+                {{ media | placeholder_svg_tag: 'rw-pdp-gallery__img' }}
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="rw-pdp-gallery__slide is-active rw-pdp-gallery__slide--ph">
+            {{ 'product-1' | placeholder_svg_tag: 'rw-pdp-gallery__img' }}
+          </div>
+        {%- endif -%}
+
+        {%- if chapter_num != blank -%}
+          <div class="rw-pdp-gallery__chapter-badge">CHAPTER {{ chapter_num }}</div>
+        {%- endif -%}
+
+        {%- if product.media.size > 1 -%}
+          <div class="rw-pdp-gallery__counter" aria-hidden="true">
+            <span class="rw-pdp-gallery__counter-cur">01</span>
+            <span> / </span>
+            <span class="rw-pdp-gallery__counter-tot">{{ product.media.size | at_least: 1 | prepend: '0' | slice: -2, 2 }}</span>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- comment -%} ── Info column ──────────────────────────────────────────── {%- endcomment -%}
+    <div class="rw-pdp-info">
+
+      {%- if chapter_num != blank -%}
+        <div class="rw-pdp-info__chapter-meta">
+          <span
+            class="rw-pdp-info__chapter-dot"
+            {%- if chapter_color != blank %} style="background: {{ chapter_color }}"{%- endif -%}
+          ></span>
+          <span>
+            CHAPTER {{ chapter_num }}
+            {%- if chapter_name != blank %} // {{ chapter_name | upcase }}{%- endif -%}
+          </span>
+        </div>
+      {%- endif -%}
+
+      <h1 class="rw-pdp-info__title">{{ product.title }}</h1>
+
+      {%- comment -%} Price row {%- endcomment -%}
+      <div class="rw-pdp-info__price-row" id="rw-price-row-{{ section.id }}">
+        <span class="rw-pdp-info__price" data-price>{{ current_variant.price | money }}</span>
+        {%- if current_variant.compare_at_price > current_variant.price -%}
+          <span class="rw-pdp-info__compare" data-compare>{{ current_variant.compare_at_price | money }}</span>
+          <span class="rw-pdp-info__save-badge" data-save-badge>
+            SAVE {{ current_variant.compare_at_price | minus: current_variant.price | money }}
+          </span>
+        {%- else -%}
+          <span class="rw-pdp-info__compare" data-compare style="display:none"></span>
+          <span class="rw-pdp-info__save-badge" data-save-badge style="display:none"></span>
+        {%- endif -%}
+      </div>
+
+      <div class="rw-pdp-info__meta">
+        <span>{{ product.vendor }}</span>
+        {%- if edition_info != blank -%}
+          <span> · {{ edition_info }}</span>
+        {%- endif -%}
+      </div>
+
+      {%- comment -%} Color option {%- endcomment -%}
+      {%- if color_opt_idx != nil -%}
+        {%- assign color_opt = product.options_with_values[color_opt_idx] -%}
+        <div class="rw-pdp-info__opt rw-pdp-info__opt--color">
+          <div class="rw-pdp-info__opt-header">
+            <span class="rw-pdp-info__opt-label">COLOR</span>
+            <span class="rw-pdp-info__opt-value" data-color-name>{{ color_opt.selected_value }}</span>
+          </div>
+          <div class="rw-pdp-info__swatches" role="radiogroup" aria-label="Color">
+            {%- for val in color_opt.values -%}
+              <button
+                class="rw-pdp-swatch{% if val.selected %} is-selected{% endif %}"
+                data-opt-idx="{{ color_opt_idx }}"
+                data-opt-val="{{ val.value | escape }}"
+                aria-label="{{ val.value | escape }}"
+                aria-pressed="{{ val.selected }}"
+                type="button"
+                {%- if val.swatch.color != blank %}
+                  style="background: rgb({{ val.swatch.color.rgb }})"
+                {%- elsif val.swatch.image != blank %}
+                  style="background: url({{ val.swatch.image | image_url: width: 84 }}) center/cover"
+                {%- else %}
+                  style="background: var(--color-foreground)"
+                {%- endif -%}
+              >
+                <span class="visually-hidden">{{ val.value }}</span>
+              </button>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} Size option {%- endcomment -%}
+      {%- if size_opt_idx != nil -%}
+        {%- assign size_opt = product.options_with_values[size_opt_idx] -%}
+        <div class="rw-pdp-info__opt rw-pdp-info__opt--size">
+          <div class="rw-pdp-info__opt-header">
+            <span class="rw-pdp-info__opt-label">SIZE</span>
+            <a href="{{ s.size_guide_url | default: '#' }}" class="rw-pdp-info__size-guide">Size guide</a>
+          </div>
+          <div class="rw-pdp-info__size-grid" role="radiogroup" aria-label="Size">
+            {%- for val in size_opt.values -%}
+              {%- liquid
+                assign val_available = false
+                for v in product.variants
+                  if v.options contains val.value
+                    if v.available
+                      assign val_available = true
+                    endif
+                  endif
+                endfor
+              -%}
+              <button
+                class="rw-pdp-size{% if val.selected %} is-selected{% endif %}{% unless val_available %} is-sold-out{% endunless %}"
+                data-opt-idx="{{ size_opt_idx }}"
+                data-opt-val="{{ val.value | escape }}"
+                aria-label="{{ val.value | escape }}{% unless val_available %} — sold out{% endunless %}"
+                aria-pressed="{{ val.selected }}"
+                {% unless val_available %}aria-disabled="true"{% endunless %}
+                type="button"
+              >{{ val.value }}</button>
+            {%- endfor -%}
+          </div>
+          <div class="rw-pdp-info__low-stock" data-low-stock aria-live="polite"></div>
+        </div>
+      {%- endif -%}
+
+      {%- comment -%} For products with no structured options (single default variant) {%- endcomment -%}
+      {%- if color_opt_idx == nil and size_opt_idx == nil and product.has_only_default_variant == false -%}
+        {%- for opt in product.options_with_values -%}
+          <div class="rw-pdp-info__opt">
+            <div class="rw-pdp-info__opt-header">
+              <span class="rw-pdp-info__opt-label">{{ opt.name | upcase }}</span>
+            </div>
+            <div class="rw-pdp-info__size-grid" role="radiogroup" aria-label="{{ opt.name }}">
+              {%- for val in opt.values -%}
+                <button
+                  class="rw-pdp-size{% if val.selected %} is-selected{% endif %}"
+                  data-opt-idx="{{ forloop.parentloop.index0 }}"
+                  data-opt-val="{{ val.value | escape }}"
+                  type="button"
+                >{{ val.value }}</button>
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+
+      {%- comment -%} Qty + Add to cart {%- endcomment -%}
+      {%- form 'product', product, id: 'rw-pdp-form-' | append: section.id, class: 'rw-pdp-form', novalidate: 'novalidate' -%}
+        <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+        <input type="hidden" name="quantity" value="1" data-quantity-input>
+
+        <div class="rw-pdp-cta" id="rw-pdp-cta-{{ section.id }}">
+          <div class="rw-pdp-qty" aria-label="{{ 'products.product.quantity.label' | t }}">
+            <button type="button" class="rw-pdp-qty__btn" data-qty-minus aria-label="{{ 'products.product.quantity.decrease' | t }}">−</button>
+            <span class="rw-pdp-qty__val" data-qty-display aria-live="polite">01</span>
+            <button type="button" class="rw-pdp-qty__btn" data-qty-plus aria-label="{{ 'products.product.quantity.increase' | t }}">+</button>
+          </div>
+
+          <button
+            type="submit"
+            name="add"
+            class="rw-pdp-add-btn"
+            data-add-btn
+            {% if current_variant.available == false %}disabled{% endif %}
+          >
+            <span data-add-btn-label>
+              {%- if current_variant.available -%}
+                {{- 'products.product.add_to_cart' | t }} — {{ current_variant.price | money -}}
+              {%- else -%}
+                {{- 'products.product.sold_out' | t -}}
+              {%- endif -%}
+            </span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </button>
+        </div>
+
+        {%- if s.show_buy_now -%}
+          <button
+            type="submit"
+            name="checkout"
+            class="rw-pdp-buy-now-btn"
+          >
+            {{ 'products.product.buy_it_now' | t | default: 'Buy it now' }}
+          </button>
+        {%- endif -%}
+      {%- endform -%}
+
+      {%- comment -%} Trust row {%- endcomment -%}
+      <div class="rw-pdp-trust" role="list">
+        {%- assign trust_items = s.trust_shipping | append: '|' | append: s.trust_returns | append: '|' | append: s.trust_made_in -%}
+        {%- assign trust_labels = 'FREE SHIP|14-DAY|HAND-MADE' | split: '|' -%}
+        {%- assign trust_values = trust_items | split: '|' -%}
+        <div class="rw-pdp-trust__item" role="listitem">
+          <span class="rw-pdp-trust__label">FREE SHIP</span>
+          <span class="rw-pdp-trust__value">{{ s.trust_shipping }}</span>
+        </div>
+        <div class="rw-pdp-trust__item" role="listitem">
+          <span class="rw-pdp-trust__label">{{ s.trust_returns_label | default: '14-DAY' }}</span>
+          <span class="rw-pdp-trust__value">{{ s.trust_returns }}</span>
+        </div>
+        <div class="rw-pdp-trust__item" role="listitem">
+          <span class="rw-pdp-trust__label">{{ s.trust_made_in_label | default: 'HAND-MADE' }}</span>
+          <span class="rw-pdp-trust__value">{{ s.trust_made_in }}</span>
+        </div>
+      </div>
+
+      {%- comment -%} Accordions {%- endcomment -%}
+      <div class="rw-pdp-accordions">
+        {%- if product.description != blank -%}
+          <details class="rw-pdp-acc" open>
+            <summary class="rw-pdp-acc__header">
+              <span class="rw-pdp-acc__title">// DESCRIPTION</span>
+              <svg class="rw-pdp-acc__icon" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <div class="rw-pdp-acc__body">
+              <div class="rw-pdp-acc__content rte">{{ product.description }}</div>
+            </div>
+          </details>
+        {%- endif -%}
+
+        {%- comment -%} Details & Fit — via metafield or section setting {%- endcomment -%}
+        {%- assign details_content = product.metafields.custom.details_and_fit | default: s.details_and_fit -%}
+        {%- if details_content != blank -%}
+          <details class="rw-pdp-acc">
+            <summary class="rw-pdp-acc__header">
+              <span class="rw-pdp-acc__title">// DETAILS &amp; FIT</span>
+              <svg class="rw-pdp-acc__icon" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            </summary>
+            <div class="rw-pdp-acc__body">
+              <div class="rw-pdp-acc__content rte">{{ details_content }}</div>
+            </div>
+          </details>
+        {%- endif -%}
+
+        <details class="rw-pdp-acc">
+          <summary class="rw-pdp-acc__header">
+            <span class="rw-pdp-acc__title">// SHIPPING &amp; RETURNS</span>
+            <svg class="rw-pdp-acc__icon" width="14" height="14" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          </summary>
+          <div class="rw-pdp-acc__body">
+            <div class="rw-pdp-acc__content rte">{{ s.shipping_returns_text }}</div>
+          </div>
+        </details>
+      </div>
+
+    </div>{%- comment -%} /info {%- endcomment -%}
+  </div>
+</section>
+
+{%- comment -%} ── Chapter story strip ─────────────────────────────────────── {%- endcomment -%}
+{%- if s.story_heading != blank or s.story_image != blank -%}
+  <section class="rw-pdp-story" aria-label="Chapter story">
+    <div class="rw-pdp-story__inner">
+      <div class="rw-pdp-story__media">
+        {%- if s.story_image != blank -%}
+          {{
+            s.story_image
+            | image_url: width: 900
+            | image_tag: loading: 'lazy', alt: s.story_image.alt | default: s.story_heading | escape, class: 'rw-pdp-story__img'
+          }}
+        {%- else -%}
+          <div class="rw-pdp-story__media-ph">
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="rw-pdp-story__body">
+        {%- if chapter_num != blank -%}
+          <div class="rw-pdp-story__kicker">
+            CHAPTER {{ chapter_num }}{% if chapter_name != blank %} // {{ chapter_name | upcase }}{% endif %}
+          </div>
+        {%- elsif s.story_kicker != blank -%}
+          <div class="rw-pdp-story__kicker">{{ s.story_kicker }}</div>
+        {%- endif -%}
+        {%- if s.story_heading != blank -%}
+          <p class="rw-pdp-story__heading">{{ s.story_heading }}</p>
+        {%- endif -%}
+        {%- if s.story_text != blank -%}
+          <p class="rw-pdp-story__text">{{ s.story_text }}</p>
+        {%- endif -%}
+        {%- if s.story_link_url != blank -%}
+          <a href="{{ s.story_link_url }}" class="rw-pdp-story__cta">
+            {{ s.story_link_label | default: 'Shop the chapter' }}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{%- comment -%} ── Sticky add-to-bag bar ────────────────────────────────────── {%- endcomment -%}
+{%- if s.sticky_bar -%}
+  <div
+    class="rw-pdp-sticky"
+    id="rw-sticky-{{ section.id }}"
+    aria-hidden="true"
+    data-sticky-bar="{{ section.id }}"
+  >
+    <div class="rw-pdp-sticky__inner">
+      <div class="rw-pdp-sticky__product">
+        {%- assign sticky_img = current_variant.featured_image | default: product.featured_image -%}
+        {%- if sticky_img -%}
+          {{
+            sticky_img
+            | image_url: width: 120
+            | image_tag: loading: 'lazy', alt: product.title | escape, class: 'rw-pdp-sticky__img'
+          }}
+        {%- endif -%}
+        <div class="rw-pdp-sticky__info">
+          <div class="rw-pdp-sticky__name">{{ product.title }}</div>
+          <div class="rw-pdp-sticky__meta" data-sticky-meta>{{ current_variant.price | money }}</div>
+        </div>
+      </div>
+      <div class="rw-pdp-sticky__actions">
+        {%- if size_opt_idx != nil -%}
+          {%- assign sticky_size_opt = product.options_with_values[size_opt_idx] -%}
+          <div class="rw-pdp-sticky__sizes" role="radiogroup" aria-label="Size">
+            {%- for val in sticky_size_opt.values -%}
+              {%- liquid
+                assign sv_available = false
+                for v in product.variants
+                  if v.options contains val.value
+                    if v.available
+                      assign sv_available = true
+                    endif
+                  endif
+                endfor
+              -%}
+              <button
+                class="rw-pdp-sticky__size{% if val.selected %} is-selected{% endif %}{% unless sv_available %} is-sold-out{% endunless %}"
+                data-sticky-size="{{ val.value | escape }}"
+                {% unless sv_available %}aria-disabled="true"{% endunless %}
+                type="button"
+              >{{ val.value }}</button>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+        <button class="rw-pdp-sticky__add" data-sticky-add type="button">
+          <span data-sticky-add-label>Add to bag</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% stylesheet %}
+/* ── Global page wrapper ─────────────────────────────────── */
+.rw-pdp-bc,
+.rw-pdp-main,
+.rw-pdp-story,
+.rw-pdp-sticky { box-sizing: border-box; }
+
+/* ── Breadcrumb ──────────────────────────────────────────── */
+.rw-pdp-bc {
+  padding: 20px 24px 0;
+}
+.rw-pdp-bc__inner {
+  max-width: 1440px;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.6);
+}
+.rw-pdp-bc__crumb {
+  text-decoration: none;
+  color: inherit;
+  transition: color 0.2s;
+}
+.rw-pdp-bc__crumb:hover { color: rgb(var(--color-foreground)); }
+.rw-pdp-bc__crumb--current { color: rgb(var(--color-foreground)); }
+.rw-pdp-bc__sep { opacity: 0.4; }
+
+/* ── Main two-col section ────────────────────────────────── */
+.rw-pdp-main {
+  padding: 20px 24px 0;
+}
+.rw-pdp-main__inner {
+  max-width: 1440px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* ── Gallery ─────────────────────────────────────────────── */
+.rw-pdp-gallery {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  align-items: start;
+}
+.rw-pdp-gallery--no-thumbs {
+  grid-template-columns: 1fr;
+}
+.rw-pdp-gallery__thumbs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: sticky;
+  top: 96px;
+}
+.rw-pdp-gallery__thumb {
+  display: block;
+  width: 84px;
+  aspect-ratio: 4 / 5;
+  padding: 0;
+  border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  background: rgba(var(--color-foreground-rgb), 0.04);
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.rw-pdp-gallery__thumb:hover {
+  border-color: rgba(var(--color-foreground-rgb), 0.5);
+}
+.rw-pdp-gallery__thumb.is-active {
+  border: 2px solid rgb(var(--color-foreground));
+  outline: 2px solid rgb(var(--color-background));
+  outline-offset: -4px;
+}
+.rw-pdp-gallery__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rw-pdp-gallery__main {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: rgba(var(--color-foreground-rgb), 0.04);
+  overflow: hidden;
+}
+.rw-pdp-gallery__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.rw-pdp-gallery__slide.is-active {
+  opacity: 1;
+  pointer-events: auto;
+}
+.rw-pdp-gallery__slide--ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rw-pdp-gallery__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.rw-pdp-gallery__chapter-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  padding: 6px 11px;
+  background: rgba(var(--color-button), 1);
+  color: rgb(var(--color-background));
+  border: 1px solid rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  pointer-events: none;
+  z-index: 2;
+}
+.rw-pdp-gallery__counter {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── Info column ─────────────────────────────────────────── */
+.rw-pdp-info {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 96px;
+}
+
+.rw-pdp-info__chapter-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+}
+.rw-pdp-info__chapter-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+  flex-shrink: 0;
+  background: rgba(var(--color-button), 1);
+}
+
+.rw-pdp-info__title {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  text-transform: uppercase;
+  font-size: clamp(36px, 4.4vw, 64px);
+  line-height: 0.9;
+  letter-spacing: 0.005em;
+  margin: 0;
+}
+
+/* Price row */
+.rw-pdp-info__price-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.rw-pdp-info__price {
+  font-size: 26px;
+  font-weight: 700;
+}
+.rw-pdp-info__compare {
+  font-family: var(--font-accent--family);
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  text-decoration: line-through;
+}
+.rw-pdp-info__save-badge {
+  padding: 4px 9px;
+  background: rgba(var(--color-button), 1);
+  color: rgb(var(--color-background));
+  border: 1px solid rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.rw-pdp-info__meta {
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  margin-top: 10px;
+}
+
+/* Option rows */
+.rw-pdp-info__opt {
+  margin-top: 28px;
+}
+.rw-pdp-info__opt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.rw-pdp-info__opt-label {
+  color: rgba(var(--color-foreground-rgb), 0.62);
+}
+.rw-pdp-info__opt-value { color: rgb(var(--color-foreground)); }
+.rw-pdp-info__size-guide {
+  text-decoration: underline;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Color swatches */
+.rw-pdp-info__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.rw-pdp-swatch {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  border-radius: 0;
+  cursor: pointer;
+  transition: border-color 0.2s, outline 0.2s;
+  flex-shrink: 0;
+}
+.rw-pdp-swatch.is-selected {
+  border: 2px solid rgb(var(--color-foreground));
+  outline: 2px solid rgb(var(--color-background));
+  outline-offset: -5px;
+}
+.rw-pdp-swatch:hover:not(.is-selected) {
+  border-color: rgba(var(--color-foreground-rgb), 0.5);
+}
+
+/* Size grid */
+.rw-pdp-info__size-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.rw-pdp-size {
+  padding: 14px 0;
+  border: 1px solid rgb(var(--color-foreground));
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  text-align: center;
+}
+.rw-pdp-size:hover:not(.is-selected):not(.is-sold-out) {
+  background: rgba(var(--color-foreground-rgb), 0.07);
+}
+.rw-pdp-size.is-selected {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+.rw-pdp-size.is-sold-out {
+  opacity: 0.35;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.rw-pdp-info__low-stock {
+  margin-top: 10px;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-error, #c0392b);
+  min-height: 18px;
+}
+
+/* Qty + CTA */
+.rw-pdp-form { display: contents; }
+
+.rw-pdp-cta {
+  display: flex;
+  gap: 10px;
+  margin-top: 28px;
+  align-items: center;
+}
+.rw-pdp-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgb(var(--color-foreground));
+  border-radius: 999px;
+  flex-shrink: 0;
+  height: 52px;
+}
+.rw-pdp-qty__btn {
+  width: 46px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-accent--family);
+  font-size: 18px;
+  cursor: pointer;
+  color: rgb(var(--color-foreground));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition: background 0.2s;
+}
+.rw-pdp-qty__btn:hover { background: rgba(var(--color-foreground-rgb), 0.07); }
+.rw-pdp-qty__val {
+  min-width: 32px;
+  text-align: center;
+  font-family: var(--font-accent--family);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: rgb(var(--color-foreground));
+  user-select: none;
+}
+
+.rw-pdp-add-btn {
+  flex: 1;
+  height: 52px;
+  border: 1px solid rgb(var(--color-foreground));
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  font-family: var(--font-accent--family);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: opacity 0.2s;
+}
+.rw-pdp-add-btn:disabled,
+.rw-pdp-add-btn[data-unavailable] {
+  background: rgba(var(--color-foreground-rgb), 0.12);
+  color: rgba(var(--color-foreground-rgb), 0.45);
+  cursor: not-allowed;
+}
+
+.rw-pdp-buy-now-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgb(var(--color-foreground));
+  background: rgba(var(--color-button), 1);
+  color: rgb(var(--color-background));
+  font-family: var(--font-accent--family);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.rw-pdp-buy-now-btn:hover { opacity: 0.88; }
+
+/* Trust row */
+.rw-pdp-trust {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 28px;
+  border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+}
+.rw-pdp-trust__item {
+  padding: 14px;
+  border-right: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  text-align: center;
+}
+.rw-pdp-trust__item:last-child { border-right: 0; }
+.rw-pdp-trust__label {
+  display: block;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+}
+.rw-pdp-trust__value {
+  display: block;
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  margin-top: 4px;
+}
+
+/* Accordions */
+.rw-pdp-accordions { margin-top: 28px; }
+
+.rw-pdp-acc {
+  border-top: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+}
+.rw-pdp-acc:last-child {
+  border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+}
+.rw-pdp-acc__header {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  cursor: pointer;
+  user-select: none;
+}
+.rw-pdp-acc__header::-webkit-details-marker { display: none; }
+.rw-pdp-acc__title {
+  font-family: var(--font-accent--family);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgb(var(--color-foreground));
+}
+.rw-pdp-acc__icon {
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+  fill: none;
+  color: rgb(var(--color-foreground));
+}
+details[open] .rw-pdp-acc__icon { transform: rotate(45deg); }
+
+.rw-pdp-acc__body {
+  overflow: hidden;
+}
+.rw-pdp-acc__content {
+  padding-bottom: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgb(var(--color-foreground));
+}
+
+/* ── Chapter story strip ─────────────────────────────────── */
+.rw-pdp-story {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  padding: 80px 24px;
+  margin-top: 64px;
+}
+.rw-pdp-story__inner {
+  max-width: 1440px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 48px;
+  align-items: center;
+}
+.rw-pdp-story__media {
+  aspect-ratio: 4 / 5;
+  background: rgba(255,255,255,0.07);
+  overflow: hidden;
+}
+.rw-pdp-story__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.rw-pdp-story__media-ph {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.3;
+}
+.rw-pdp-story__kicker {
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--color-button), 1);
+  margin-bottom: 18px;
+}
+.rw-pdp-story__heading {
+  font-family: var(--font-heading--family);
+  font-weight: var(--font-heading--weight);
+  text-transform: uppercase;
+  font-size: clamp(30px, 4vw, 60px);
+  line-height: 0.95;
+  margin: 0;
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+.rw-pdp-story__text {
+  font-size: 17px;
+  line-height: 1.6;
+  margin-top: 24px;
+  max-width: 520px;
+  opacity: 0.82;
+}
+.rw-pdp-story__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 14px 22px;
+  border: 1px solid rgb(var(--color-background));
+  background: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.rw-pdp-story__cta:hover { opacity: 0.85; }
+
+/* ── Sticky add-to-bag bar ───────────────────────────────── */
+.rw-pdp-sticky {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  background: rgb(var(--color-background));
+  border-top: 1px solid rgb(var(--color-foreground));
+  transform: translateY(110%);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.rw-pdp-sticky.is-visible {
+  transform: translateY(0);
+}
+.rw-pdp-sticky__inner {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.rw-pdp-sticky__product {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+.rw-pdp-sticky__img {
+  width: 46px;
+  height: 56px;
+  object-fit: cover;
+  flex-shrink: 0;
+  display: block;
+}
+.rw-pdp-sticky__info { min-width: 0; }
+.rw-pdp-sticky__name {
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.rw-pdp-sticky__meta {
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  margin-top: 3px;
+}
+.rw-pdp-sticky__actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.rw-pdp-sticky__sizes {
+  display: flex;
+  gap: 6px;
+}
+.rw-pdp-sticky__size {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgb(var(--color-foreground));
+  background: transparent;
+  color: rgb(var(--color-foreground));
+  font-family: var(--font-accent--family);
+  font-size: 11px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.rw-pdp-sticky__size.is-selected {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+.rw-pdp-sticky__size.is-sold-out {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.rw-pdp-sticky__add {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid rgb(var(--color-foreground));
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+  font-family: var(--font-accent--family);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.rw-pdp-sticky__add:hover { opacity: 0.88; }
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1023px) {
+  .rw-pdp-main__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .rw-pdp-gallery {
+    grid-template-columns: 64px 1fr;
+    gap: 10px;
+  }
+  .rw-pdp-info { position: static; }
+  .rw-pdp-story__inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .rw-pdp-story__media { aspect-ratio: 16 / 9; }
+  .rw-pdp-sticky__sizes { display: none; }
+}
+
+@media (max-width: 639px) {
+  .rw-pdp-gallery {
+    grid-template-columns: 1fr;
+  }
+  .rw-pdp-gallery__thumbs {
+    flex-direction: row;
+    overflow-x: auto;
+    position: static;
+    scrollbar-width: none;
+  }
+  .rw-pdp-gallery__thumbs::-webkit-scrollbar { display: none; }
+  .rw-pdp-gallery__thumb {
+    width: 60px;
+    flex-shrink: 0;
+  }
+  .rw-pdp-info__size-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .rw-pdp-main { padding-inline: 16px; }
+  .rw-pdp-bc { padding-inline: 16px; }
+}
+{% endstylesheet %}
+
+{% javascript %}
+(function () {
+  'use strict';
+
+  class RwProductPage extends HTMLElement {
+    connectedCallback() { this.init(); }
+
+    init() {
+      const sectionId = this.dataset.section;
+      if (!sectionId) return;
+      const key = 'RW_PRODUCT_' + sectionId.replace(/-/g, '_');
+      const data = window[key];
+      if (!data) return;
+
+      this.data = data;
+      this.qty = 1;
+      this.selectedOptions = this._initialOptions(data);
+
+      this._bindGallery(sectionId);
+      this._bindOptionButtons();
+      this._bindQty(sectionId);
+      this._bindStickyBar(sectionId);
+      this._syncState(sectionId);
+    }
+
+    _initialOptions(data) {
+      const opts = [];
+      const firstVariant = data.variants[0];
+      if (firstVariant) {
+        firstVariant.options.forEach((o, i) => opts[i] = o);
+      }
+      return opts;
+    }
+
+    _bindGallery(sectionId) {
+      const gallery = document.getElementById('rw-gallery-' + sectionId);
+      if (!gallery) return;
+
+      const thumbs = gallery.querySelectorAll('.rw-pdp-gallery__thumb');
+      const slides = gallery.querySelectorAll('.rw-pdp-gallery__slide');
+      const counterCur = gallery.querySelector('.rw-pdp-gallery__counter-cur');
+
+      thumbs.forEach(thumb => {
+        thumb.addEventListener('click', () => {
+          const idx = parseInt(thumb.dataset.index, 10);
+          thumbs.forEach(t => t.classList.toggle('is-active', t === thumb));
+          slides.forEach((s, i) => s.classList.toggle('is-active', i === idx));
+          if (counterCur) counterCur.textContent = String(idx + 1).padStart(2, '0');
+        });
+      });
+    }
+
+    _bindOptionButtons() {
+      const optBtns = this.querySelectorAll('[data-opt-idx]');
+      optBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const idx = parseInt(btn.dataset.optIdx, 10);
+          const val = btn.dataset.optVal;
+          this.selectedOptions[idx] = val;
+
+          // Update active state within the same option group
+          const group = this.querySelectorAll(`[data-opt-idx="${idx}"]`);
+          group.forEach(b => {
+            b.classList.toggle('is-selected', b.dataset.optVal === val);
+            b.setAttribute('aria-pressed', b.dataset.optVal === val ? 'true' : 'false');
+          });
+
+          const sectionId = this.dataset.section;
+          this._syncState(sectionId);
+        });
+      });
+    }
+
+    _bindQty(sectionId) {
+      const form = document.getElementById('rw-pdp-form-' + sectionId);
+      if (!form) return;
+
+      const minusBtn = form.querySelector('[data-qty-minus]');
+      const plusBtn  = form.querySelector('[data-qty-plus]');
+      const display  = form.querySelector('[data-qty-display]');
+      const input    = form.querySelector('[data-quantity-input]');
+
+      const update = () => {
+        if (display) display.textContent = String(this.qty).padStart(2, '0');
+        if (input) input.value = this.qty;
+        this._updateAddBtnPrice(sectionId);
+      };
+
+      if (minusBtn) minusBtn.addEventListener('click', () => { this.qty = Math.max(1, this.qty - 1); update(); });
+      if (plusBtn)  plusBtn.addEventListener('click',  () => { this.qty += 1; update(); });
+    }
+
+    _syncState(sectionId) {
+      const variant = this._findVariant();
+      this._updateForm(sectionId, variant);
+      this._updatePrice(sectionId, variant);
+      this._updateColorName();
+      this._updateLowStock(variant);
+      this._updateAddBtnPrice(sectionId, variant);
+    }
+
+    _findVariant() {
+      const { variants } = this.data;
+      // Try exact match across all selected options
+      return variants.find(v =>
+        v.options.every((o, i) =>
+          this.selectedOptions[i] === undefined || this.selectedOptions[i] === o
+        )
+      ) || variants.find(v => v.available) || variants[0];
+    }
+
+    _updateForm(sectionId, variant) {
+      if (!variant) return;
+      const form = document.getElementById('rw-pdp-form-' + sectionId);
+      if (!form) return;
+      const idInput = form.querySelector('[data-variant-id]');
+      if (idInput) idInput.value = variant.id;
+
+      const addBtn = form.querySelector('[data-add-btn]');
+      if (addBtn) {
+        addBtn.disabled = !variant.available;
+        if (!variant.available) {
+          addBtn.setAttribute('data-unavailable', '');
+        } else {
+          addBtn.removeAttribute('data-unavailable');
+        }
+      }
+
+      // Update URL
+      const url = new URL(window.location);
+      url.searchParams.set('variant', variant.id);
+      window.history.replaceState({}, '', url.toString());
+    }
+
+    _updatePrice(sectionId, variant) {
+      if (!variant) return;
+      const row = document.getElementById('rw-price-row-' + sectionId);
+      if (!row) return;
+
+      const priceEl   = row.querySelector('[data-price]');
+      const compareEl = row.querySelector('[data-compare]');
+      const saveEl    = row.querySelector('[data-save-badge]');
+
+      const fmt = cents => (cents / 100).toLocaleString(undefined, { style: 'currency', currency: window.Shopify?.currency?.active || 'EUR', minimumFractionDigits: 2 });
+
+      if (priceEl) priceEl.textContent = fmt(variant.price);
+
+      if (compareEl && saveEl) {
+        if (variant.compareAt && variant.compareAt > variant.price) {
+          compareEl.textContent = fmt(variant.compareAt);
+          saveEl.textContent    = 'SAVE ' + fmt(variant.compareAt - variant.price);
+          compareEl.style.display = '';
+          saveEl.style.display    = '';
+        } else {
+          compareEl.style.display = 'none';
+          saveEl.style.display    = 'none';
+        }
+      }
+    }
+
+    _updateColorName() {
+      const colorNameEl = this.querySelector('[data-color-name]');
+      if (!colorNameEl) return;
+      const idx = this.data.colorOptIdx;
+      if (idx < 0) return;
+      const val = this.selectedOptions[idx];
+      if (val) colorNameEl.textContent = val;
+    }
+
+    _updateLowStock(variant) {
+      const el = this.querySelector('[data-low-stock]');
+      if (!el || !variant) return;
+      if (variant.inventoryMgmt && variant.inventoryQty > 0 && variant.inventoryQty <= 6) {
+        el.textContent = '// ONLY ' + variant.inventoryQty + ' LEFT IN ' + (this.selectedOptions[this.data.sizeOptIdx] || '');
+      } else {
+        el.textContent = '';
+      }
+    }
+
+    _updateAddBtnPrice(sectionId, variant) {
+      variant = variant || this._findVariant();
+      if (!variant) return;
+      const form = document.getElementById('rw-pdp-form-' + sectionId);
+      if (!form) return;
+      const label = form.querySelector('[data-add-btn-label]');
+      if (!label) return;
+      if (!variant.available) {
+        label.textContent = 'Sold Out';
+        return;
+      }
+      const fmt = cents => (cents / 100).toLocaleString(undefined, { style: 'currency', currency: window.Shopify?.currency?.active || 'EUR', minimumFractionDigits: 2 });
+      label.innerHTML = 'Add to bag — ' + fmt(variant.price * this.qty)
+        + ' <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>';
+    }
+
+    _bindStickyBar(sectionId) {
+      const cta = document.getElementById('rw-pdp-cta-' + sectionId);
+      const bar = document.getElementById('rw-sticky-' + sectionId);
+      if (!cta || !bar) return;
+
+      const io = new IntersectionObserver(
+        ([entry]) => {
+          const visible = !entry.isIntersecting;
+          bar.classList.toggle('is-visible', visible);
+          bar.setAttribute('aria-hidden', String(!visible));
+        },
+        { rootMargin: '-80px 0px 0px 0px' }
+      );
+      io.observe(cta);
+
+      // Sticky size buttons mirror main size selection
+      const stickySizes = bar.querySelectorAll('[data-sticky-size]');
+      const stickyAdd   = bar.querySelector('[data-sticky-add]');
+
+      stickySizes.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const val = btn.dataset.stickySize;
+          const idx = this.data.sizeOptIdx;
+          if (idx < 0) return;
+
+          this.selectedOptions[idx] = val;
+          stickySizes.forEach(b => b.classList.toggle('is-selected', b.dataset.stickySize === val));
+
+          // Mirror on main size grid
+          const mainSizes = this.querySelectorAll(`[data-opt-idx="${idx}"]`);
+          mainSizes.forEach(b => {
+            b.classList.toggle('is-selected', b.dataset.optVal === val);
+            b.setAttribute('aria-pressed', b.dataset.optVal === val ? 'true' : 'false');
+          });
+
+          this._syncState(sectionId);
+        });
+      });
+
+      if (stickyAdd) {
+        stickyAdd.addEventListener('click', () => {
+          const form = document.getElementById('rw-pdp-form-' + sectionId);
+          if (form) form.requestSubmit();
+          bar.classList.remove('is-visible');
+          bar.setAttribute('aria-hidden', 'true');
+        });
+      }
+    }
+  }
+
+  customElements.define('rw-product-page', RwProductPage);
+})();
+{% endjavascript %}
+
+</rw-product-page>
+
+{% schema %}
+{
+  "name": "RW Product Page",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "sticky_bar",
+      "label": "Show sticky add-to-bag bar",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_buy_now",
+      "label": "Show Buy it now button",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "size_guide_url",
+      "label": "Size guide URL"
+    },
+    {
+      "type": "header",
+      "content": "Trust row"
+    },
+    {
+      "type": "text",
+      "id": "trust_shipping",
+      "label": "Shipping value",
+      "default": "over €120"
+    },
+    {
+      "type": "text",
+      "id": "trust_returns_label",
+      "label": "Returns label",
+      "default": "14-DAY"
+    },
+    {
+      "type": "text",
+      "id": "trust_returns",
+      "label": "Returns value",
+      "default": "returns"
+    },
+    {
+      "type": "text",
+      "id": "trust_made_in_label",
+      "label": "Made in label",
+      "default": "HAND-MADE"
+    },
+    {
+      "type": "text",
+      "id": "trust_made_in",
+      "label": "Made in value",
+      "default": "in Kraków"
+    },
+    {
+      "type": "header",
+      "content": "Accordions"
+    },
+    {
+      "type": "richtext",
+      "id": "details_and_fit",
+      "label": "Details & Fit (fallback if no metafield)",
+      "info": "Set per-product via custom.details_and_fit metafield. This is the global fallback."
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_returns_text",
+      "label": "Shipping & Returns text",
+      "default": "<p>Tracked worldwide shipping, free over €120. Dispatched within 48h. 14-day returns on unworn pieces. Drops don't restock, size carefully.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Chapter story strip"
+    },
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "story_kicker",
+      "label": "Story kicker (overridden by product chapter metafield)"
+    },
+    {
+      "type": "textarea",
+      "id": "story_heading",
+      "label": "Story heading"
+    },
+    {
+      "type": "textarea",
+      "id": "story_text",
+      "label": "Story body text"
+    },
+    {
+      "type": "url",
+      "id": "story_link_url",
+      "label": "Story CTA link"
+    },
+    {
+      "type": "text",
+      "id": "story_link_label",
+      "label": "Story CTA label",
+      "default": "Shop the chapter"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Product Page"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
