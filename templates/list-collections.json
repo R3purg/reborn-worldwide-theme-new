@@ -6,14 +6,15 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "rw_collections_page": {
       "type": "rw-collections-page",
       "settings": {
         "color_scheme": "scheme-1",
         "description": "Every chapter, every regular, every last piece. Eight collections, four stories, one studio. Browse by drop or by what’s left.",
-        "columns": 3,
+        "columns": 2,
         "image_ratio": "square",
         "sort_default": "alphabetical"
       }
