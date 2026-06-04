@@ -1,0 +1,244 @@
+{%- liquid
+  assign threshold_cents = section.settings.free_shipping_threshold | times: 100
+  assign cart_total = cart.total_price
+  assign remaining_cents = threshold_cents | minus: cart_total | at_least: 0
+  assign remaining = remaining_cents | money
+  assign pct = cart_total | times: 100 | divided_by: threshold_cents | at_most: 100
+  assign count = cart.item_count
+-%}
+
+<div class="section--{{ section.settings.section_width }}">
+  <div class="rw-cart-hdr" style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;">
+
+    {%- unless cart.empty? -%}
+      <nav class="rw-cart-hdr__breadcrumb" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
+        <a href="{{ routes.root_url }}" class="rw-cart-hdr__bc-link">HOME</a>
+        <span aria-hidden="true"> / </span>
+        <span aria-current="page">BAG</span>
+      </nav>
+    {%- endunless -%}
+
+    <div class="rw-cart-hdr__title-row{% if cart.empty? %} rw-cart-hdr__title-row--empty{% endif %}">
+      {%- if cart.empty? -%}
+        <h1 class="rw-cart-hdr__title rw-cart-hdr__title--empty">It&#8217;s empty in here.</h1>
+      {%- else -%}
+        <h1 class="rw-cart-hdr__title">
+          YOUR BAG<sup class="rw-cart-hdr__count">
+            {%- if count < 10 -%}0{{ count }}{%- else -%}{{ count }}{%- endif -%}
+          </sup>
+        </h1>
+        <a href="{{ routes.all_products_collection_url }}" class="rw-cart-hdr__keep-shopping">&#8592; Keep shopping</a>
+      {%- endif -%}
+    </div>
+
+    {%- if cart.empty? -%}
+      <p class="rw-cart-hdr__empty-sub">// AS EMPTY AS A MONDAY MORNING. GO FIX THAT.</p>
+    {%- elsif section.settings.show_free_shipping_bar -%}
+      <div class="rw-cart-progress rw-cart-progress--page">
+        <div class="rw-cart-progress__label">
+          {%- if remaining_cents <= 0 -%}
+            // FREE WORLDWIDE SHIPPING UNLOCKED
+          {%- else -%}
+            // {{ remaining }} TO FREE WORLDWIDE SHIPPING
+          {%- endif -%}
+        </div>
+        <div class="rw-cart-progress__track">
+          <div class="rw-cart-progress__fill" style="width: {{ pct }}%"></div>
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+
+{% stylesheet %}
+  .rw-cart-hdr {
+    padding-inline: var(--page-margin, 1.5rem);
+  }
+
+  .rw-cart-hdr__breadcrumb {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 20px;
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+
+  .rw-cart-hdr__bc-link {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .rw-cart-hdr__bc-link:hover {
+    text-decoration: underline;
+  }
+
+  .rw-cart-hdr__title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .rw-cart-hdr__title-row--empty {
+    justify-content: center;
+    margin-bottom: 16px;
+  }
+
+  .rw-cart-hdr__title {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.005em;
+    font-size: clamp(52px, 10vw, 160px);
+    line-height: 0.95;
+    margin: 0;
+  }
+
+  .rw-cart-hdr__title--empty {
+    font-size: clamp(40px, 6vw, 88px);
+    text-align: center;
+    text-transform: none;
+  }
+
+  .rw-cart-hdr__count {
+    color: rgb(var(--color-button));
+    font-size: 0.4em;
+    vertical-align: super;
+    line-height: 1;
+  }
+
+  .rw-cart-hdr__keep-shopping {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-decoration: underline;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    padding-bottom: 10px;
+    white-space: nowrap;
+  }
+
+  .rw-cart-hdr__keep-shopping:hover {
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-cart-hdr__empty-sub {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    text-align: center;
+    margin: 0 0 32px;
+  }
+
+  /* Page variant of free-ship progress bar */
+  .rw-cart-progress--page {
+    border: 1px solid rgb(var(--color-foreground));
+    padding: 18px 20px;
+    margin-bottom: 0;
+  }
+
+  .rw-cart-progress--page .rw-cart-progress__label {
+    color: rgb(var(--color-foreground));
+    margin-bottom: 10px;
+  }
+
+  .rw-cart-progress--page .rw-cart-progress__track {
+    height: 6px;
+  }
+
+  /* Hide the default _cart-title block — replaced by this section */
+  .cart-page__title {
+    display: none;
+  }
+
+  /* Style the empty-cart CTA to match the brand button system */
+  .cart-page--empty .cart-items__empty-button {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid rgb(var(--color-foreground));
+    border-radius: 999px;
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+    padding: 18px 28px;
+    font-size: 14px;
+    transition: transform 0.2s ease;
+  }
+
+  .cart-page--empty .cart-items__empty-button:hover {
+    transform: translateY(-2px);
+    box-shadow: none;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Cart Header",
+  "enabled_on": {
+    "templates": ["cart"]
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_free_shipping_bar",
+      "label": "Show free shipping progress bar",
+      "default": true
+    },
+    {
+      "type": "number",
+      "id": "free_shipping_threshold",
+      "label": "Free shipping threshold",
+      "info": "Amount in your main currency unit (e.g. 120 for €120)",
+      "default": 120
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Width",
+      "options": [
+        { "value": "page-width", "label": "Page" },
+        { "value": "full-width", "label": "Full" }
+      ],
+      "default": "page-width"
+    },
+    {
+      "type": "header",
+      "content": "Padding"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cart Header"
+    }
+  ]
+}
+{% endschema %}

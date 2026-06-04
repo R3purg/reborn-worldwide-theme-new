@@ -32,6 +32,15 @@
 >
   <div class="{{ cart_summary_inner_class }}">
     {% render 'cart-summary', accelerated_checkout_buttons_layout: 'vertical', section_id: section.id %}
+
+    {%- unless cart.empty? -%}
+      <div class="rw-cart-urgency">
+        <span class="rw-cart-urgency__dot" aria-hidden="true"></span>
+        <p class="rw-cart-urgency__text">
+          <strong>No restocks.</strong> These pieces are part of limited chapters. Your bag isn&#8217;t a reservation — check out before someone else does.
+        </p>
+      </div>
+    {%- endunless -%}
   </div>
 </div>
 
@@ -101,6 +110,37 @@
   /* If extend is off, apply the border radius to the inner summary container */
   .cart-summary__inner.has-border-radius {
     border-radius: var(--border-radius);
+  }
+
+  .rw-cart-urgency {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid rgb(var(--color-foreground));
+    padding: 16px 18px;
+    width: 100%;
+  }
+
+  .rw-cart-urgency__dot {
+    flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgb(var(--color-button));
+    margin-top: 4px;
+  }
+
+  .rw-cart-urgency__text {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    line-height: 1.7;
+    margin: 0;
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-cart-urgency__text strong {
+    font-weight: 600;
   }
 
   @media screen and (max-width: 749px) {

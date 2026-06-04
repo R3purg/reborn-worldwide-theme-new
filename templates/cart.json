@@ -8,6 +8,16 @@
  * ------------------------------------------------------------
  */{
   "sections": {
+    "cart-header": {
+      "type": "cart-header",
+      "settings": {
+        "show_free_shipping_bar": true,
+        "free_shipping_threshold": 120,
+        "section_width": "page-width",
+        "padding_top": 40,
+        "padding_bottom": 0
+      }
+    },
     "cart-section": {
       "type": "main-cart",
       "blocks": {
@@ -15,8 +25,8 @@
           "type": "_cart-title",
           "static": true,
           "settings": {
-            "title": "Cart",
-            "show_count": true,
+            "title": "",
+            "show_count": false,
             "type_preset": "h4",
             "alignment": "left",
             "padding-block-start": 0,
@@ -59,7 +69,7 @@
       "settings": {
         "section_width": "page-width",
         "color_scheme": "",
-        "padding-block-start": 24,
+        "padding-block-start": 0,
         "padding-block-end": 0
       }
     },
@@ -104,7 +114,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<h3>You may also like</h3>",
+                "text": "<h3>Add one more thing</h3>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -259,6 +269,7 @@
     }
   },
   "order": [
+    "cart-header",
     "cart-section",
     "product_list_NNFgcy"
   ]
