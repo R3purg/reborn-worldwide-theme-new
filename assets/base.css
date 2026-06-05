@@ -4338,6 +4338,221 @@ product-recommendations:has([data-has-recommendations='false']) {
   font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace) !important;
 }
 
+/* ── Cart totals: labels in mono uppercase ───────────────────── */
+.cart-totals__total-label,
+.cart-totals__original-label {
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+}
+
+.cart-totals__total-value {
+  font-weight: 700 !important;
+}
+
+/* ── Cart items: "Remove" as text link (both page & drawer) ─── */
+.cart-items__remove .svg-wrapper,
+.cart-items__remove svg {
+  display: none !important;
+}
+
+.cart-items__remove .visually-hidden {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  clip: unset !important;
+  clip-path: unset !important;
+  overflow: visible !important;
+  white-space: normal !important;
+}
+
+.cart-items__remove {
+  background: transparent !important;
+  box-shadow: none !important;
+  width: auto !important;
+  min-width: unset !important;
+  height: auto !important;
+  padding: 0 !important;
+  text-decoration: underline !important;
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  color: rgba(var(--color-foreground-rgb), 0.62) !important;
+  border: none !important;
+}
+
+.cart-items__remove:hover {
+  color: rgb(var(--color-foreground)) !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Cart drawer: image width 80px, item font sizes ─────────── */
+.cart-drawer .cart-items__table-row {
+  grid-template-columns: 80px minmax(0, 1fr) auto !important;
+}
+
+.cart-drawer .cart-items__media-container {
+  width: 80px !important;
+}
+
+.cart-drawer .cart-items__title {
+  font-size: 13px !important;
+}
+
+/* ── Cart drawer: summary/footer — ink border-top, slight elevation ── */
+.cart-drawer .cart-drawer__summary {
+  background: rgba(var(--color-foreground-rgb), 0.04) !important;
+  border-top: 1px solid rgb(var(--color-foreground)) !important;
+}
+
+/* ── Cart page: 3-column grid (96px | details+qty | price) ─────
+   Overrides Dawn's 4-column desktop layout to match design spec  */
+@container cart-items (min-width: 720px) {
+  .cart-page .cart-items__table-row {
+    grid-template-columns: 96px minmax(0, 1fr) auto !important;
+    grid-template-areas:
+      'media details price'
+      'media quantity price'
+      'media error error' !important;
+    grid-template-rows: auto auto auto !important;
+  }
+
+  .cart-page .cart-items__quantity {
+    grid-area: quantity !important;
+    margin-top: var(--margin-xs) !important;
+  }
+
+  .cart-page .cart-items__price {
+    grid-area: price !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    min-height: unset !important;
+  }
+}
+
+/* Cart page: item title 16px bold (design spec) */
+.cart-page .cart-items__title {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+}
+
+/* Cart page: hide per-unit price from details column — shown in price column instead */
+.cart-page .cart-items__unit-price-wrapper {
+  display: none !important;
+}
+
+/* ── Column labels row (ITEM / TOTAL) ───────────────────────── */
+.rw-cart-col-labels {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr) auto;
+  gap: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgb(var(--color-foreground));
+  margin-bottom: 0;
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  width: 100%;
+}
+
+/* ── Per-unit "EA" price in right price column ───────────────── */
+.cart-items__price-ea {
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  margin-top: 6px;
+}
+
+.cart-drawer .cart-items__price-ea {
+  display: none;
+}
+
+/* ── Cart page: summary card — ink border ───────────────────── */
+.cart-page .cart-summary {
+  border: 1px solid rgb(var(--color-foreground)) !important;
+}
+
+/* ── Cart page: discount form as always-visible pill ────────── */
+.cart-page .cart-discount__summary {
+  display: none !important;
+}
+
+.cart-page .cart-discount details.details {
+  border: none !important;
+  background: transparent !important;
+}
+
+/* Force content visible — overrides UA <details>:not([open]) hiding */
+.cart-page .cart-discount .details-content {
+  display: block !important;
+  overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.cart-page .cart-discount__form {
+  display: flex !important;
+  border: 1px solid rgb(var(--color-foreground)) !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  margin-bottom: 0 !important;
+}
+
+.cart-page .cart-discount__input {
+  border: none !important;
+  background: transparent !important;
+  flex: 1 !important;
+  padding: 12px 16px !important;
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cart-page .cart-discount__button {
+  border: none !important;
+  background: rgb(var(--color-foreground)) !important;
+  color: rgb(var(--color-background)) !important;
+  padding: 14px 20px !important;
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace) !important;
+  font-size: 11px !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  min-width: unset !important;
+  height: auto !important;
+}
+
+/* Cart drawer: no discount/note form — matches design (only subtotal + checkout) */
+.cart-drawer .cart-actions {
+  display: none !important;
+}
+
+/* ── Cart summary policies — mono uppercase ─────────────────── */
+.cart-summary__policies,
+.cart-policies {
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.04em !important;
+  text-transform: uppercase !important;
+  text-align: center !important;
+  color: rgba(var(--color-foreground-rgb), 0.55) !important;
+  margin-top: 12px !important;
+}
+
 /* ── RW Button system (shared across sections) ───────────────── */
 .rw-btn {
   font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);

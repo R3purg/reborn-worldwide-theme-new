@@ -31,6 +31,9 @@
   {{ block.shopify_attributes }}
 >
   <div class="{{ cart_summary_inner_class }}">
+    {%- unless cart.empty? -%}
+      <div class="rw-cart-summary-heading">Summary</div>
+    {%- endunless -%}
     {% render 'cart-summary', accelerated_checkout_buttons_layout: 'vertical', section_id: section.id %}
 
     {%- unless cart.empty? -%}
@@ -110,6 +113,15 @@
   /* If extend is off, apply the border radius to the inner summary container */
   .cart-summary__inner.has-border-radius {
     border-radius: var(--border-radius);
+  }
+
+  .rw-cart-summary-heading {
+    font-family: var(--font-heading--family, 'Anton', 'Oswald', sans-serif);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1;
+    width: 100%;
+    margin-bottom: 4px;
   }
 
   .rw-cart-urgency {

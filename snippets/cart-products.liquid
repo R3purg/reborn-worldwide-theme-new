@@ -70,6 +70,13 @@
         class="cart-items spacing-style{% if block_settings.dividers %} cart-items--dividers{% endif %}"
         style="{%  render 'spacing-style', settings: block_settings %} --cart-items-gap:{{ block_settings.gap | append: "px" }};"
       >
+        {%- if show_labels -%}
+          <div class="rw-cart-col-labels" aria-hidden="true">
+            <span>Item</span>
+            <span></span>
+            <span>Total</span>
+          </div>
+        {%- endif -%}
         <table
           class="cart-items__table"
           role="table"
@@ -368,6 +375,7 @@
                   headers="productTotal"
                 >
                   <text-component value="{{ price | strip_html }}">{{ price }}</text-component>
+                  <div class="cart-items__price-ea">{{ item.final_price | money }}&nbsp;EA</div>
                   {%- if item.unit_price_measurement -%}
                     <div class="cart-items__price-unit cart-secondary-typography">
                       {% render 'unit-price', price: unit_price, measurement: item.unit_price_measurement %}
