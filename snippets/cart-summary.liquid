@@ -211,10 +211,7 @@
             </div>
           </details>
         {% endcapture %}
-        {% render 'accordion-custom-component',
-          children: cart_discount_accordion_children,
-          class: 'cart-discount'
-        %}
+        {% render 'accordion-custom-component', children: cart_discount_accordion_children, class: 'cart-discount' %}
       {% endif %}
     </div>
   {% endif %}
@@ -284,6 +281,10 @@
     </div>
   {% endif %}
 </div>
+
+{%- unless cart.empty? -%}
+  <div class="rw-cart-payment-methods">VISA · MC · APPLE PAY · KLARNA · BLIK</div>
+{%- endunless -%}
 
 {% stylesheet %}
   .cart-actions {
@@ -604,5 +605,20 @@
     .cart-summary--extend {
       height: 100%;
     }
+  }
+
+  .rw-cart-payment-methods {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: center;
+    color: rgb(var(--color-foreground-rgb) / var(--opacity-subdued-text));
+    width: 100%;
+    padding-block: var(--padding-sm);
+  }
+
+  .cart-drawer .rw-cart-payment-methods {
+    display: none;
   }
 {% endstylesheet %}

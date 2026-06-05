@@ -271,6 +271,13 @@
                     {%- endif -%}
                   </div>
 
+                  {%- if item.variant.inventory_management == 'shopify'
+                    and item.variant.inventory_quantity <= 6
+                    and item.variant.inventory_quantity > 0
+                  -%}
+                    <div class="rw-cart-low-stock">// ONLY {{ item.variant.inventory_quantity }} LEFT</div>
+                  {%- endif -%}
+
                   <div class="cart-items__unit-price-wrapper">
                     <div>
                       {% if item.original_price != item.final_price %}
@@ -567,7 +574,6 @@
     display: block;
   }
 
-
   .cart-items__variant {
     display: inline;
   }
@@ -630,7 +636,6 @@
     font-size: var(--font-size--sm);
     line-height: var(--line-height);
   }
-
 
   .cart-items__price-unit {
     font-size: var(--font-size--xs);
@@ -937,5 +942,14 @@
       filter: none;
       opacity: 1;
     }
+  }
+
+  .rw-cart-low-stock {
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: oklch(58% 0.18 45);
+    margin-block-start: var(--margin-3xs);
   }
 {% endstylesheet %}
