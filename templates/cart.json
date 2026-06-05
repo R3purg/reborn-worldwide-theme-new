@@ -110,48 +110,15 @@
             "padding-inline-end": 0
           },
           "blocks": {
-            "product_list_eyebrow_bfrygo": {
-              "type": "_product-list-text",
-              "name": "eyebrow",
-              "settings": {
-                "text": "// BEFORE YOU GO",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-accent--family)",
-                "font_size": "11px",
-                "line_height": "normal",
-                "letter_spacing": "0.04em",
-                "case": "uppercase",
-                "wrap": "pretty",
-                "color": "rgba(var(--color-foreground-rgb), 0.62)",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
             "product_list_text_fifeh4": {
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "Add one more thing",
+                "text": "<p>// BEFORE YOU GO</p><h2>Add one more thing</h2>",
                 "width": "fit-content",
-                "max_width": "normal",
+                "max_width": "none",
                 "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-heading--family)",
-                "font_size": "",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "uppercase",
-                "wrap": "pretty",
-                "color": "var(--color-foreground)",
+                "type_preset": "rte",
                 "background": false,
                 "background_color": "#00000026",
                 "corner_radius": 0,
@@ -178,7 +145,6 @@
             }
           },
           "block_order": [
-            "product_list_eyebrow_bfrygo",
             "product_list_text_fifeh4",
             "product_list_button_eibbma"
           ]

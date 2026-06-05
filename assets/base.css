@@ -3700,6 +3700,16 @@ fly-to-cart.fly-to-cart--sticky {
   display: none;
 }
 
+/* ── Cross-sell header: eyebrow paragraph above h2 ──────────── */
+.section-resource-list__header .text-block.rte > p {
+  font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(var(--color-foreground-rgb), 0.62);
+  margin-block-end: var(--margin-xs);
+}
+
 :where(.section-resource-list.section--full-width) product-card[data-product-transition] > .group-block,
 :where(.section-carousel.section--full-width) product-card[data-product-transition] > .group-block {
   @media screen and (max-width: 749px) {
