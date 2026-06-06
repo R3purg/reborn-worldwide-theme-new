@@ -1,4 +1,4 @@
-/*
+﻿/*
  * ------------------------------------------------------------
  * IMPORTANT: The contents of this file are auto-generated.
  *
@@ -12,22 +12,22 @@
     "rw_hero_HmBRt6": {
       "type": "rw-hero",
       "settings": {
-        "meta_line": "VOL.01 - SS01 // FROM THE STREETS OF EASTERN EUROPE",
-        "edition_date": "SS01",
+        "meta_line": "VOL.04 &mdash; SS26 // FROM THE STREETS OF EASTERN EUROPE",
+        "edition_date": "2026/05/10",
         "image": "shopify://shop_images/hero-1-alt.png",
         "layout": "split",
         "show_stickers": true,
         "sticker_1_text": "LIMITED AS F*CK",
-        "sticker_1_sub": "ED. 001 / DROP",
-        "sticker_2_text": "// SS01 LOOKBOOK",
-        "countdown_date": "2026-07-01T00:00:00+03:00",
-        "countdown_label": "NEXT DROP // SEASON 02 - ?",
-        "countdown_time_label": "WED 00:00 EET",
+        "sticker_1_sub": "ED. 250 / DROP",
+        "sticker_2_text": "// SS26 LOOKBOOK",
+        "countdown_date": "2026-06-12T22:00:00+02:00",
+        "countdown_label": "NEXT DROP // CHAPTER 04 &mdash; BIKINI BLING",
+        "countdown_time_label": "FRI 22:00 CET",
         "manifesto_quote": "Built for the kid that never asked permission. Four chapters a year. Two hundred fifty pieces each. No restocks.",
-        "cta_primary_label": "Shop chapter 01",
-        "cta_primary_url": "shopify://collections/chapter-01",
+        "cta_primary_label": "Shop chapter 04",
+        "cta_primary_url": "#shop",
         "cta_secondary_label": "Read the lookbook",
-        "cta_secondary_url": "",
+        "cta_secondary_url": "#chapters",
         "color_scheme": "scheme-1"
       }
     },
@@ -320,7 +320,7 @@
             "chapter_number": "01",
             "chapter_code": "MS-001",
             "title": "MY SWAMP",
-            "kicker": "Chapter 01 — The Anti-Hero Awakens",
+            "kicker": "Chapter 01 â€” The Anti-Hero Awakens",
             "body": "He doesn't live in the swamp. He owns it. Cheap cigarettes, cheaper dreams, and a lease nobody signed.",
             "accent_color": "#7baf2c",
             "image": "shopify://shop_images/CHAOS_B_MySwamp.png",
@@ -335,7 +335,7 @@
             "chapter_number": "02",
             "chapter_code": "MD-014",
             "title": "MONSTERS DRINK",
-            "kicker": "Chapter 02 — The Door Was Never Locked",
+            "kicker": "Chapter 02 â€” The Door Was Never Locked",
             "body": "They don't knock. They walk in, smoke in hand, like the place is still theirs. He always knew the light meant home.",
             "accent_color": "#3f6f8c",
             "image": "shopify://shop_images/CHAOS_B_MONSTERS_DRINK_FRONT.png",
@@ -350,7 +350,7 @@
             "chapter_number": "03",
             "chapter_code": "AF-208",
             "title": "ANIME FAN",
-            "kicker": "Chapter 03 — Broadcast From a Better World",
+            "kicker": "Chapter 03 â€” Broadcast From a Better World",
             "body": "In the morning she sat in silence, but her soul was loud. Through every winter, every power cut, she held on.",
             "accent_color": "#0098a2",
             "image": "shopify://shop_images/CHAOS_B_ANIMEFAN_FRONT.png",
@@ -365,7 +365,7 @@
             "chapter_number": "04",
             "chapter_code": "BB-077",
             "title": "BIKINI BLING",
-            "kicker": "Chapter 04 — Pineapple Under The Concrete",
+            "kicker": "Chapter 04 â€” Pineapple Under The Concrete",
             "body": "Crawled out of the deep end with a chain thicker than your leash. Even Gary's going fast up in this bitch.",
             "accent_color": "#e6d63a",
             "image": "shopify://shop_images/CHAOS_B_Bottom_Bada.png",
@@ -394,8 +394,8 @@
       "settings": {
         "kicker": "// CURRENTLY IN STOCK",
         "heading": "The shop floor",
-        "collection": "chapter-01",
-        "max_products": 12,
+        "collection": "",
+        "max_products": 8,
         "cta_label": "View all pieces",
         "cta_url": "/collections/all",
         "color_scheme": "scheme-1"
@@ -440,16 +440,16 @@
         "stat_04"
       ],
       "settings": {
-        "kicker": "// MANIFESTO - 001",
-        "heading": "<p>We make clothes for people who were told to sit down. We don’t sit down.</p>",
-        "body": "<p>Reborn is a five-person studio working out of a garage in Lithuania. Every piece is small-batch, screen-printed by hand and never restocked. When it’s gone, it’s gone. That’s the whole pitch.</p>",
+        "kicker": "// MANIFESTO &mdash; 002",
+        "heading": "<p>We make clothes for people who were told to sit down. We don't sit down.</p>",
+        "body": "<p>Reborn is a four-person studio working out of a garage in Krakow, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>",
         "image": "shopify://shop_images/activewear-products-4.jpg",
         "cta_primary_label": "Read the full story",
         "cta_primary_url": "",
         "cta_secondary_label": "Studio visits",
-        "cta_secondary_url": "",
+        "cta_secondary_url": "#chapters",
         "orange_bg": true,
-        "color_scheme": "scheme-58084d4c-a86e-4d0a-855e-a0966e5043f7"
+        "color_scheme": "scheme-1"
       }
     },
     "rw_lookbook_mRtGj3": {
@@ -544,7 +544,7 @@
         "heading": "@reborn.wxrldwide",
         "instagram_url": "https://www.instagram.com/reborn.wxrldwide/",
         "cta_label": "Follow us",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-2"
       }
     },
     "rw_newsletter_xKbPq1": {

@@ -1,4 +1,4 @@
-{% liquid
+﻿{% liquid
   assign s = section.settings
 %}
 
@@ -12,7 +12,7 @@
         <div class="rw-manifesto__btns">
           {%- if s.cta_primary_label != blank -%}
             <a href="{{ s.cta_primary_url | default: '/pages/about' }}" class="rw-btn rw-btn--md rw-btn--solid">
-              {{ s.cta_primary_label }} →
+              {{ s.cta_primary_label }} &rarr;
             </a>
           {%- endif -%}
           {%- if s.cta_secondary_label != blank -%}
@@ -71,6 +71,7 @@
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
     margin-bottom: 18px;
   }
   .rw-manifesto__heading {
@@ -142,9 +143,9 @@
   }
   .rw-manifesto.rw-manifesto--orange {
     background: rgb(var(--color-button));
-    color: rgb(var(--color-button-label));
-    border-top-color: rgb(var(--color-button-label));
-    border-bottom-color: rgb(var(--color-button-label));
+    color: rgb(var(--color-foreground));
+    border-top-color: rgb(var(--color-foreground));
+    border-bottom-color: rgb(var(--color-foreground));
   }
   .rw-manifesto.rw-manifesto--orange .rw-manifesto__stat-lbl {
     opacity: 0.75;
@@ -157,8 +158,8 @@
     border-color: rgba(0, 0, 0, 0.2);
   }
   .rw-manifesto.rw-manifesto--orange .rw-btn--ghost {
-    color: rgb(var(--color-button-label));
-    border-color: rgb(var(--color-button-label));
+    color: rgb(var(--color-foreground));
+    border-color: rgb(var(--color-foreground));
   }
   @media (max-width: 749px) {
     .rw-manifesto {
@@ -183,19 +184,19 @@
       "type": "text",
       "id": "kicker",
       "label": "Kicker",
-      "default": "// MANIFESTO — 002"
+      "default": "// MANIFESTO &mdash; 002"
     },
     {
       "type": "richtext",
       "id": "heading",
       "label": "Heading",
-      "default": "<p>We make clothes for people who were told to sit down. We don't sit down.</p>"
+      "default": "<p>We make clothes for people who were told to sit down. We don't sit down.</p>",
     },
     {
       "type": "richtext",
       "id": "body",
       "label": "Body text",
-      "default": "<p>Reborn is a four-person studio working out of a garage in Kraków, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>"
+      "default": "<p>Reborn is a four-person studio working out of a garage in Krakow, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>",
     },
     {
       "type": "image_picker",
@@ -279,4 +280,4 @@
     }
   ]
 }
-{% endschema %}
+        "body": "<p>Reborn is a four-person studio working out of a garage in Krakow, a basement in Berlin and a kitchen in Lisbon. Every piece is small-batch, screen-printed by hand and never restocked. When it's gone, it's gone. That's the whole pitch.</p>",

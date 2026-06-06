@@ -1,4 +1,4 @@
-{% liquid
+﻿{% liquid
   assign s = section.settings
 %}
 
@@ -9,7 +9,7 @@
   <div class="rw-hero__inner">
     <div class="rw-hero__meta">
       <span>{{ s.meta_line }}</span>
-      <span>RW—{{ s.edition_date }}</span>
+      <span>RW&mdash;{{ s.edition_date }}</span>
     </div>
 
     <div class="rw-hero__title-wrap">
@@ -74,8 +74,8 @@
             </div>
             <div class="rw-hero__cd-footer">
               <span>{{ s.countdown_time_label }}</span>
-              <a href="{{ s.cta_primary_url | default: '/collections/all' }}" class="rw-btn rw-btn--sm rw-btn--orange">
-                Notify me →
+              <a href="#chapters" class="rw-btn rw-btn--sm rw-btn--orange">
+                Notify me &rarr;
               </a>
             </div>
           </div>
@@ -90,20 +90,20 @@
 
     <div class="rw-hero__cta-row">
       <div class="rw-hero__cta-btns">
-        <a href="{{ s.cta_primary_url | default: '/collections/all' }}" class="rw-btn rw-btn--lg rw-btn--solid">
-          {{ s.cta_primary_label }} →
+        <a href="#shop" class="rw-btn rw-btn--lg rw-btn--solid">
+          {{ s.cta_primary_label }} &rarr;
         </a>
         <a href="{{ s.cta_secondary_url | default: '#' }}" class="rw-btn rw-btn--lg rw-btn--ghost">
           {{ s.cta_secondary_label }}
         </a>
       </div>
-      <div class="rw-hero__cta-meta">04 CHAPTERS · 250 PIECES EACH · NO RESTOCKS</div>
+      <div class="rw-hero__cta-meta">04 CHAPTERS &middot; 250 PIECES EACH &middot; NO RESTOCKS</div>
     </div>
   </div>
 </section>
 
 {% stylesheet %}
-  /* ── Hero section ──────────────────────────────────────────── */
+  /* â”€â”€ Hero section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   .rw-hero .rw-btn--ghost {
     border-color: var(--color-foreground);
   }
@@ -308,7 +308,7 @@
   .rw-hero__manifesto {
     padding: 20px 22px;
     border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
-    background: var(--color-background);
+    background: rgba(var(--color-foreground-rgb), 0.04);
   }
   .rw-hero__manifesto-kicker {
     font-family: var(--font-accent--family);
@@ -416,7 +416,7 @@
       "type": "text",
       "id": "meta_line",
       "label": "Meta line",
-      "default": "VOL.04 — SS26 // FROM THE STREETS OF EASTERN EUROPE"
+      "default": "VOL.04 â€” SS26 // FROM THE STREETS OF EASTERN EUROPE"
     },
     {
       "type": "text",
@@ -482,7 +482,7 @@
       "type": "text",
       "id": "countdown_label",
       "label": "Countdown label",
-      "default": "NEXT DROP // CHAPTER 04 — BIKINI BLING"
+      "default": "NEXT DROP // CHAPTER 04 â€” BIKINI BLING"
     },
     {
       "type": "text",

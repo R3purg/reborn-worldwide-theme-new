@@ -179,7 +179,13 @@
   .rw-cart-progress--page {
     border: 1px solid rgb(var(--color-foreground));
     padding: 18px 20px;
-    margin-bottom: 0;
+    margin-bottom: 24px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .rw-cart-progress--page {
+      margin-inline-end: calc(min(50vw, var(--sidebar-width, 25rem)) + var(--padding-5xl, 3rem));
+    }
   }
 
   .rw-cart-progress--page .rw-cart-progress__label {
@@ -233,10 +239,7 @@
 
 {% javascript %}
   (function () {
-    const sectionId = document.currentScript
-      ? document.currentScript.closest('[data-section-id]')?.dataset.sectionId
-      : null;
-    const root = document.getElementById('rw-cart-hdr-' + sectionId);
+    const root = document.querySelector('[data-rw-cart-hdr]');
     if (!root) return;
 
     const title = root.querySelector('[data-rw-cart-hdr-title]');

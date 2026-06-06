@@ -1,4 +1,4 @@
-{% liquid
+﻿{% liquid
   assign s = section.settings
   assign menu_shop = linklists[s.menu_shop]
   assign menu_studio = linklists[s.menu_studio]
@@ -10,7 +10,7 @@
   data-section-id="{{ section.id }}"
 >
   <div class="rw-footer__inner">
-    {%- comment -%} ── Top grid ──────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} â”€â”€ Top grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ {%- endcomment -%}
     <div class="rw-footer__grid">
       {%- comment -%} Brand column {%- endcomment -%}
       <div class="rw-footer__brand">
@@ -71,11 +71,11 @@
       {%- endfor -%}
     </div>
 
-    {%- comment -%} ── Bottom bar ────────────────────────────────── {%- endcomment -%}
+    {%- comment -%} â”€â”€ Bottom bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ {%- endcomment -%}
     <div class="rw-footer__bottom">
       <div class="rw-footer__copy">
-        © {{ 'now' | date: '%Y' }}
-        {{ s.legal_name | default: 'REBORN WORLDWIDE' }} — KRAKÓW · BERLIN · LISBON
+        &copy; {{ s.legal_name | default: 'REBORN WORLDWIDE' }} {{ 'now' | date: '%Y' }} &mdash; KRAKOW &middot; BERLIN &middot; LISBON
+
       </div>
       <div class="rw-footer__social" aria-label="Social">
         {%- assign rw_social_networks = 'IG,TT,YT,DC' | split: ',' -%}
@@ -94,7 +94,7 @@
           <a href="{{ social_url }}" class="rw-footer__social-link">{{ network }}</a>
         {%- endfor -%}
       </div>
-      <div class="rw-footer__payments" aria-label="Payment methods">VISA · MC · APPLE PAY · KLARNA · BLIK</div>
+      <div class="rw-footer__payments" aria-label="Payment methods">VISA &middot; MC &middot; APPLE PAY &middot; KLARNA &middot; BLIK</div>
     </div>
   </div>
 </footer>
@@ -111,7 +111,7 @@
     padding-inline: 24px;
   }
 
-  /* ── Grid ──────────────────────────────────────────────────── */
+  /* â”€â”€ Grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   .rw-footer__grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr 1fr 1fr;
@@ -119,7 +119,7 @@
     align-items: start;
   }
 
-  /* ── Brand ─────────────────────────────────────────────────── */
+  /* â”€â”€ Brand â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   .rw-footer__logo {
     display: inline-flex;
     align-items: baseline;
@@ -157,7 +157,7 @@
     color: rgba(var(--color-foreground-rgb), 0.62);
   }
 
-  /* ── Nav columns ───────────────────────────────────────────── */
+  /* â”€â”€ Nav columns â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   .rw-footer__col-heading {
     font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
@@ -187,7 +187,7 @@
     opacity: 0.6;
   }
 
-  /* ── Bottom bar ─────────────────────────────────────────────── */
+  /* â”€â”€ Bottom bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   .rw-footer__bottom {
     display: flex;
     justify-content: space-between;
@@ -227,7 +227,7 @@
     color: var(--color-foreground);
   }
 
-  /* ── Mobile ────────────────────────────────────────────────── */
+  /* â”€â”€ Mobile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   @media (max-width: 989px) {
     .rw-footer__grid {
       grid-template-columns: 1fr 1fr;
@@ -285,7 +285,7 @@
     {
       "type": "text",
       "id": "legal_name",
-      "label": "Legal name (for © line)",
+      "label": "Legal name (for Â© line)",
       "default": "REBORN WORLDWIDE"
     },
     {
@@ -359,4 +359,4 @@
     }
   ]
 }
-{% endschema %}
+        &copy; {{ s.legal_name | default: 'REBORN WORLDWIDE' }} {{ 'now' | date: '%Y' }} &mdash; KRAKOW &middot; BERLIN &middot; LISBON
