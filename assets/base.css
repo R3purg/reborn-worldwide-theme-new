@@ -3961,6 +3961,7 @@ text-component {
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
 }
 
 /* Product card title truncation - applied on mobile regardless of view */
@@ -3971,6 +3972,7 @@ text-component {
     overflow: hidden;
     text-overflow: ellipsis;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
   }
 }
 

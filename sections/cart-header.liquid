@@ -21,7 +21,7 @@
     data-free-shipping-enabled="{{ section.settings.show_free_shipping_bar }}"
     style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
   >
-    <nav class="rw-cart-hdr__breadcrumb"{% if cart.empty? %} hidden{% endif %} aria-label="{{ 'accessibility.breadcrumbs' | t }}" data-rw-cart-hdr-breadcrumb>
+    <nav class="rw-cart-hdr__breadcrumb"{% if cart.empty? %} hidden{% endif %} aria-label="Breadcrumbs" data-rw-cart-hdr-breadcrumb>
       <a href="{{ routes.root_url }}" class="rw-cart-hdr__bc-link">HOME</a>
       <span aria-hidden="true"> / </span>
       <span aria-current="page">BAG</span>
