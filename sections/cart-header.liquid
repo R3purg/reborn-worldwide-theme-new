@@ -21,13 +21,23 @@
     data-free-shipping-enabled="{{ section.settings.show_free_shipping_bar }}"
     style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
   >
-    <nav class="rw-cart-hdr__breadcrumb"{% if cart.empty? %} hidden{% endif %} aria-label="Breadcrumbs" data-rw-cart-hdr-breadcrumb>
+    <nav
+      class="rw-cart-hdr__breadcrumb"
+      {% if cart.empty? %}
+        hidden
+      {% endif %}
+      aria-label="Breadcrumbs"
+      data-rw-cart-hdr-breadcrumb
+    >
       <a href="{{ routes.root_url }}" class="rw-cart-hdr__bc-link">HOME</a>
       <span aria-hidden="true"> / </span>
       <span aria-current="page">BAG</span>
     </nav>
 
-    <div class="rw-cart-hdr__title-row{% if cart.empty? %} rw-cart-hdr__title-row--empty{% endif %}" data-rw-cart-hdr-row>
+    <div
+      class="rw-cart-hdr__title-row{% if cart.empty? %} rw-cart-hdr__title-row--empty{% endif %}"
+      data-rw-cart-hdr-row
+    >
       <h1
         class="rw-cart-hdr__title{% if cart.empty? %} rw-cart-hdr__title--empty{% endif %}"
         data-rw-cart-hdr-title
@@ -41,7 +51,13 @@
             YOUR BAG
           {%- endif -%}
         </span>
-        <sup class="rw-cart-hdr__count" data-rw-cart-hdr-count{% if cart.empty? %} hidden{% endif %}>
+        <sup
+          class="rw-cart-hdr__count"
+          data-rw-cart-hdr-count
+          {% if cart.empty? %}
+            hidden
+          {% endif %}
+        >
           {%- if count < 10 -%}0{{ count }}{%- else -%}{{ count }}{%- endif -%}
         </sup>
       </h1>
@@ -49,13 +65,21 @@
         href="{{ routes.all_products_collection_url }}"
         class="rw-cart-hdr__keep-shopping"
         data-rw-cart-hdr-keep-shopping
-        {% if cart.empty? %}hidden{% endif %}
+        {% if cart.empty? %}
+          hidden
+        {% endif %}
       >
         &#8592; Keep shopping
       </a>
     </div>
 
-    <p class="rw-cart-hdr__empty-sub"{% unless cart.empty? %} hidden{% endunless %} data-rw-cart-hdr-empty-sub>
+    <p
+      class="rw-cart-hdr__empty-sub"
+      {% unless cart.empty? %}
+        hidden
+      {% endunless %}
+      data-rw-cart-hdr-empty-sub
+    >
       // AS EMPTY AS A MONDAY MORNING. GO FIX THAT.
     </p>
 
@@ -64,7 +88,9 @@
         class="rw-cart-progress rw-cart-progress--page"
         data-rw-cart-hdr-progress
         data-rw-cart-hdr-progress-enabled="true"
-        {% if cart.empty? %}hidden{% endif %}
+        {% if cart.empty? %}
+          hidden
+        {% endif %}
       >
         <div class="rw-cart-progress__label">
           <span data-rw-cart-hdr-progress-text>
