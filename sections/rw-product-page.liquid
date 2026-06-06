@@ -6,6 +6,7 @@
   assign chapter_name = product.metafields.custom.chapter_name | default: ''
   assign chapter_color = product.metafields.custom.chapter_color | default: ''
   assign edition_info = product.metafields.custom.edition | default: ''
+  assign product_code = current_variant.sku | default: product.variants.first.sku | default: product.vendor
 
   assign color_opt_idx = null
   assign size_opt_idx = null
@@ -18,6 +19,11 @@
       assign size_opt_idx = forloop.index0
     endif
   endfor
+
+  assign current_color_value = ''
+  if color_opt_idx != null
+    assign current_color_value = current_variant.options[color_opt_idx] | default: ''
+  endif
 
   assign size_needs_selection = false
   if size_opt_idx != null
@@ -36,6 +42,7 @@
   window.RW_PRODUCT_{{ section.id | replace: '-', '_' }} = {
     id: {{ product.id }},
     handle: {{ product.handle | json }},
+    selectedVariantId: {{ current_variant.id }},
     colorOptIdx: {{ color_opt_idx | default: -1 }},
     sizeOptIdx: {{ size_opt_idx | default: -1 }},
     variants: [
@@ -47,6 +54,7 @@
           compareAt: {{ v.compare_at_price | default: 0 }},
           available: {{ v.available }},
           options: {{ v.options | json }},
+          featuredMediaId: {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %},
           inventoryQty: {{ v.inventory_quantity | default: 0 }},
           inventoryMgmt: {{ v.inventory_management | json }}
         }{% unless forloop.last %},{% endunless %}
@@ -96,9 +104,11 @@
         {%- if product.media.size > 1 -%}
           <div class="rw-pdp-gallery__thumbs" role="list">
             {%- for media in product.media limit: 8 -%}
+              {%- assign thumb_alt = media.alt | default: product.title -%}
               <button
                 class="rw-pdp-gallery__thumb{% if forloop.first %} is-active{% endif %}"
                 data-index="{{ forloop.index0 }}"
+                data-media-id="{{ media.id }}"
                 aria-label="{{ media.alt | default: product.title | escape }}"
                 type="button"
                 role="listitem"
@@ -106,8 +116,7 @@
                 {{
                   media
                   | image_url: width: 168
-                  | image_tag: loading: 'lazy', alt: media.alt
-                  | default: product.title, class: 'rw-pdp-gallery__thumb-img'
+                  | image_tag: loading: 'lazy', alt: thumb_alt, class: 'rw-pdp-gallery__thumb-img'
                 }}
               </button>
             {%- endfor -%}
@@ -117,9 +126,11 @@
         <div class="rw-pdp-gallery__main">
           {%- if product.media.size > 0 -%}
             {%- for media in product.media limit: 8 -%}
+              {%- assign media_alt = media.alt | default: product.title -%}
               <div
                 class="rw-pdp-gallery__slide{% if forloop.first %} is-active{% endif %}"
                 data-index="{{ forloop.index0 }}"
+                data-media-id="{{ media.id }}"
               >
                 {%- if media.media_type == 'image' -%}
                   {%- assign loading_strategy = 'lazy' -%}
@@ -129,8 +140,11 @@
                   {{
                     media
                     | image_url: width: 1400
-                    | image_tag: loading: loading_strategy, preload: forloop.first, alt: media.alt
-                    | default: product.title, class: 'rw-pdp-gallery__img'
+                    | image_tag:
+                      loading: loading_strategy,
+                      preload: forloop.first,
+                      alt: media_alt,
+                      class: 'rw-pdp-gallery__img'
                   }}
                 {%- elsif media.media_type == 'video' -%}
                   {{ media | video_tag: image_size: '1400x', autoplay: false, loop: true, controls: true, muted: true }}
@@ -195,7 +209,9 @@
         </div>
 
         <div class="rw-pdp-info__meta">
-          <span>{{ product.vendor }}</span>
+          {%- if product_code != blank -%}
+            <span>{{ product_code }}</span>
+          {%- endif -%}
           {%- if edition_info != blank -%}
             <span> · {{ edition_info }}</span>
           {%- endif -%}
@@ -316,20 +332,23 @@
                 {%- liquid
                   assign val_available = false
                   for v in product.variants
-                    if v.options contains val.value
-                      if v.available
-                        assign val_available = true
+                    if v.options[size_opt_idx] == val.value
+                      if color_opt_idx == null or current_color_value == blank or v.options[color_opt_idx] == current_color_value
+                        if v.available
+                          assign val_available = true
+                        endif
                       endif
                     endif
                   endfor
                 -%}
                 <button
-                  class="rw-pdp-size{% if val.selected %} is-selected{% endif %}{% unless val_available %} is-sold-out{% endunless %}"
+                  class="rw-pdp-size{% if val.selected and size_needs_selection == false %} is-selected{% endif %}{% unless val_available %} is-sold-out{% endunless %}"
                   data-opt-idx="{{ size_opt_idx }}"
                   data-opt-val="{{ val.value | escape }}"
                   aria-label="{{ val.value | escape }}{% unless val_available %} — sold out{% endunless %}"
-                  aria-pressed="{{ val.selected }}"
+                  aria-pressed="{% if val.selected and size_needs_selection == false %}true{% else %}false{% endif %}"
                   {% unless val_available %}
+                    disabled
                     aria-disabled="true"
                   {% endunless %}
                   type="button"
@@ -554,17 +573,20 @@
                 {%- liquid
                   assign sv_available = false
                   for v in product.variants
-                    if v.options contains val.value
-                      if v.available
-                        assign sv_available = true
+                    if v.options[size_opt_idx] == val.value
+                      if color_opt_idx == null or current_color_value == blank or v.options[color_opt_idx] == current_color_value
+                        if v.available
+                          assign sv_available = true
+                        endif
                       endif
                     endif
                   endfor
                 -%}
                 <button
-                  class="rw-pdp-sticky__size{% if val.selected %} is-selected{% endif %}{% unless sv_available %} is-sold-out{% endunless %}"
+                  class="rw-pdp-sticky__size{% if val.selected and size_needs_selection == false %} is-selected{% endif %}{% unless sv_available %} is-sold-out{% endunless %}"
                   data-sticky-size="{{ val.value | escape }}"
                   {% unless sv_available %}
+                    disabled
                     aria-disabled="true"
                   {% endunless %}
                   type="button"
@@ -574,8 +596,17 @@
               {%- endfor -%}
             </div>
           {%- endif -%}
-          <button class="rw-pdp-sticky__add" data-sticky-add type="button">
-            <span data-sticky-add-label>Add to bag</span>
+          <button
+            class="rw-pdp-sticky__add"
+            data-sticky-add
+            type="button"
+            {% if size_needs_selection %}
+              disabled
+            {% endif %}
+          >
+            <span data-sticky-add-label>
+              {%- if size_needs_selection %}PICK A SIZE{% else %}ADD TO BAG{% endif -%}
+            </span>
             <svg
               width="14"
               height="14"
@@ -603,7 +634,7 @@
 
     /* ── Breadcrumb ──────────────────────────────────────────── */
     .rw-pdp-bc {
-      padding: 20px 24px 0;
+      padding: 24px 24px 0;
     }
     .rw-pdp-bc__inner {
       max-width: 1440px;
@@ -635,7 +666,7 @@
 
     /* ── Main two-col section ────────────────────────────────── */
     .rw-pdp-main {
-      padding: 20px 24px 0;
+      padding: 24px 24px 0;
     }
     .rw-pdp-main__inner {
       max-width: 1440px;
@@ -750,8 +781,7 @@
     .rw-pdp-info {
       display: flex;
       flex-direction: column;
-      position: sticky;
-      top: 96px;
+      position: static;
     }
 
     .rw-pdp-info__chapter-meta {
@@ -778,7 +808,7 @@
       font-family: var(--font-heading--family);
       font-weight: var(--font-heading--weight);
       text-transform: uppercase;
-      font-size: clamp(36px, 4.4vw, 64px);
+      font-size: clamp(38px, 4.4vw, 64px);
       line-height: 0.9;
       letter-spacing: 0.005em;
       margin: 0;
@@ -1216,6 +1246,13 @@
     .rw-pdp-sticky__add:hover {
       opacity: 0.88;
     }
+    .rw-pdp-sticky__add:disabled {
+      opacity: 0.62;
+      background: rgba(var(--color-foreground-rgb), 0.08);
+      color: rgba(var(--color-foreground-rgb), 0.62);
+      border-color: rgba(var(--color-foreground-rgb), 0.18);
+      cursor: not-allowed;
+    }
 
     /* ── Responsive ──────────────────────────────────────────── */
     @media (max-width: 1023px) {
@@ -1294,11 +1331,30 @@
 
         _initialOptions(data) {
           const opts = [];
-          const firstVariant = data.variants[0];
-          if (firstVariant) {
-            firstVariant.options.forEach((o, i) => (opts[i] = o));
+          const initialVariant =
+            data.variants.find((variant) => variant.id === data.selectedVariantId) || data.variants[0];
+          if (initialVariant) {
+            initialVariant.options.forEach((o, i) => (opts[i] = o));
           }
           return opts;
+        }
+
+        _effectiveOptions(overrides = {}) {
+          const options = [...this.selectedOptions];
+          Object.keys(overrides).forEach((key) => {
+            options[Number(key)] = overrides[key];
+          });
+
+          const sizeIdx = this.data.sizeOptIdx;
+          if (
+            sizeIdx >= 0 &&
+            !this.sizeExplicitlySelected &&
+            Object.prototype.hasOwnProperty.call(overrides, String(sizeIdx)) === false
+          ) {
+            options[sizeIdx] = undefined;
+          }
+
+          return options;
         }
 
         _bindGallery(sectionId) {
@@ -1323,6 +1379,7 @@
           const optBtns = this.querySelectorAll('[data-opt-idx]');
           optBtns.forEach((btn) => {
             btn.addEventListener('click', () => {
+              if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
               const idx = parseInt(btn.dataset.optIdx, 10);
               const val = btn.dataset.optVal;
               this.selectedOptions[idx] = val;
@@ -1370,6 +1427,8 @@
         }
 
         _syncState(sectionId) {
+          this._updateSizeAvailability(sectionId);
+          this._updateStickySizeAvailability(sectionId);
           const variant = this._findVariant();
           this._updateForm(sectionId, variant);
           this._updatePrice(sectionId, variant);
@@ -1377,18 +1436,89 @@
           this._updateLowStock(variant);
           this._updateAddBtnPrice(sectionId, variant);
           this._updateStickyMeta(sectionId, variant);
+          this._updateStickyAddLabel(sectionId, variant);
+          this._updateGalleryForVariant(sectionId, variant);
         }
 
-        _findVariant() {
+        _findVariant(overrides = {}) {
           const { variants } = this.data;
-          // Try exact match across all selected options
+          const options = this._effectiveOptions(overrides);
+          const matches = variants.filter((variant) =>
+            variant.options.every((value, index) => options[index] === undefined || options[index] === value)
+          );
+
           return (
-            variants.find((v) =>
-              v.options.every((o, i) => this.selectedOptions[i] === undefined || this.selectedOptions[i] === o)
-            ) ||
-            variants.find((v) => v.available) ||
+            matches.find((variant) => variant.available) ||
+            matches[0] ||
+            variants.find((variant) => variant.available) ||
             variants[0]
           );
+        }
+
+        _updateSizeAvailability(sectionId) {
+          const sizeIdx = this.data.sizeOptIdx;
+          if (sizeIdx < 0) return;
+
+          const buttons = this.querySelectorAll(`[data-opt-idx="${sizeIdx}"]`);
+          let hasSelectedAvailable = false;
+
+          buttons.forEach((button) => {
+            const value = button.dataset.optVal;
+            const variant = this._findVariant({ [sizeIdx]: value });
+            const isAvailable = Boolean(variant && variant.available && variant.options[sizeIdx] === value);
+
+            button.disabled = !isAvailable;
+            button.classList.toggle('is-sold-out', !isAvailable);
+            button.setAttribute('aria-label', `${value}${isAvailable ? '' : ' — sold out'}`);
+
+            if (isAvailable) {
+              button.removeAttribute('aria-disabled');
+            } else {
+              button.setAttribute('aria-disabled', 'true');
+            }
+
+            if (this.sizeExplicitlySelected && this.selectedOptions[sizeIdx] === value && isAvailable) {
+              hasSelectedAvailable = true;
+            }
+          });
+
+          if (this.data.sizeOptIdx >= 0 && this.sizeExplicitlySelected && !hasSelectedAvailable) {
+            this.sizeExplicitlySelected = false;
+            this.selectedOptions[sizeIdx] = undefined;
+            buttons.forEach((button) => {
+              button.classList.remove('is-selected');
+              button.setAttribute('aria-pressed', 'false');
+            });
+          }
+        }
+
+        _updateStickySizeAvailability(sectionId) {
+          const sizeIdx = this.data.sizeOptIdx;
+          if (sizeIdx < 0) return;
+
+          const bar = document.getElementById('rw-sticky-' + sectionId);
+          if (!bar) return;
+
+          const buttons = bar.querySelectorAll('[data-sticky-size]');
+          buttons.forEach((button) => {
+            const value = button.dataset.stickySize;
+            const variant = this._findVariant({ [sizeIdx]: value });
+            const isAvailable = Boolean(variant && variant.available && variant.options[sizeIdx] === value);
+
+            button.disabled = !isAvailable;
+            button.classList.toggle('is-sold-out', !isAvailable);
+
+            if (isAvailable) {
+              button.removeAttribute('aria-disabled');
+            } else {
+              button.setAttribute('aria-disabled', 'true');
+            }
+
+            button.classList.toggle(
+              'is-selected',
+              this.sizeExplicitlySelected && this.selectedOptions[sizeIdx] === value && isAvailable
+            );
+          });
         }
 
         _updateForm(sectionId, variant) {
@@ -1399,8 +1529,9 @@
           if (idInput) idInput.value = variant.id;
 
           const addBtn = form.querySelector('[data-add-btn]');
+          const needsSize = this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected;
+
           if (addBtn) {
-            const needsSize = this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected;
             addBtn.disabled = needsSize || !variant.available;
             if (!needsSize && !variant.available) {
               addBtn.setAttribute('data-unavailable', '');
@@ -1410,9 +1541,11 @@
           }
 
           // Update URL
-          const url = new URL(window.location);
-          url.searchParams.set('variant', variant.id);
-          window.history.replaceState({}, '', url.toString());
+          if (!needsSize) {
+            const url = new URL(window.location);
+            url.searchParams.set('variant', variant.id);
+            window.history.replaceState({}, '', url.toString());
+          }
         }
 
         _updatePrice(sectionId, variant) {
@@ -1458,6 +1591,10 @@
         _updateLowStock(variant) {
           const el = this.querySelector('[data-low-stock]');
           if (!el || !variant) return;
+          if (this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected) {
+            el.textContent = '';
+            return;
+          }
           if (variant.inventoryMgmt && variant.inventoryQty > 0 && variant.inventoryQty <= 6) {
             const idx = this.data.sizeOptIdx;
             const sizeName = idx >= 0 ? this.selectedOptions[idx] || '' : '';
@@ -1515,6 +1652,53 @@
           meta.textContent = parts.join(' · ');
         }
 
+        _updateStickyAddLabel(sectionId, variant) {
+          const bar = document.getElementById('rw-sticky-' + sectionId);
+          if (!bar) return;
+          const addButton = bar.querySelector('[data-sticky-add]');
+          const label = bar.querySelector('[data-sticky-add-label]');
+          if (!addButton || !label) return;
+
+          const needsSize = this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected;
+          if (needsSize) {
+            label.textContent = 'PICK A SIZE';
+            addButton.disabled = true;
+            return;
+          }
+
+          if (!variant || !variant.available) {
+            label.textContent = this.data.i18n.soldOut;
+            addButton.disabled = true;
+            return;
+          }
+
+          label.textContent = 'ADD TO BAG';
+          addButton.disabled = false;
+        }
+
+        _updateGalleryForVariant(sectionId, variant) {
+          if (!variant || !variant.featuredMediaId) return;
+          const gallery = document.getElementById('rw-gallery-' + sectionId);
+          if (!gallery) return;
+
+          const targetId = String(variant.featuredMediaId);
+          const slides = gallery.querySelectorAll('.rw-pdp-gallery__slide');
+          const thumbs = gallery.querySelectorAll('.rw-pdp-gallery__thumb');
+          const targetSlide = gallery.querySelector(`.rw-pdp-gallery__slide[data-media-id="${targetId}"]`);
+          if (!targetSlide) return;
+
+          const targetIndex = targetSlide.dataset.index;
+          slides.forEach((slide) => {
+            slide.classList.toggle('is-active', slide.dataset.index === targetIndex);
+          });
+          thumbs.forEach((thumb) => {
+            thumb.classList.toggle('is-active', thumb.dataset.index === targetIndex);
+          });
+
+          const counterCur = gallery.querySelector('.rw-pdp-gallery__counter-cur');
+          if (counterCur) counterCur.textContent = String(Number(targetIndex) + 1).padStart(2, '0');
+        }
+
         _bindStickyBar(sectionId) {
           const cta = document.getElementById('rw-pdp-cta-' + sectionId);
           const bar = document.getElementById('rw-sticky-' + sectionId);
@@ -1536,10 +1720,12 @@
 
           stickySizes.forEach((btn) => {
             btn.addEventListener('click', () => {
+              if (btn.disabled || btn.getAttribute('aria-disabled') === 'true') return;
               const val = btn.dataset.stickySize;
               const idx = this.data.sizeOptIdx;
               if (idx < 0) return;
 
+              this.sizeExplicitlySelected = true;
               this.selectedOptions[idx] = val;
               stickySizes.forEach((b) => b.classList.toggle('is-selected', b.dataset.stickySize === val));
 

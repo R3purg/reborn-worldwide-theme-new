@@ -6,7 +6,12 @@
 %}
 
 {%- if s.story_heading != blank or s.story_image != blank -%}
-  <section class="rw-pdp-story color-{{ s.color_scheme }}" aria-label="Chapter story" {{ section.shopify_attributes }}>
+  <div class="section-background color-{{ s.color_scheme }}"></div>
+  <section
+    class="section rw-pdp-story color-{{ s.color_scheme }}"
+    aria-label="Chapter story"
+    {{ section.shopify_attributes }}
+  >
     <div class="rw-pdp-story__inner">
       <div class="rw-pdp-story__media">
         {%- if s.story_image != blank -%}
@@ -56,7 +61,12 @@
     </div>
   </section>
 {%- elsif request.design_mode -%}
-  <section class="rw-pdp-story color-{{ s.color_scheme }}" aria-label="Chapter story" {{ section.shopify_attributes }}>
+  <div class="section-background color-{{ s.color_scheme }}"></div>
+  <section
+    class="section rw-pdp-story color-{{ s.color_scheme }}"
+    aria-label="Chapter story"
+    {{ section.shopify_attributes }}
+  >
     <div class="rw-pdp-story__inner">
       <div class="rw-pdp-story__media">
         <div class="rw-pdp-story__media-ph">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
