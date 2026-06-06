@@ -36,11 +36,14 @@
     {%- elsif section.settings.show_free_shipping_bar -%}
       <div class="rw-cart-progress rw-cart-progress--page">
         <div class="rw-cart-progress__label">
-          {%- if remaining_cents <= 0 -%}
-            // FREE WORLDWIDE SHIPPING UNLOCKED
-          {%- else -%}
-            // {{ remaining }} TO FREE WORLDWIDE SHIPPING
-          {%- endif -%}
+          <span>
+            {%- if remaining_cents <= 0 -%}
+              // FREE WORLDWIDE SHIPPING UNLOCKED
+            {%- else -%}
+              // {{ remaining }} TO FREE WORLDWIDE SHIPPING
+            {%- endif -%}
+          </span>
+          <span>{{ pct }}%</span>
         </div>
         <div class="rw-cart-progress__track">
           <div class="rw-cart-progress__fill" style="width: {{ pct }}%"></div>
@@ -104,7 +107,6 @@
   .rw-cart-hdr__title--empty {
     font-size: clamp(40px, 6vw, 88px);
     text-align: center;
-    text-transform: none;
   }
 
   .rw-cart-hdr__count {
@@ -147,6 +149,9 @@
   }
 
   .rw-cart-progress--page .rw-cart-progress__label {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
     color: rgb(var(--color-foreground));
     margin-bottom: 10px;
   }

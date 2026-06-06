@@ -14,7 +14,7 @@
       "settings": {
         "color_scheme": "scheme-1",
         "description": "Every chapter, every regular, every last piece. Eight collections, four stories, one studio. Browse by drop or by what’s left.",
-        "columns": 2,
+        "columns": 3,
         "image_ratio": "square",
         "sort_default": "alphabetical"
       }

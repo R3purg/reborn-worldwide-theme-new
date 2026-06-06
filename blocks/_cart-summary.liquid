@@ -34,13 +34,18 @@
     {%- unless cart.empty? -%}
       <div class="rw-cart-summary-heading">Summary</div>
     {%- endunless -%}
-    {% render 'cart-summary', accelerated_checkout_buttons_layout: 'vertical', section_id: section.id %}
+    {% render 'cart-summary', accelerated_checkout_buttons_layout: 'vertical', section_id: section.id, show_note: false %}
 
     {%- unless cart.empty? -%}
       <div class="rw-cart-urgency">
         <span class="rw-cart-urgency__dot" aria-hidden="true"></span>
-        <p class="rw-cart-urgency__text">
-          <strong>No restocks.</strong> These pieces are part of limited chapters. Your bag isn&#8217;t a reservation — check out before someone else does.
+        <p
+          class="rw-cart-urgency__text"
+          aria-label="No restocks. These pieces are part of limited chapters. Your bag is not a reservation - check out before someone else does."
+        >
+          <span class="rw-cart-urgency__text-clean" aria-hidden="true">
+            <strong>No restocks.</strong> These pieces are part of limited chapters. Your bag isn&#8217;t a reservation &#8212; check out before someone else does.
+          </span>
         </p>
       </div>
     {%- endunless -%}
@@ -151,7 +156,11 @@
     color: rgb(var(--color-foreground));
   }
 
-  .rw-cart-urgency__text strong {
+  .rw-cart-urgency__text-clean {
+    display: block;
+  }
+
+  .rw-cart-urgency__text-clean strong {
     font-weight: 600;
   }
 

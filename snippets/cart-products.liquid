@@ -4,6 +4,8 @@
   Renders the cart products list or empty cart state.
 
   @param {boolean} [force_empty] - Force render empty cart state
+  @param {boolean} [show_labels] - Render cart page column labels
+  @param {boolean} [show_order_note] - Render the cart page order note below items
   @param {block} [block] - The block object providing settings and editor attributes.
 
   @example
@@ -383,6 +385,18 @@
                 >
                   <text-component value="{{ price | strip_html }}">{{ price }}</text-component>
                   <div class="cart-items__price-ea">{{ item.final_price | money }}&nbsp;EA</div>
+                  <button
+                    class="button cart-items__remove rw-cart-price-remove"
+                    type="button"
+                    aria-label="{{ 'accessibility.remove_item' | t: title: item.title | escape }}"
+                    on:click="/onLineItemRemove/{{ item.index | plus: 1 }}"
+                    {% if can_remove == false %}
+                      hidden
+                    {% endif %}
+                  >
+                    {{- 'icon-delete.svg' | inline_asset_content -}}
+                    <span class="visually-hidden">{{ 'accessibility.remove' | t }}</span>
+                  </button>
                   {%- if item.unit_price_measurement -%}
                     <div class="cart-items__price-unit cart-secondary-typography">
                       {% render 'unit-price', price: unit_price, measurement: item.unit_price_measurement %}
@@ -395,6 +409,39 @@
         </table>
       </div>
     </form>
+    {%- if show_order_note and settings.show_cart_note -%}
+      <script
+        type="module"
+        src="{{ 'cart-note.js' | asset_url }}"
+      ></script>
+
+      <cart-note class="rw-cart-order-note">
+        <details>
+          <summary class="rw-cart-order-note__summary">
+            <span class="rw-cart-order-note__icon" aria-hidden="true">
+              {{- 'icon-plus.svg' | inline_asset_content -}}
+            </span>
+            <span>Add order note</span>
+          </summary>
+          <div class="rw-cart-order-note__body">
+            <label
+              for="CartPageNote"
+              class="visually-hidden"
+            >
+              {{- 'content.seller_note' | t -}}
+            </label>
+            <textarea
+              form="cart-form"
+              on:input="/updateCartNote"
+              id="CartPageNote"
+              class="rw-cart-order-note__textarea"
+              name="note"
+              placeholder="Leave a note for the studio - gift wrap, delivery instructions, hate mail..."
+            >{{ cart.note }}</textarea>
+          </div>
+        </details>
+      </cart-note>
+    {%- endif -%}
   {%- endif -%}
 </div>
 
@@ -949,7 +996,63 @@
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: oklch(58% 0.18 45);
+    color: rgb(var(--color-button));
     margin-block-start: var(--margin-3xs);
+  }
+
+  .rw-cart-order-note {
+    display: block;
+    margin-block-start: 24px;
+  }
+
+  .rw-cart-order-note details {
+    border: 0;
+  }
+
+  .rw-cart-order-note__summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground));
+  }
+
+  .rw-cart-order-note__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .rw-cart-order-note__icon {
+    display: inline-flex;
+    width: 14px;
+    transition: transform 0.25s ease;
+  }
+
+  .rw-cart-order-note details[open] .rw-cart-order-note__icon {
+    transform: rotate(45deg);
+  }
+
+  .rw-cart-order-note__body {
+    margin-block-start: 12px;
+  }
+
+  .rw-cart-order-note__textarea {
+    width: 100%;
+    min-height: 90px;
+    padding: 14px;
+    resize: vertical;
+    border: 1px solid rgb(var(--color-foreground));
+    border-radius: 0;
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    font-family: var(--font-paragraph--family);
+    font-size: 14px;
+    outline: none;
   }
 {% endstylesheet %}

@@ -14,15 +14,65 @@
     "marquee_col_vM4Tp9": {
       "type": "marquee",
       "blocks": {
-        "txt_1": { "type": "text", "settings": { "text": "<h2>NO RESTOCKS</h2>", "type_preset": "h2", "font": "var(--font-heading--family)", "case": "uppercase", "wrap": "nowrap", "width": "fit-content" } },
+        "txt_1": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>NO RESTOCKS</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        },
         "div_1": { "type": "_divider", "settings": {} },
-        "txt_2": { "type": "text", "settings": { "text": "<h2>250 PER CHAPTER</h2>", "type_preset": "h2", "font": "var(--font-heading--family)", "case": "uppercase", "wrap": "nowrap", "width": "fit-content" } },
+        "txt_2": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>250 PER CHAPTER</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        },
         "div_2": { "type": "_divider", "settings": {} },
-        "txt_3": { "type": "text", "settings": { "text": "<h2>FREE OVER €120</h2>", "type_preset": "h2", "font": "var(--font-heading--family)", "case": "uppercase", "wrap": "nowrap", "width": "fit-content" } },
+        "txt_3": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>FREE OVER €120</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        },
         "div_3": { "type": "_divider", "settings": {} },
-        "txt_4": { "type": "text", "settings": { "text": "<h2>FROM EASTERN EUROPE</h2>", "type_preset": "h2", "font": "var(--font-heading--family)", "case": "uppercase", "wrap": "nowrap", "width": "fit-content" } },
+        "txt_4": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>FROM EASTERN EUROPE</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        },
         "div_4": { "type": "_divider", "settings": {} },
-        "txt_5": { "type": "text", "settings": { "text": "<h2>SS26 // VOL.04</h2>", "type_preset": "h2", "font": "var(--font-heading--family)", "case": "uppercase", "wrap": "nowrap", "width": "fit-content" } }
+        "txt_5": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>SS26 // VOL.04</h2>",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "width": "fit-content"
+          }
+        }
       },
       "block_order": ["txt_1", "div_1", "txt_2", "div_2", "txt_3", "div_3", "txt_4", "div_4", "txt_5"],
       "settings": {

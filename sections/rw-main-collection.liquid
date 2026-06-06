@@ -1,9 +1,10 @@
 {% liquid
   assign s = section.settings
+  assign current_sort_by = collection.sort_by | default: collection.default_sort_by
 %}
 
 {% paginate collection.products by s.products_per_page %}
-<section class="rw-col-main color-{{ s.color_scheme }}">
+<section class="rw-col-main color-{{ s.color_scheme }}" data-section-id="{{ section.id }}">
   <div class="rw-col-main__inner">
     {%- comment %} Sticky filter/sort bar {%- endcomment %}
     <div class="rw-col-main__bar">
@@ -32,8 +33,14 @@
                     </summary>
                     <div class="rw-col-main__panel">
                       {%- for option in filter.values -%}
+                        {%- liquid
+                          assign option_url = option.url_to_add
+                          if option.active
+                            assign option_url = option.url_to_remove
+                          endif
+                        -%}
                         <a
-                          href="{{ option.url }}"
+                          href="{{ option_url }}"
                           class="rw-col-main__panel-item {% if option.active %}rw-col-main__panel-item--active{% endif %}"
                         >
                           {{ option.label }}
@@ -54,11 +61,11 @@
 
           <label class="rw-col-main__sort-label">
             SORT
-            <select class="rw-col-main__sort-select" onchange="window.location = this.value;">
+            <select class="rw-col-main__sort-select">
               {%- for option in collection.sort_options -%}
                 <option
-                  value="{{ option.url }}"
-                  {% if option.is_active %}
+                  value="{{ option.value }}"
+                  {% if option.value == current_sort_by %}
                     selected
                   {% endif %}
                 >
@@ -139,16 +146,18 @@
             endif
           -%}
 
-          <div class="rw-col__card">
+          <div class="rw-col__card" data-product-id="{{ product.id }}">
             <div class="rw-col__card-media">
               {%- if product.featured_image != blank -%}
                 <div class="rw-col__card-img-wrap">
                   <a href="{{ product.url }}" aria-label="{{ product.title | escape }}" tabindex="-1">
+                    {%- liquid
+                      assign product_image_alt = product.featured_image.alt | default: product.title
+                    -%}
                     {{
                       product.featured_image
                       | image_url: width: 600
-                      | image_tag: loading: 'lazy', class: 'rw-col__card-img', alt: product.featured_image.alt
-                      | default: product.title
+                      | image_tag: loading: 'lazy', class: 'rw-col__card-img', alt: product_image_alt
                     }}
                   </a>
                 </div>
@@ -165,7 +174,7 @@
               {%- endif -%}
 
               {%- unless is_sold_out -%}
-                <div class="rw-col__quick-add" aria-hidden="true">
+                <div class="rw-col__quick-add">
                   <div class="rw-col__qa-inner">
                     {%- unless has_one_variant -%}
                       {%- liquid
@@ -306,9 +315,11 @@
           {%- if part.title == '...' -%}
             <span class="rw-col-main__page-ellipsis">&#8230;</span>
           {%- elsif part.is_link -%}
-            <a href="{{ part.url }}" class="rw-col-main__page-btn">{{ part.title }}</a>
+            {%- assign page_number = part.title | plus: 0 -%}
+            <a href="{{ part.url }}" class="rw-col-main__page-btn">{% if page_number < 10 %}0{% endif %}{{ part.title }}</a>
           {%- else -%}
-            <span class="rw-col-main__page-btn rw-col-main__page-btn--active">{{ part.title }}</span>
+            {%- assign page_number = part.title | plus: 0 -%}
+            <span class="rw-col-main__page-btn rw-col-main__page-btn--active">{% if page_number < 10 %}0{% endif %}{{ part.title }}</span>
           {%- endif -%}
         {%- endfor -%}
 
@@ -326,6 +337,15 @@
 {% javascript %}
   (function () {
     document.querySelectorAll('.rw-col-main').forEach(function (section) {
+      var sortSelect = section.querySelector('.rw-col-main__sort-select');
+      if (sortSelect) {
+        sortSelect.addEventListener('change', function () {
+          var url = new URL(window.location.href);
+          url.searchParams.set('sort_by', this.value);
+          window.location.href = url.toString();
+        });
+      }
+
       section.addEventListener('click', function (e) {
         /* size button: select, enable add */
         var sizeBtn = e.target.closest('.rw-col__size-btn');
@@ -348,6 +368,8 @@
         if (addBtn && addBtn.dataset.variantId && !addBtn.disabled) {
           e.preventDefault();
           var label = addBtn.innerHTML;
+          var sectionId = section.dataset.sectionId || '';
+          var card = addBtn.closest('.rw-col__card');
           addBtn.disabled = true;
           addBtn.textContent = '...';
           fetch(window.Shopify.routes.root + 'cart/add.js', {
@@ -355,15 +377,44 @@
             headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
             body: JSON.stringify({ id: parseInt(addBtn.dataset.variantId, 10), quantity: 1 })
           })
-            .then(function (r) { return r.json(); })
-            .then(function () {
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (payload) {
+              if (payload && payload.status) {
+                throw new Error(payload.description || payload.message || 'Unable to add item');
+              }
+
+              return fetch(window.Shopify.routes.root + 'cart.js');
+            })
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (cart) {
+              document.dispatchEvent(
+                new CustomEvent('cart:update', {
+                  bubbles: true,
+                  detail: {
+                    resource: cart,
+                    sourceId: sectionId || 'rw-main-collection',
+                    data: {
+                      itemCount: cart.item_count,
+                      productId: card ? card.dataset.productId : '',
+                      variantId: addBtn.dataset.variantId
+                    }
+                  }
+                })
+              );
               addBtn.textContent = '+';
-              document.dispatchEvent(new CustomEvent('cart:refresh', { bubbles: true }));
-              setTimeout(function () { addBtn.innerHTML = label; addBtn.disabled = false; }, 1800);
             })
             .catch(function () {
               addBtn.textContent = '!';
-              setTimeout(function () { addBtn.innerHTML = label; addBtn.disabled = false; }, 1800);
+            })
+            .finally(function () {
+              setTimeout(function () {
+                addBtn.innerHTML = label;
+                addBtn.disabled = false;
+              }, 1800);
             });
         }
       });
@@ -386,7 +437,7 @@
     top: var(--header-height, 60px);
     z-index: 40;
     background: var(--color-background);
-    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+    border-bottom: 1px solid rgb(var(--color-foreground));
     padding: 16px 24px;
   }
   .rw-col-main__bar-inner {
@@ -615,6 +666,9 @@
   .rw-col__card:hover .rw-col__quick-add {
     transform: translateY(0);
   }
+  .rw-col__card:focus-within .rw-col__quick-add {
+    transform: translateY(0);
+  }
   .rw-col__qa-inner {
     background: rgba(var(--color-background-rgb), 0.96);
     border: 1px solid var(--color-foreground);
@@ -679,6 +733,10 @@
   .rw-col__add-btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+  }
+
+  .rw-col__card-media:focus-within .rw-col__quick-add {
+    transform: translateY(0);
   }
 
   /* ── Card info ── */
@@ -835,7 +893,7 @@
     justify-content: center;
     align-items: center;
     gap: 8px;
-    margin: -64px 0 48px;
+    margin: 56px 0 48px;
     padding: 0 24px;
   }
   .rw-col-main__page-btn {
@@ -897,6 +955,10 @@
       grid-template-columns: 1fr;
       padding: 40px 16px 64px;
       gap: 16px;
+    }
+    .rw-col-main__pagination {
+      margin: 40px 0 32px;
+      padding: 0 16px;
     }
     .rw-col-main__sort-wrap {
       display: none;

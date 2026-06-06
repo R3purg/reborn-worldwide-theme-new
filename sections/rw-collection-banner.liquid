@@ -3,9 +3,29 @@
   assign col_title = s.heading_override | default: collection.title
   assign col_desc = s.subtext | default: collection.description
   assign product_count = collection.products_count
+
+  assign title_parts = col_title | split: '//'
+  assign title_main = title_parts | first | strip
+  assign title_suffix = ''
+  if title_parts.size > 1
+    assign title_suffix = title_parts | last | strip
+  endif
+
+  assign title_words = title_main | split: ' '
+  assign title_primary = title_words | first | strip
+  assign title_secondary = ''
+  if title_words.size > 1
+    for word in title_words offset: 1
+      assign title_secondary = title_secondary | append: word
+      unless forloop.last
+        assign title_secondary = title_secondary | append: ' '
+      endunless
+    endfor
+  endif
+  assign collection_image_alt = collection.image.alt | default: title_main
 %}
 
-<section class="rw-col-banner color-{{ s.color_scheme }}">
+<section class="rw-col-banner rw-col-banner--{{ s.banner_style }} color-{{ s.color_scheme }}">
   <div class="rw-col-banner__inner">
     {%- if s.banner_style == 'minimal' -%}
       {%- comment %} Minimal mode: breadcrumb + giant h1 only {%- endcomment %}
@@ -14,9 +34,17 @@
         <span>/</span>
         <a href="{{ routes.all_products_collection_url }}">SHOP</a>
         <span>/</span>
-        <span class="rw-col-banner__current">{{ col_title }}</span>
+        <span class="rw-col-banner__current">{{ title_main }}</span>
       </div>
-      <h1 class="rw-col-banner__h1-minimal">{{ col_title }}</h1>
+      <h1 class="rw-col-banner__h1-minimal">
+        <span class="rw-col-banner__title-line">{{ title_main }}</span>
+        {%- if title_suffix != blank -%}
+          <span class="rw-col-banner__title-line">
+            <span class="rw-col-banner__slash">/</span>
+            <span class="rw-col-banner__accent">{{ title_suffix }}</span>
+          </span>
+        {%- endif -%}
+      </h1>
 
     {%- else -%}
       {%- comment %} Editorial mode: two-column grid {%- endcomment %}
@@ -25,7 +53,7 @@
         <span>/</span>
         <a href="{{ routes.all_products_collection_url }}">SHOP</a>
         <span>/</span>
-        <span class="rw-col-banner__current">{{ col_title }}</span>
+        <span class="rw-col-banner__current">{{ title_main }}</span>
       </div>
 
       <div class="rw-col-banner__grid">
@@ -34,7 +62,19 @@
             <div class="rw-col-banner__kicker">{{ s.kicker }}</div>
           {%- endif -%}
 
-          <h1 class="rw-col-banner__h1">{{ col_title }}</h1>
+          <h1 class="rw-col-banner__h1">
+            <span class="rw-col-banner__title-line">{{ title_primary }}</span>
+            {%- if title_secondary != blank or title_suffix != blank -%}
+              <span class="rw-col-banner__title-line">
+                {%- if title_secondary != blank -%}
+                  {{ title_secondary }}
+                {%- endif -%}
+                {%- if title_suffix != blank -%}
+                  <span class="rw-col-banner__accent">// {{ title_suffix }}</span>
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+          </h1>
 
           {%- if col_desc != blank -%}
             <p class="rw-col-banner__description">{{ col_desc }}</p>
@@ -43,9 +83,9 @@
           {%- if s.show_stats -%}
             <div class="rw-col-banner__stats">
               <span>{{ product_count }} PIECES</span>
-              <span>·</span>
+              <span>&middot;</span>
               <span>4 CHAPTERS</span>
-              <span>·</span>
+              <span>&middot;</span>
               <span>SHIP WORLDWIDE</span>
             </div>
           {%- endif -%}
@@ -56,8 +96,7 @@
             {{
               collection.image
               | image_url: width: 800
-              | image_tag: loading: 'eager', preload: true, class: 'rw-col-banner__img', alt: collection.image.alt
-              | default: col_title
+              | image_tag: loading: 'eager', preload: true, class: 'rw-col-banner__img', alt: collection_image_alt
             }}
           {%- else -%}
             <div class="rw-col-banner__media-ph">
@@ -72,14 +111,19 @@
 
 {% stylesheet %}
   .rw-col-banner {
-    padding: 56px 24px;
+    padding: 40px 24px 48px;
   }
+
+  .rw-col-banner--minimal {
+    padding-bottom: 0;
+  }
+
   .rw-col-banner__inner {
     max-width: 1440px;
     margin-inline: auto;
   }
 
-  /* ── Breadcrumb ── */
+  /* Breadcrumb */
   .rw-col-banner__breadcrumb {
     font-family: var(--font-accent--family);
     font-size: 11px;
@@ -88,20 +132,23 @@
     color: rgba(var(--color-foreground-rgb), 0.62);
     display: flex;
     gap: 8px;
-    margin-bottom: 18px;
+    margin-bottom: 22px;
   }
+
   .rw-col-banner__breadcrumb a {
     text-decoration: none;
     transition: opacity 0.2s ease;
   }
+
   .rw-col-banner__breadcrumb a:hover {
     opacity: 0.7;
   }
+
   .rw-col-banner__current {
     color: var(--color-foreground);
   }
 
-  /* ── Minimal mode ── */
+  /* Minimal mode */
   .rw-col-banner__h1-minimal {
     font-family: var(--font-heading--family);
     font-weight: var(--font-heading--weight);
@@ -111,15 +158,23 @@
     letter-spacing: -0.01em;
     margin: 0;
     color: var(--color-foreground);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0 0.12em;
   }
 
-  /* ── Editorial mode ── */
+  .rw-col-banner__h1-minimal .rw-col-banner__title-line {
+    display: block;
+  }
+
+  /* Editorial mode */
   .rw-col-banner__grid {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 24px;
     align-items: stretch;
-    margin-top: 32px;
+    margin-top: 24px;
   }
 
   .rw-col-banner__content {
@@ -146,6 +201,22 @@
     letter-spacing: -0.01em;
     margin: 0 0 16px;
     color: var(--color-foreground);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .rw-col-banner__title-line {
+    display: block;
+  }
+
+  .rw-col-banner__accent {
+    color: rgb(var(--color-button));
+  }
+
+  .rw-col-banner__slash {
+    color: rgb(var(--color-button));
+    margin-right: 0.12em;
   }
 
   .rw-col-banner__description {
@@ -171,6 +242,7 @@
 
   .rw-col-banner__media {
     aspect-ratio: 4 / 5;
+    min-height: 380px;
     position: relative;
     overflow: hidden;
     border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
@@ -199,26 +271,32 @@
     opacity: 0.25;
   }
 
-  /* ── Responsive ── */
+  /* Responsive */
   @media (max-width: 989px) {
     .rw-col-banner {
-      padding: 48px 24px;
+      padding: 48px 24px 40px;
     }
+
     .rw-col-banner__grid {
       grid-template-columns: 1fr;
       gap: 32px;
     }
+
     .rw-col-banner__media {
       aspect-ratio: 16 / 9;
+      min-height: 0;
     }
   }
+
   @media (max-width: 749px) {
     .rw-col-banner {
       padding: 40px 16px;
     }
+
     .rw-col-banner__h1 {
       font-size: clamp(40px, 8vw, 100px);
     }
+
     .rw-col-banner__description {
       font-size: 16px;
     }
@@ -259,7 +337,7 @@
       "type": "text",
       "id": "kicker",
       "label": "Kicker",
-      "default": "// COLLECTION — VOL.04"
+      "default": "// COLLECTION &mdash; VOL.04"
     },
     {
       "type": "textarea",

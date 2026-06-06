@@ -90,8 +90,10 @@
         {%- for collection in collections -%}
           {%- liquid
             assign accent_color = collection.metafields.custom.accent_color | default: 'rgba(var(--color-button), 1)'
-            assign count_str = collection.products_count | prepend: '00'
-            assign count_display = count_str | slice: -2, 2
+            assign count_display = collection.products_count
+            if collection.products_count < 10
+              assign count_display = '0' | append: collection.products_count
+            endif
             assign pub_date = collection.published_at | date: '%Y-%m-%d'
           -%}
           <li
@@ -138,8 +140,11 @@
                   style="background: {{ accent_color }};"
                 ></span>
                 <span class="rw-col-card__index-num">
-                  {%- assign idx_str = forloop.index | prepend: '00' -%}
-                  {{ idx_str | slice: -2, 2 }}
+                  {%- assign idx_display = forloop.index -%}
+                  {%- if forloop.index < 10 -%}
+                    {%- assign idx_display = '0' | append: forloop.index -%}
+                  {%- endif -%}
+                  {{ idx_display }}
                 </span>
               </div>
 
@@ -210,7 +215,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -241,7 +246,7 @@
   }
 
   .rw-collections__kicker {
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -350,7 +355,7 @@
   }
 
   .rw-collections__count {
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -361,7 +366,7 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -373,7 +378,7 @@
     border: 1px solid var(--color-foreground);
     border-radius: 999px;
     padding: 9px 14px;
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -475,7 +480,7 @@
     background: var(--color-background);
     color: var(--color-foreground);
     border: 1px solid var(--color-foreground);
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 10px;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -507,7 +512,7 @@
   }
 
   .rw-col-card__index-num {
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -539,7 +544,7 @@
     align-items: center;
     gap: 8px;
     margin-top: 12px;
-    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;

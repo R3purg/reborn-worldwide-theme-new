@@ -3,7 +3,15 @@
 
   @param {string} [accelerated_checkout_buttons_layout] - { 'vertical' } Forced layout of the additional checkout buttons, instead of relying on platform's layout.
   @param {string} [section_id] - The section ID for cart discount component.
+  @param {boolean} [show_note] - Whether to render cart note controls in this summary.
 {%- enddoc -%}
+
+{%- liquid
+  assign show_cart_note_in_summary = settings.show_cart_note
+  if show_note == false
+    assign show_cart_note_in_summary = false
+  endif
+-%}
 
 <div class="cart-totals">
   {% # We need to keep this node in place to allow morphing to work properly # %}
@@ -38,9 +46,9 @@
     {%- endif -%}
   </div>
 
-  {% if settings.show_cart_note or settings.show_add_discount_code %}
+  {% if show_cart_note_in_summary or settings.show_add_discount_code %}
     <div class="cart-actions">
-      {% if settings.show_cart_note %}
+      {% if show_cart_note_in_summary %}
         <script
           type="module"
           src="{{ 'cart-note.js' | asset_url }}"
@@ -89,7 +97,7 @@
           %}
         </cart-note>
       {% endif %}
-      {% if settings.show_cart_note and settings.show_add_discount_code %}
+      {% if show_cart_note_in_summary and settings.show_add_discount_code %}
         <div class="cart-actions__divider"></div>
       {% endif %}
       {% if settings.show_add_discount_code %}
@@ -116,7 +124,7 @@
         {% capture cart_discount_accordion_children %}
           <details
             class="details"
-            {% if disclosure_expanded %}
+            {% if disclosure_expanded or show_note == false %}
               open
             {% endif %}
           >
@@ -267,6 +275,7 @@
   >
     <span class="button-text">
       {{ 'content.checkout' | t }}
+      <span class="rw-cart-checkout-total" aria-hidden="true">&nbsp;&middot;&nbsp;{{ total_price }}</span>
     </span>
   </button>
 
@@ -283,7 +292,7 @@
 </div>
 
 {%- unless cart.empty? -%}
-  <div class="rw-cart-payment-methods">VISA · MC · APPLE PAY · KLARNA · BLIK</div>
+  <div class="rw-cart-payment-methods">VISA &middot; MC &middot; APPLE PAY &middot; KLARNA &middot; BLIK</div>
 {%- endunless -%}
 
 {% stylesheet %}
