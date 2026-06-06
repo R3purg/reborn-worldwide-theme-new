@@ -5,10 +5,6 @@
   else
     assign shop_col = collections.all
   endif
-  assign view_all_label = s.cta_label
-  if view_all_label == blank or view_all_label == 'View all pieces'
-    assign view_all_label = 'View all ' | append: shop_col.products_count | append: ' pieces'
-  endif
 %}
 
 <section class="rw-shop color-{{ s.color_scheme }}" id="shop">
@@ -240,7 +236,7 @@
     {%- if s.cta_label != blank -%}
       <div class="rw-shop__footer">
         <a href="{{ s.cta_url | default: shop_col.url | default: '/collections/all' }}" class="rw-shop__view-all">
-          {{ view_all_label }} &rarr;
+          {{ s.cta_label }} →
         </a>
       </div>
     {%- endif -%}
