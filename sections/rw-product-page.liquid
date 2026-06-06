@@ -369,80 +369,78 @@
             <span class="rw-pdp-trust__value">{{ s.trust_made_in }}</span>
           </div>
         </div>
+
+        {%- comment -%} Accordions {%- endcomment -%}
+        <div class="rw-pdp-accordions">
+          {%- if product.description != blank -%}
+            <details class="rw-pdp-acc" open>
+              <summary class="rw-pdp-acc__header">
+                <span class="rw-pdp-acc__title">// DESCRIPTION</span>
+                <svg
+                  class="rw-pdp-acc__icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </summary>
+              <div class="rw-pdp-acc__body">
+                <div class="rw-pdp-acc__content rte">{{ product.description }}</div>
+              </div>
+            </details>
+          {%- endif -%}
+
+          {%- assign details_content = product.metafields.custom.details_and_fit | default: s.details_and_fit -%}
+          {%- if details_content != blank -%}
+            <details class="rw-pdp-acc">
+              <summary class="rw-pdp-acc__header">
+                <span class="rw-pdp-acc__title">// DETAILS &amp; FIT</span>
+                <svg
+                  class="rw-pdp-acc__icon"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  aria-hidden="true"
+                >
+                  <path d="M12 5v14M5 12h14"/>
+                </svg>
+              </summary>
+              <div class="rw-pdp-acc__body">
+                <div class="rw-pdp-acc__content rte">{{ details_content }}</div>
+              </div>
+            </details>
+          {%- endif -%}
+
+          <details class="rw-pdp-acc">
+            <summary class="rw-pdp-acc__header">
+              <span class="rw-pdp-acc__title">// SHIPPING &amp; RETURNS</span>
+              <svg
+                class="rw-pdp-acc__icon"
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+                aria-hidden="true"
+              >
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
+            </summary>
+            <div class="rw-pdp-acc__body">
+              <div class="rw-pdp-acc__content rte">{{ s.shipping_returns_text }}</div>
+            </div>
+          </details>
+        </div>
       </div>
       {%- comment -%} /info {%- endcomment -%}
     </div>
   </section>
-
-  {%- comment -%} ── Chapter story strip ─────────────────────────────────────── {%- endcomment -%}
-  {%- if s.story_heading != blank or s.story_image != blank -%}
-    <section class="rw-pdp-story" aria-label="Chapter story">
-      <div class="rw-pdp-story__inner">
-        <div class="rw-pdp-story__media">
-          {%- if s.story_image != blank -%}
-            {{
-              s.story_image
-              | image_url: width: 900
-              | image_tag: loading: 'lazy', alt: s.story_image.alt
-              | default: s.story_heading, class: 'rw-pdp-story__img'
-            }}
-          {%- else -%}
-            <div class="rw-pdp-story__media-ph">
-              {{ 'lifestyle-1' | placeholder_svg_tag }}
-            </div>
-          {%- endif -%}
-        </div>
-        <div class="rw-pdp-story__body">
-          {%- if chapter_num != blank -%}
-            <div class="rw-pdp-story__kicker">
-              CHAPTER {{ chapter_num -}}
-              {%- if chapter_name != blank %} // {{ chapter_name | upcase }}{% endif %}
-            </div>
-          {%- elsif s.story_kicker != blank -%}
-            <div class="rw-pdp-story__kicker">{{ s.story_kicker }}</div>
-          {%- endif -%}
-          {%- if s.story_heading != blank -%}
-            <p class="rw-pdp-story__heading">{{ s.story_heading }}</p>
-          {%- endif -%}
-          {%- if s.story_text != blank -%}
-            <p class="rw-pdp-story__text">{{ s.story_text }}</p>
-          {%- endif -%}
-          {%- if s.story_link_url != blank -%}
-            <a href="{{ s.story_link_url }}" class="rw-pdp-story__cta">
-              {{ s.story_link_label | default: 'Shop the chapter' }}
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.8"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
-              </svg>
-            </a>
-          {%- endif -%}
-        </div>
-      </div>
-    </section>
-  {%- elsif request.design_mode -%}
-    <section class="rw-pdp-story" aria-label="Chapter story">
-      <div class="rw-pdp-story__inner">
-        <div class="rw-pdp-story__media">
-          <div class="rw-pdp-story__media-ph">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
-        </div>
-        <div class="rw-pdp-story__body">
-          <div class="rw-pdp-story__kicker">CHAPTER // STORY</div>
-          <p class="rw-pdp-story__heading">Add your chapter story here</p>
-          <p class="rw-pdp-story__text">
-            Fill in the story heading, image, text, and CTA link in the section settings to display this editorial
-            strip.
-          </p>
-        </div>
-      </div>
-    </section>
-  {%- endif -%}
 
   {%- comment -%} ── Sticky add-to-bag bar ────────────────────────────────────── {%- endcomment -%}
   {%- if s.sticky_bar -%}
@@ -518,7 +516,6 @@
     /* ── Global page wrapper ─────────────────────────────────── */
     .rw-pdp-bc,
     .rw-pdp-main,
-    .rw-pdp-story,
     .rw-pdp-sticky {
       box-sizing: border-box;
     }
@@ -966,84 +963,54 @@
       margin-top: 4px;
     }
 
-    /* ── Chapter story strip ─────────────────────────────────── */
-    .rw-pdp-story {
-      background: rgb(var(--color-foreground));
-      color: rgb(var(--color-background));
-      padding: 80px 24px;
-      margin-top: 64px;
+    /* Accordions */
+    .rw-pdp-accordions {
+      margin-top: 28px;
     }
-    .rw-pdp-story__inner {
-      max-width: 1440px;
-      margin-inline: auto;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 48px;
-      align-items: center;
+
+    .rw-pdp-acc {
+      border-top: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     }
-    .rw-pdp-story__media {
-      aspect-ratio: 4 / 5;
-      background: rgba(255, 255, 255, 0.07);
-      overflow: hidden;
+    .rw-pdp-acc:last-child {
+      border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
     }
-    .rw-pdp-story__img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .rw-pdp-story__media-ph {
-      width: 100%;
-      height: 100%;
+    .rw-pdp-acc__header {
+      list-style: none;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      opacity: 0.3;
+      padding: 18px 0;
+      cursor: pointer;
+      user-select: none;
     }
-    .rw-pdp-story__kicker {
+    .rw-pdp-acc__header::-webkit-details-marker {
+      display: none;
+    }
+    .rw-pdp-acc__title {
       font-family: var(--font-accent--family);
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 0.06em;
       text-transform: uppercase;
-      color: rgba(var(--color-button), 1);
-      margin-bottom: 18px;
-    }
-    .rw-pdp-story__heading {
-      font-family: var(--font-heading--family);
-      font-weight: var(--font-heading--weight);
-      text-transform: uppercase;
-      font-size: clamp(30px, 4vw, 60px);
-      line-height: 0.95;
-      margin: 0;
-      letter-spacing: 0.005em;
-      text-wrap: balance;
-    }
-    .rw-pdp-story__text {
-      font-size: 17px;
-      line-height: 1.6;
-      margin-top: 24px;
-      max-width: 520px;
-      opacity: 0.82;
-    }
-    .rw-pdp-story__cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-top: 28px;
-      padding: 14px 22px;
-      border: 1px solid rgb(var(--color-background));
-      background: rgb(var(--color-background));
       color: rgb(var(--color-foreground));
-      font-family: var(--font-accent--family);
-      font-size: 13px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      border-radius: 999px;
-      text-decoration: none;
-      transition: opacity 0.2s;
     }
-    .rw-pdp-story__cta:hover {
-      opacity: 0.85;
+    .rw-pdp-acc__icon {
+      flex-shrink: 0;
+      transition: transform 0.25s ease;
+      fill: none;
+      color: rgb(var(--color-foreground));
+    }
+    details[open] .rw-pdp-acc__icon {
+      transform: rotate(45deg);
+    }
+
+    .rw-pdp-acc__body {
+      overflow: hidden;
+    }
+    .rw-pdp-acc__content {
+      padding-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: rgb(var(--color-foreground));
     }
 
     /* ── Sticky add-to-bag bar ───────────────────────────────── */
@@ -1162,13 +1129,6 @@
       }
       .rw-pdp-info {
         position: static;
-      }
-      .rw-pdp-story__inner {
-        grid-template-columns: 1fr;
-        gap: 32px;
-      }
-      .rw-pdp-story__media {
-        aspect-ratio: 16 / 9;
       }
       .rw-pdp-sticky__sizes {
         display: none;
@@ -1566,38 +1526,19 @@
     },
     {
       "type": "header",
-      "content": "Chapter story strip"
+      "content": "Accordions"
     },
     {
-      "type": "image_picker",
-      "id": "story_image",
-      "label": "Story image"
+      "type": "richtext",
+      "id": "details_and_fit",
+      "label": "Details & Fit",
+      "info": "Overridden per-product via custom.details_and_fit metafield."
     },
     {
-      "type": "text",
-      "id": "story_kicker",
-      "label": "Story kicker (overridden by product chapter metafield)"
-    },
-    {
-      "type": "textarea",
-      "id": "story_heading",
-      "label": "Story heading"
-    },
-    {
-      "type": "textarea",
-      "id": "story_text",
-      "label": "Story body text"
-    },
-    {
-      "type": "url",
-      "id": "story_link_url",
-      "label": "Story CTA link"
-    },
-    {
-      "type": "text",
-      "id": "story_link_label",
-      "label": "Story CTA label",
-      "default": "Shop the chapter"
+      "type": "richtext",
+      "id": "shipping_returns_text",
+      "label": "Shipping & Returns text",
+      "default": "<p>Tracked worldwide shipping, free over \u20ac120. Dispatched from Krak\u00f3w within 48h. 14-day returns on unworn pieces \u2014 minus the journey back. Drops don't restock, so size carefully.</p>"
     }
   ],
   "presets": [

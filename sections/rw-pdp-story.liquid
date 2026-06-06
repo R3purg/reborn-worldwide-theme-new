@@ -1,0 +1,214 @@
+{% liquid
+  assign s = section.settings
+  assign chapter_num = product.metafields.custom.chapter | default: ''
+  assign chapter_name = product.metafields.custom.chapter_name | default: ''
+  assign story_img_alt = s.story_image.alt | default: s.story_heading
+%}
+
+{%- if s.story_heading != blank or s.story_image != blank -%}
+  <section class="rw-pdp-story" aria-label="Chapter story" {{ section.shopify_attributes }}>
+    <div class="rw-pdp-story__inner">
+      <div class="rw-pdp-story__media">
+        {%- if s.story_image != blank -%}
+          {{
+            s.story_image
+            | image_url: width: 900
+            | image_tag: loading: 'lazy', alt: story_img_alt, class: 'rw-pdp-story__img'
+          }}
+        {%- else -%}
+          <div class="rw-pdp-story__media-ph">
+            {{ 'lifestyle-1' | placeholder_svg_tag }}
+          </div>
+        {%- endif -%}
+      </div>
+      <div class="rw-pdp-story__body">
+        {%- if chapter_num != blank -%}
+          <div class="rw-pdp-story__kicker">
+            CHAPTER {{ chapter_num -}}
+            {%- if chapter_name != blank %} // {{ chapter_name | upcase }}{% endif %}
+          </div>
+        {%- elsif s.story_kicker != blank -%}
+          <div class="rw-pdp-story__kicker">{{ s.story_kicker }}</div>
+        {%- endif -%}
+        {%- if s.story_heading != blank -%}
+          <p class="rw-pdp-story__heading">{{ s.story_heading }}</p>
+        {%- endif -%}
+        {%- if s.story_text != blank -%}
+          <p class="rw-pdp-story__text">{{ s.story_text }}</p>
+        {%- endif -%}
+        {%- if s.story_link_url != blank -%}
+          <a href="{{ s.story_link_url }}" class="rw-pdp-story__cta">
+            {{ s.story_link_label | default: 'Shop the chapter' }}
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              aria-hidden="true"
+            >
+              <path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>
+            </svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </section>
+{%- elsif request.design_mode -%}
+  <section class="rw-pdp-story" aria-label="Chapter story" {{ section.shopify_attributes }}>
+    <div class="rw-pdp-story__inner">
+      <div class="rw-pdp-story__media">
+        <div class="rw-pdp-story__media-ph">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
+      </div>
+      <div class="rw-pdp-story__body">
+        <div class="rw-pdp-story__kicker">CHAPTER // STORY</div>
+        <p class="rw-pdp-story__heading">Add your chapter story here</p>
+        <p class="rw-pdp-story__text">
+          Fill in the story heading, image, text, and CTA link in the section settings to display this editorial strip.
+        </p>
+      </div>
+    </div>
+  </section>
+{%- endif -%}
+
+{% stylesheet %}
+  .rw-pdp-story {
+    box-sizing: border-box;
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+    padding: 80px 24px;
+    margin-top: 64px;
+  }
+  .rw-pdp-story__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .rw-pdp-story__media {
+    aspect-ratio: 4 / 5;
+    background: rgba(255, 255, 255, 0.07);
+    overflow: hidden;
+  }
+  .rw-pdp-story__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-pdp-story__media-ph {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+  }
+  .rw-pdp-story__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(var(--color-button), 1);
+    margin-bottom: 18px;
+  }
+  .rw-pdp-story__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(30px, 4vw, 60px);
+    line-height: 0.95;
+    margin: 0;
+    letter-spacing: 0.005em;
+    text-wrap: balance;
+  }
+  .rw-pdp-story__text {
+    font-size: 17px;
+    line-height: 1.6;
+    margin-top: 24px;
+    max-width: 520px;
+    opacity: 0.82;
+  }
+  .rw-pdp-story__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    padding: 14px 22px;
+    border: 1px solid rgb(var(--color-background));
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
+    font-family: var(--font-accent--family);
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+  .rw-pdp-story__cta:hover {
+    opacity: 0.85;
+  }
+
+  @media (max-width: 1023px) {
+    .rw-pdp-story__inner {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .rw-pdp-story__media {
+      aspect-ratio: 16 / 9;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Chapter Story",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "story_image",
+      "label": "Story image"
+    },
+    {
+      "type": "text",
+      "id": "story_kicker",
+      "label": "Kicker (overridden by product chapter metafield)"
+    },
+    {
+      "type": "textarea",
+      "id": "story_heading",
+      "label": "Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "story_text",
+      "label": "Body text"
+    },
+    {
+      "type": "url",
+      "id": "story_link_url",
+      "label": "CTA link"
+    },
+    {
+      "type": "text",
+      "id": "story_link_label",
+      "label": "CTA label",
+      "default": "Shop the chapter"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Chapter Story"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
