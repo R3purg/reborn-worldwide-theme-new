@@ -22,9 +22,12 @@
         "trust_made_in": "in Kraków"
       }
     },
-    "rw_pdp_story": {
-      "type": "rw-pdp-story",
-      "settings": {}
+    "rw_pdp_accordions": {
+      "type": "rw-pdp-accordions",
+      "settings": {
+        "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>",
+        "color_scheme": "scheme-1"
+      }
     },
     "product_recommendations_qggXJq": {
       "type": "rw-product-recommendations",
@@ -39,7 +42,6 @@
   "order": [
     "main",
     "rw_pdp_accordions",
-    "rw_pdp_story",
     "product_recommendations_qggXJq"
   ]
 }
