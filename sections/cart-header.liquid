@@ -3,54 +3,84 @@
   assign cart_total = cart.total_price
   assign remaining_cents = threshold_cents | minus: cart_total | at_least: 0
   assign remaining = remaining_cents | money
-  assign pct = cart_total | times: 100 | divided_by: threshold_cents | at_most: 100
+  assign pct = 0
+  if threshold_cents > 0
+    assign pct = cart_total | times: 100 | divided_by: threshold_cents | at_most: 100
+  endif
   assign count = cart.item_count
 -%}
 
 <div class="section--{{ section.settings.section_width }}">
-  <div class="rw-cart-hdr" style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;">
+  <div
+    class="rw-cart-hdr{% if cart.empty? %} rw-cart-hdr--empty{% endif %}"
+    id="rw-cart-hdr-{{ section.id }}"
+    data-rw-cart-hdr
+    data-initial-item-count="{{ cart.item_count }}"
+    data-initial-total-price="{{ cart.total_price }}"
+    data-free-shipping-threshold-cents="{{ threshold_cents }}"
+    data-free-shipping-enabled="{{ section.settings.show_free_shipping_bar }}"
+    style="padding-block-start: {{ section.settings.padding_top }}px; padding-block-end: {{ section.settings.padding_bottom }}px;"
+  >
+    <nav class="rw-cart-hdr__breadcrumb"{% if cart.empty? %} hidden{% endif %} aria-label="{{ 'accessibility.breadcrumbs' | t }}" data-rw-cart-hdr-breadcrumb>
+      <a href="{{ routes.root_url }}" class="rw-cart-hdr__bc-link">HOME</a>
+      <span aria-hidden="true"> / </span>
+      <span aria-current="page">BAG</span>
+    </nav>
 
-    {%- unless cart.empty? -%}
-      <nav class="rw-cart-hdr__breadcrumb" aria-label="{{ 'accessibility.breadcrumbs' | t }}">
-        <a href="{{ routes.root_url }}" class="rw-cart-hdr__bc-link">HOME</a>
-        <span aria-hidden="true"> / </span>
-        <span aria-current="page">BAG</span>
-      </nav>
-    {%- endunless -%}
-
-    <div class="rw-cart-hdr__title-row{% if cart.empty? %} rw-cart-hdr__title-row--empty{% endif %}">
-      {%- if cart.empty? -%}
-        <h1 class="rw-cart-hdr__title rw-cart-hdr__title--empty">It&#8217;s empty in here.</h1>
-      {%- else -%}
-        <h1 class="rw-cart-hdr__title">
-          YOUR BAG<sup class="rw-cart-hdr__count">
-            {%- if count < 10 -%}0{{ count }}{%- else -%}{{ count }}{%- endif -%}
-          </sup>
-        </h1>
-        <a href="{{ routes.all_products_collection_url }}" class="rw-cart-hdr__keep-shopping">&#8592; Keep shopping</a>
-      {%- endif -%}
+    <div class="rw-cart-hdr__title-row{% if cart.empty? %} rw-cart-hdr__title-row--empty{% endif %}" data-rw-cart-hdr-row>
+      <h1
+        class="rw-cart-hdr__title{% if cart.empty? %} rw-cart-hdr__title--empty{% endif %}"
+        data-rw-cart-hdr-title
+        data-filled-text="YOUR BAG"
+        data-empty-text="It&#8217;s empty in here."
+      >
+        <span class="rw-cart-hdr__title-text" data-rw-cart-hdr-title-text>
+          {%- if cart.empty? -%}
+            It&#8217;s empty in here.
+          {%- else -%}
+            YOUR BAG
+          {%- endif -%}
+        </span>
+        <sup class="rw-cart-hdr__count" data-rw-cart-hdr-count{% if cart.empty? %} hidden{% endif %}>
+          {%- if count < 10 -%}0{{ count }}{%- else -%}{{ count }}{%- endif -%}
+        </sup>
+      </h1>
+      <a
+        href="{{ routes.all_products_collection_url }}"
+        class="rw-cart-hdr__keep-shopping"
+        data-rw-cart-hdr-keep-shopping
+        {% if cart.empty? %}hidden{% endif %}
+      >
+        &#8592; Keep shopping
+      </a>
     </div>
 
-    {%- if cart.empty? -%}
-      <p class="rw-cart-hdr__empty-sub">// AS EMPTY AS A MONDAY MORNING. GO FIX THAT.</p>
-    {%- elsif section.settings.show_free_shipping_bar -%}
-      <div class="rw-cart-progress rw-cart-progress--page">
+    <p class="rw-cart-hdr__empty-sub"{% unless cart.empty? %} hidden{% endunless %} data-rw-cart-hdr-empty-sub>
+      // AS EMPTY AS A MONDAY MORNING. GO FIX THAT.
+    </p>
+
+    {%- if section.settings.show_free_shipping_bar -%}
+      <div
+        class="rw-cart-progress rw-cart-progress--page"
+        data-rw-cart-hdr-progress
+        data-rw-cart-hdr-progress-enabled="true"
+        {% if cart.empty? %}hidden{% endif %}
+      >
         <div class="rw-cart-progress__label">
-          <span>
+          <span data-rw-cart-hdr-progress-text>
             {%- if remaining_cents <= 0 -%}
               // FREE WORLDWIDE SHIPPING UNLOCKED
             {%- else -%}
               // {{ remaining }} TO FREE WORLDWIDE SHIPPING
             {%- endif -%}
           </span>
-          <span>{{ pct }}%</span>
+          <span data-rw-cart-hdr-progress-percent>{{ pct }}%</span>
         </div>
         <div class="rw-cart-progress__track">
-          <div class="rw-cart-progress__fill" style="width: {{ pct }}%"></div>
+          <div class="rw-cart-progress__fill" style="width: {{ pct }}%" data-rw-cart-hdr-progress-fill></div>
         </div>
       </div>
     {%- endif -%}
-
   </div>
 </div>
 
@@ -107,6 +137,10 @@
   .rw-cart-hdr__title--empty {
     font-size: clamp(40px, 6vw, 88px);
     text-align: center;
+  }
+
+  .rw-cart-hdr__title-text {
+    display: inline-block;
   }
 
   .rw-cart-hdr__count {
@@ -183,7 +217,116 @@
     transform: translateY(-2px);
     box-shadow: none;
   }
+
+  .rw-cart-hdr--empty .rw-cart-hdr__title-row {
+    justify-content: center;
+  }
+
+  .rw-cart-hdr--empty .rw-cart-hdr__keep-shopping {
+    display: none;
+  }
+
+  .rw-cart-hdr--empty .rw-cart-progress--page {
+    display: none;
+  }
 {% endstylesheet %}
+
+{% javascript %}
+  (function () {
+    const sectionId = document.currentScript
+      ? document.currentScript.closest('[data-section-id]')?.dataset.sectionId
+      : null;
+    const root = document.getElementById('rw-cart-hdr-' + sectionId);
+    if (!root) return;
+
+    const title = root.querySelector('[data-rw-cart-hdr-title]');
+    const titleText = root.querySelector('[data-rw-cart-hdr-title-text]');
+    const count = root.querySelector('[data-rw-cart-hdr-count]');
+    const breadcrumb = root.querySelector('[data-rw-cart-hdr-breadcrumb]');
+    const keepShopping = root.querySelector('[data-rw-cart-hdr-keep-shopping]');
+    const emptySub = root.querySelector('[data-rw-cart-hdr-empty-sub]');
+    const progress = root.querySelector('[data-rw-cart-hdr-progress]');
+    const progressText = root.querySelector('[data-rw-cart-hdr-progress-text]');
+    const progressPercent = root.querySelector('[data-rw-cart-hdr-progress-percent]');
+    const progressFill = root.querySelector('[data-rw-cart-hdr-progress-fill]');
+    const row = root.querySelector('[data-rw-cart-hdr-row]');
+    const thresholdCents = Number(root.dataset.freeShippingThresholdCents || 0);
+    const progressEnabled = root.dataset.freeShippingEnabled === 'true';
+    const filledText = title?.dataset.filledText || 'YOUR BAG';
+    const emptyText = title?.dataset.emptyText || 'It’s empty in here.';
+
+    const moneyCurrency = () => window.Shopify?.currency?.active || 'EUR';
+    const formatMoney = (cents) =>
+      (Math.max(0, Number(cents) || 0) / 100).toLocaleString(undefined, {
+        style: 'currency',
+        currency: moneyCurrency(),
+        minimumFractionDigits: 2,
+      });
+
+    const setHidden = (el, hidden) => {
+      if (!el) return;
+      el.hidden = hidden;
+    };
+
+    const syncHeader = (cartData) => {
+      const itemCount = Number(cartData?.item_count ?? 0);
+      const totalPrice = Number(cartData?.total_price ?? 0);
+      const isEmpty = itemCount <= 0;
+
+      root.classList.toggle('rw-cart-hdr--empty', isEmpty);
+      row?.classList.toggle('rw-cart-hdr__title-row--empty', isEmpty);
+
+      if (titleText) titleText.textContent = isEmpty ? emptyText : filledText;
+      if (count) {
+        count.hidden = isEmpty;
+        count.textContent = isEmpty ? '' : String(itemCount).padStart(2, '0');
+      }
+
+      setHidden(breadcrumb, isEmpty);
+      setHidden(keepShopping, isEmpty);
+      setHidden(emptySub, !isEmpty);
+
+      if (!progress || !progressEnabled || thresholdCents <= 0) return;
+
+      setHidden(progress, isEmpty);
+
+      if (isEmpty) return;
+
+      const remainingCents = Math.max(0, thresholdCents - totalPrice);
+      const pct = Math.min(100, Math.round((totalPrice / thresholdCents) * 100));
+
+      if (progressText) {
+        progressText.textContent =
+          remainingCents <= 0
+            ? '// FREE WORLDWIDE SHIPPING UNLOCKED'
+            : `// ${formatMoney(remainingCents)} TO FREE WORLDWIDE SHIPPING`;
+      }
+
+      if (progressPercent) progressPercent.textContent = `${pct}%`;
+      if (progressFill) progressFill.style.width = `${pct}%`;
+    };
+
+    syncHeader({
+      item_count: Number(root.dataset.initialItemCount || 0),
+      total_price: Number(root.dataset.initialTotalPrice || 0),
+    });
+
+    const onCartUpdate = (event) => {
+      const cartData = event?.detail?.resource || {};
+      if (cartData.item_count === undefined && event?.detail?.data?.itemCount !== undefined) {
+        cartData.item_count = Number(event.detail.data.itemCount);
+      }
+      syncHeader(cartData);
+    };
+
+    if (window.__rwCartHeaderOnCartUpdate) {
+      document.removeEventListener('cart:update', window.__rwCartHeaderOnCartUpdate);
+    }
+
+    window.__rwCartHeaderOnCartUpdate = onCartUpdate;
+    document.addEventListener('cart:update', onCartUpdate);
+  })();
+{% endjavascript %}
 
 {% schema %}
 {
