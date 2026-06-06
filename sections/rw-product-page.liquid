@@ -18,6 +18,13 @@
       assign size_opt_idx = forloop.index0
     endif
   endfor
+
+  assign size_needs_selection = false
+  if size_opt_idx != null
+    if product.selected_variant == null
+      assign size_needs_selection = true
+    endif
+  endif
 %}
 
 <script type="application/ld+json">
@@ -48,8 +55,10 @@
     currency: {{ shop.currency | json }},
     i18n: {
       soldOut: {{ 'products.product.sold_out' | t | json }},
-      addToCart: {{ 'products.product.add_to_cart' | t | json }}
-    }
+      addToCart: "ADD TO BAG",
+      selectSize: "SELECT A SIZE"
+    },
+    sizeNeedsSelection: {{ size_needs_selection }}
   };
 </script>
 
@@ -202,23 +211,93 @@
             </div>
             <div class="rw-pdp-info__swatches" role="radiogroup" aria-label="Color">
               {%- for val in color_opt.values -%}
-                <button
-                  class="rw-pdp-swatch{% if val.selected %} is-selected{% endif %}"
-                  data-opt-idx="{{ color_opt_idx }}"
-                  data-opt-val="{{ val.value | escape }}"
-                  aria-label="{{ val.value | escape }}"
-                  aria-pressed="{{ val.selected }}"
-                  type="button"
-                  {%- if val.swatch.color != blank %}
-                    style="background: rgb({{ val.swatch.color.rgb }})"
-                  {%- elsif val.swatch.image != blank %}
-                    style="background: url({{ val.swatch.image | image_url: width: 84 }}) center/cover"
-                  {%- else %}
-                    style="background: var(--color-foreground)"
-                  {%- endif -%}
-                >
-                  <span class="visually-hidden">{{ val.value }}</span>
-                </button>
+                {%- liquid
+                  assign sw_bg = ''
+                  assign sw_is_color = false
+                  if val.swatch.color != blank
+                    assign sw_bg = 'rgb(' | append: val.swatch.color.rgb | append: ')'
+                    assign sw_is_color = true
+                  elsif val.swatch.image != blank
+                    assign sw_is_color = true
+                  else
+                    assign sw_slug = val.value | downcase | strip | replace: ' ', '' | replace: '-', '' | replace: '_', ''
+                    case sw_slug
+                      when 'black', 'washedblack', 'offblack', 'inkblack', 'inknight'
+                        assign sw_bg = '#1a1a1a'
+                        assign sw_is_color = true
+                      when 'white', 'opticwhite', 'purewhite'
+                        assign sw_bg = '#f5f5f5'
+                        assign sw_is_color = true
+                      when 'bone', 'ivory', 'cream', 'offwhite', 'ecru'
+                        assign sw_bg = '#EDE7DA'
+                        assign sw_is_color = true
+                      when 'sand', 'beige', 'tan', 'camel', 'khaki'
+                        assign sw_bg = '#C9B99A'
+                        assign sw_is_color = true
+                      when 'green', 'swampgreen', 'forestgreen', 'olive', 'moss', 'army'
+                        assign sw_bg = '#7BAF2C'
+                        assign sw_is_color = true
+                      when 'red', 'crimson', 'scarlet', 'blood'
+                        assign sw_bg = '#C0392B'
+                        assign sw_is_color = true
+                      when 'orange'
+                        assign sw_bg = '#F26B1F'
+                        assign sw_is_color = true
+                      when 'yellow', 'acid', 'lemon'
+                        assign sw_bg = '#DCEC3D'
+                        assign sw_is_color = true
+                      when 'navy', 'navyblue', 'darkblue'
+                        assign sw_bg = '#1A2744'
+                        assign sw_is_color = true
+                      when 'blue', 'cobalt', 'cobaltblue'
+                        assign sw_bg = '#2980B9'
+                        assign sw_is_color = true
+                      when 'grey', 'gray', 'stonegrey', 'heathergrey', 'lightgrey'
+                        assign sw_bg = '#888888'
+                        assign sw_is_color = true
+                      when 'darkgrey', 'charcoal', 'smokegrey'
+                        assign sw_bg = '#3D3D3D'
+                        assign sw_is_color = true
+                      when 'pink', 'dustypink', 'blush', 'rose'
+                        assign sw_bg = '#E8A0A0'
+                        assign sw_is_color = true
+                      when 'purple', 'violet', 'plum', 'mauve'
+                        assign sw_bg = '#7D3C98'
+                        assign sw_is_color = true
+                      when 'brown', 'chocolate', 'mocha', 'coffee'
+                        assign sw_bg = '#6D4C41'
+                        assign sw_is_color = true
+                    endcase
+                  endif
+                -%}
+                {%- if sw_is_color -%}
+                  <button
+                    class="rw-pdp-swatch{% if val.selected %} is-selected{% endif %}"
+                    data-opt-idx="{{ color_opt_idx }}"
+                    data-opt-val="{{ val.value | escape }}"
+                    aria-label="{{ val.value | escape }}"
+                    aria-pressed="{{ val.selected }}"
+                    type="button"
+                    {%- if val.swatch.image != blank %}
+                      style="background: url({{ val.swatch.image | image_url: width: 84 }}) center/cover"
+                    {%- else %}
+                      style="background: {{ sw_bg }}"
+                    {%- endif -%}
+                  >
+                    <span class="visually-hidden">{{ val.value }}</span>
+                  </button>
+                {%- else -%}
+                  <button
+                    class="rw-pdp-swatch rw-pdp-swatch--text{% if val.selected %} is-selected{% endif %}"
+                    data-opt-idx="{{ color_opt_idx }}"
+                    data-opt-val="{{ val.value | escape }}"
+                    aria-label="{{ val.value | escape }}"
+                    aria-pressed="{{ val.selected }}"
+                    type="button"
+                  >
+                    {{ val.value }}
+                  </button>
+                {%- endif -%}
               {%- endfor -%}
             </div>
           </div>
@@ -316,15 +395,17 @@
             <button
               type="submit"
               name="add"
-              class="rw-pdp-add-btn"
+              class="rw-pdp-add-btn{% if size_needs_selection %} rw-pdp-add-btn--needs-size{% endif %}"
               data-add-btn
-              {% if current_variant.available == false %}
+              {% if size_needs_selection or current_variant.available == false %}
                 disabled
               {% endif %}
             >
               <span data-add-btn-label>
-                {%- if current_variant.available -%}
-                  {{- 'products.product.add_to_cart' | t }} — {{ current_variant.price | money -}}
+                {%- if size_needs_selection -%}
+                  SELECT A SIZE
+                {%- elsif current_variant.available -%}
+                  ADD TO BAG — {{ current_variant.price | money -}}
                 {%- else -%}
                   {{- 'products.product.sold_out' | t -}}
                 {%- endif -%}
@@ -797,6 +878,23 @@
     .rw-pdp-swatch:hover:not(.is-selected) {
       border-color: rgba(var(--color-foreground-rgb), 0.5);
     }
+    .rw-pdp-swatch--text {
+      width: auto;
+      padding: 10px 14px;
+      height: auto;
+      background: transparent;
+      color: rgb(var(--color-foreground));
+      font-family: var(--font-accent--family);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .rw-pdp-swatch--text.is-selected {
+      background: rgb(var(--color-foreground));
+      color: rgb(var(--color-background));
+      outline: none;
+      border-color: rgb(var(--color-foreground));
+    }
 
     /* Size grid */
     .rw-pdp-info__size-grid {
@@ -904,10 +1002,12 @@
       gap: 10px;
       transition: opacity 0.2s;
     }
+    .rw-pdp-add-btn--needs-size,
     .rw-pdp-add-btn:disabled,
     .rw-pdp-add-btn[data-unavailable] {
-      background: rgba(var(--color-foreground-rgb), 0.12);
-      color: rgba(var(--color-foreground-rgb), 0.45);
+      background: rgba(var(--color-foreground-rgb), 0.08);
+      color: rgba(var(--color-foreground-rgb), 0.62);
+      border-color: rgba(var(--color-foreground-rgb), 0.18);
       cursor: not-allowed;
     }
 
@@ -1182,6 +1282,7 @@
 
           this.data = data;
           this.qty = 1;
+          this.sizeExplicitlySelected = !data.sizeNeedsSelection;
           this.selectedOptions = this._initialOptions(data);
 
           this._bindGallery(sectionId);
@@ -1225,6 +1326,8 @@
               const idx = parseInt(btn.dataset.optIdx, 10);
               const val = btn.dataset.optVal;
               this.selectedOptions[idx] = val;
+
+              if (idx === this.data.sizeOptIdx) this.sizeExplicitlySelected = true;
 
               // Update active state within the same option group
               const group = this.querySelectorAll(`[data-opt-idx="${idx}"]`);
@@ -1297,8 +1400,9 @@
 
           const addBtn = form.querySelector('[data-add-btn]');
           if (addBtn) {
-            addBtn.disabled = !variant.available;
-            if (!variant.available) {
+            const needsSize = this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected;
+            addBtn.disabled = needsSize || !variant.available;
+            if (!needsSize && !variant.available) {
               addBtn.setAttribute('data-unavailable', '');
             } else {
               addBtn.removeAttribute('data-unavailable');
@@ -1369,7 +1473,14 @@
           const form = document.getElementById('rw-pdp-form-' + sectionId);
           if (!form) return;
           const label = form.querySelector('[data-add-btn-label]');
+          const addBtn = form.querySelector('[data-add-btn]');
           if (!label) return;
+          const needsSize = this.data.sizeOptIdx >= 0 && !this.sizeExplicitlySelected;
+          if (addBtn) addBtn.classList.toggle('rw-pdp-add-btn--needs-size', needsSize);
+          if (needsSize) {
+            label.textContent = this.data.i18n.selectSize;
+            return;
+          }
           if (!variant.available) {
             label.textContent = this.data.i18n.soldOut;
             return;
@@ -1398,7 +1509,7 @@
           if (this.data.colorOptIdx >= 0 && this.selectedOptions[this.data.colorOptIdx]) {
             parts.push(this.selectedOptions[this.data.colorOptIdx]);
           }
-          if (this.data.sizeOptIdx >= 0 && this.selectedOptions[this.data.sizeOptIdx]) {
+          if (this.data.sizeOptIdx >= 0 && this.sizeExplicitlySelected && this.selectedOptions[this.data.sizeOptIdx]) {
             parts.push(this.selectedOptions[this.data.sizeOptIdx]);
           }
           meta.textContent = parts.join(' · ');
@@ -1446,7 +1557,7 @@
           if (stickyAdd) {
             stickyAdd.addEventListener('click', () => {
               const variant = this._findVariant();
-              if (!variant || !variant.available) return;
+              if (!variant || !variant.available || !this.sizeExplicitlySelected) return;
               const form = document.getElementById('rw-pdp-form-' + sectionId);
               if (form) form.requestSubmit();
               bar.classList.remove('is-visible');

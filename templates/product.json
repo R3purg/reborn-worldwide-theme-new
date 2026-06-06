@@ -24,7 +24,9 @@
     },
     "rw_pdp_story": {
       "type": "rw-pdp-story",
-      "settings": {}
+      "settings": {
+        "color_scheme": "scheme-4"
+      }
     },
     "product_recommendations_qggXJq": {
       "type": "rw-product-recommendations",
@@ -38,7 +40,6 @@
   },
   "order": [
     "main",
-    "rw_pdp_accordions",
     "rw_pdp_story",
     "product_recommendations_qggXJq"
   ]

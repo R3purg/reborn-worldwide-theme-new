@@ -6,7 +6,7 @@
 %}
 
 {%- if s.story_heading != blank or s.story_image != blank -%}
-  <section class="rw-pdp-story" aria-label="Chapter story" {{ section.shopify_attributes }}>
+  <section class="rw-pdp-story color-{{ s.color_scheme }}" aria-label="Chapter story" {{ section.shopify_attributes }}>
     <div class="rw-pdp-story__inner">
       <div class="rw-pdp-story__media">
         {%- if s.story_image != blank -%}
@@ -56,7 +56,7 @@
     </div>
   </section>
 {%- elsif request.design_mode -%}
-  <section class="rw-pdp-story" aria-label="Chapter story" {{ section.shopify_attributes }}>
+  <section class="rw-pdp-story color-{{ s.color_scheme }}" aria-label="Chapter story" {{ section.shopify_attributes }}>
     <div class="rw-pdp-story__inner">
       <div class="rw-pdp-story__media">
         <div class="rw-pdp-story__media-ph">{{ 'lifestyle-1' | placeholder_svg_tag }}</div>
@@ -75,8 +75,8 @@
 {% stylesheet %}
   .rw-pdp-story {
     box-sizing: border-box;
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    background-color: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
     padding: 80px 24px;
     margin-top: 64px;
   }
@@ -90,7 +90,7 @@
   }
   .rw-pdp-story__media {
     aspect-ratio: 4 / 5;
-    background: rgba(255, 255, 255, 0.07);
+    background: rgba(var(--color-foreground-rgb), 0.07);
     overflow: hidden;
   }
   .rw-pdp-story__img {
@@ -138,9 +138,9 @@
     gap: 10px;
     margin-top: 28px;
     padding: 14px 22px;
-    border: 1px solid rgb(var(--color-background));
-    background: rgb(var(--color-background));
-    color: rgb(var(--color-foreground));
+    border: 1px solid rgb(var(--color-foreground));
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
     font-family: var(--font-accent--family);
     font-size: 13px;
     letter-spacing: 0.08em;
@@ -170,6 +170,12 @@
   "tag": "section",
   "class": "section",
   "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    },
     {
       "type": "image_picker",
       "id": "story_image",
