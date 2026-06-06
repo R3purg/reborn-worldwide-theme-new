@@ -1,0 +1,163 @@
+{% liquid
+  assign s = section.settings
+  assign details_content = product.metafields.custom.details_and_fit | default: s.details_and_fit
+%}
+
+<div class="rw-acc color-{{ s.color_scheme }}" {{ section.shopify_attributes }}>
+  <div class="rw-acc__inner">
+    {%- if product.description != blank -%}
+      <details class="rw-pdp-acc" open>
+        <summary class="rw-pdp-acc__header">
+          <span class="rw-pdp-acc__title">// DESCRIPTION</span>
+          <svg
+            class="rw-pdp-acc__icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </summary>
+        <div class="rw-pdp-acc__body">
+          <div class="rw-pdp-acc__content rte">{{ product.description }}</div>
+        </div>
+      </details>
+    {%- endif -%}
+
+    {%- if details_content != blank -%}
+      <details class="rw-pdp-acc">
+        <summary class="rw-pdp-acc__header">
+          <span class="rw-pdp-acc__title">// DETAILS &amp; FIT</span>
+          <svg
+            class="rw-pdp-acc__icon"
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+        </summary>
+        <div class="rw-pdp-acc__body">
+          <div class="rw-pdp-acc__content rte">{{ details_content }}</div>
+        </div>
+      </details>
+    {%- endif -%}
+
+    <details class="rw-pdp-acc">
+      <summary class="rw-pdp-acc__header">
+        <span class="rw-pdp-acc__title">// SHIPPING &amp; RETURNS</span>
+        <svg
+          class="rw-pdp-acc__icon"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14"/>
+        </svg>
+      </summary>
+      <div class="rw-pdp-acc__body">
+        <div class="rw-pdp-acc__content rte">{{ s.shipping_returns_text }}</div>
+      </div>
+    </details>
+  </div>
+</div>
+
+{% stylesheet %}
+  .rw-acc {
+    padding: 0 24px 48px;
+  }
+  .rw-acc__inner {
+    max-width: 760px;
+    margin-inline: auto;
+  }
+
+  .rw-pdp-acc {
+    border-top: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  }
+  .rw-pdp-acc:last-child {
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  }
+  .rw-pdp-acc__header {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    cursor: pointer;
+    user-select: none;
+  }
+  .rw-pdp-acc__header::-webkit-details-marker {
+    display: none;
+  }
+  .rw-pdp-acc__title {
+    font-family: var(--font-accent--family);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgb(var(--color-foreground));
+  }
+  .rw-pdp-acc__icon {
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+    fill: none;
+    color: rgb(var(--color-foreground));
+  }
+  details[open] .rw-pdp-acc__icon {
+    transform: rotate(45deg);
+  }
+
+  .rw-pdp-acc__body {
+    overflow: hidden;
+  }
+  .rw-pdp-acc__content {
+    padding-bottom: 20px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgb(var(--color-foreground));
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Accordions",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "details_and_fit",
+      "label": "Details & Fit",
+      "info": "Overridden per-product via custom.details_and_fit metafield."
+    },
+    {
+      "type": "richtext",
+      "id": "shipping_returns_text",
+      "label": "Shipping & Returns text",
+      "default": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Accordions"
+    }
+  ],
+  "enabled_on": {
+    "templates": ["product"]
+  }
+}
+{% endschema %}
