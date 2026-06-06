@@ -244,13 +244,13 @@
                       when 'white', 'opticwhite', 'purewhite'
                         assign sw_bg = '#f5f5f5'
                         assign sw_is_color = true
-                      when 'bone', 'ivory', 'cream', 'offwhite', 'ecru'
+                      when 'bone', 'natural', 'ivory', 'cream', 'offwhite', 'ecru'
                         assign sw_bg = '#EDE7DA'
                         assign sw_is_color = true
                       when 'sand', 'beige', 'tan', 'camel', 'khaki'
                         assign sw_bg = '#C9B99A'
                         assign sw_is_color = true
-                      when 'green', 'swampgreen', 'forestgreen', 'olive', 'moss', 'army'
+                      when 'green', 'swamp', 'myswamp', 'swampgreen', 'forestgreen', 'olive', 'moss', 'army'
                         assign sw_bg = '#7BAF2C'
                         assign sw_is_color = true
                       when 'red', 'crimson', 'scarlet', 'blood'
@@ -905,9 +905,6 @@
       outline: 2px solid rgb(var(--color-background));
       outline-offset: -5px;
     }
-    .rw-pdp-swatch:hover:not(.is-selected) {
-      border-color: rgba(var(--color-foreground-rgb), 0.5);
-    }
     .rw-pdp-swatch--text {
       width: auto;
       padding: 10px 14px;
@@ -943,9 +940,6 @@
       cursor: pointer;
       transition: background 0.2s, color 0.2s;
       text-align: center;
-    }
-    .rw-pdp-size:hover:not(.is-selected):not(.is-sold-out) {
-      background: rgba(var(--color-foreground-rgb), 0.07);
     }
     .rw-pdp-size.is-selected {
       background: rgb(var(--color-foreground));
@@ -992,7 +986,7 @@
       border: 0;
       background: transparent;
       font-family: var(--font-accent--family);
-      font-size: 18px;
+      font-size: 16px;
       cursor: pointer;
       color: rgb(var(--color-foreground));
       display: flex;
@@ -1000,9 +994,6 @@
       justify-content: center;
       border-radius: 999px;
       transition: background 0.2s;
-    }
-    .rw-pdp-qty__btn:hover {
-      background: rgba(var(--color-foreground-rgb), 0.07);
     }
     .rw-pdp-qty__val {
       min-width: 32px;
@@ -1036,8 +1027,9 @@
     .rw-pdp-add-btn:disabled,
     .rw-pdp-add-btn[data-unavailable] {
       background: rgba(var(--color-foreground-rgb), 0.08);
+      background: color-mix(in srgb, rgb(var(--color-background)) 88%, rgb(var(--color-foreground)) 12%);
       color: rgba(var(--color-foreground-rgb), 0.62);
-      border-color: rgba(var(--color-foreground-rgb), 0.18);
+      border-color: rgb(var(--color-foreground));
       cursor: not-allowed;
     }
 
@@ -1047,7 +1039,7 @@
       padding: 16px;
       border: 1px solid rgb(var(--color-foreground));
       background: rgba(var(--color-button), 1);
-      color: rgb(var(--color-background));
+      color: rgb(var(--color-button-text, var(--color-foreground)));
       font-family: var(--font-accent--family);
       font-size: 13px;
       letter-spacing: 0.08em;
@@ -1056,10 +1048,6 @@
       cursor: pointer;
       transition: opacity 0.2s;
     }
-    .rw-pdp-buy-now-btn:hover {
-      opacity: 0.88;
-    }
-
     /* Trust row */
     .rw-pdp-trust {
       display: grid;
@@ -1231,26 +1219,23 @@
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 12px 20px;
+      padding: 14px 22px;
       border: 1px solid rgb(var(--color-foreground));
       background: rgb(var(--color-foreground));
       color: rgb(var(--color-background));
       font-family: var(--font-accent--family);
-      font-size: 12px;
+      font-size: 13px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       border-radius: 999px;
       cursor: pointer;
       transition: opacity 0.2s;
     }
-    .rw-pdp-sticky__add:hover {
-      opacity: 0.88;
-    }
     .rw-pdp-sticky__add:disabled {
-      opacity: 0.62;
-      background: rgba(var(--color-foreground-rgb), 0.08);
-      color: rgba(var(--color-foreground-rgb), 0.62);
-      border-color: rgba(var(--color-foreground-rgb), 0.18);
+      opacity: 0.6;
+      background: rgb(var(--color-foreground));
+      color: rgb(var(--color-background));
+      border-color: rgb(var(--color-foreground));
       cursor: not-allowed;
     }
 
