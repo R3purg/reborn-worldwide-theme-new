@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "main": {
+      "type": "rw-product-page",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "sticky_bar": true,
+        "show_buy_now": true,
+        "size_guide_url": "",
+        "trust_shipping": "over €120",
+        "trust_returns_label": "14-DAY",
+        "trust_returns": "returns",
+        "trust_made_in_label": "HAND-MADE",
+        "trust_made_in": "in Kraków",
+        "details_and_fit": "",
+        "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>"
+      }
+    },
+    "rw_pdp_story_VBtRqD": {
+      "type": "rw-pdp-story",
+      "name": "RW Chapter Story",
+      "settings": {
+        "color_scheme": "scheme-4",
+        "story_kicker": "CHAPTER 01 // THE ANTI-HERO AWAKENS",
+        "story_heading": "He doesn't live in the swamp.\nHe owns it.",
+        "story_text": "Cheap cigarettes, cheaper dreams, and a lease nobody signed. The hero they never asked for — the problem they can't ignore. This tee is the uniform.",
+        "story_link_url": "shopify://collections/chapter-01",
+        "story_link_label": "Shop the whole chapter"
+      }
+    },
+    "product_recommendations_qggXJq": {
+      "type": "rw-product-recommendations",
+      "settings": {
+        "label": "// COMPLETE THE LOOK",
+        "heading": "You'll want these too",
+        "cta_label": "All of chapter 01",
+        "cta_url": "shopify://collections/chapter-01",
+        "max_products": 4,
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "rw_pdp_story_VBtRqD",
+    "product_recommendations_qggXJq"
+  ]
+}
