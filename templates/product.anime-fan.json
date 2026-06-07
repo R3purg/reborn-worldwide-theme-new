@@ -15,18 +15,27 @@
         "color_scheme": "scheme-1",
         "sticky_bar": true,
         "show_buy_now": true,
+        "size_guide_url": "",
         "trust_shipping": "over €120",
         "trust_returns_label": "14-DAY",
         "trust_returns": "returns",
         "trust_made_in_label": "HAND-MADE",
-        "trust_made_in": "in Kraków"
+        "trust_made_in": "in Kraków",
+        "details_and_fit": "",
+        "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>"
       }
     },
-    "rw_pdp_accordions": {
-      "type": "rw-pdp-accordions",
+    "rw_pdp_story_VBtRqD": {
+      "type": "rw-pdp-story",
+      "name": "RW Chapter Story",
       "settings": {
-        "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-4",
+        "story_image": "shopify://shop_images/CHAOS_B_ANIMEFAN_FRONT.png",
+        "story_kicker": "",
+        "story_heading": "Chapter 03 - Broadcast From a Better World",
+        "story_text": "In the morning she sat in silence, but her soul was loud. Through every winter, every power cut, she held on.",
+        "story_link_url": "shopify://collections/personal-care",
+        "story_link_label": "Shop the whole season"
       }
     },
     "product_recommendations_qggXJq": {
@@ -34,6 +43,8 @@
       "settings": {
         "label": "// COMPLETE THE LOOK",
         "heading": "You'll want these too",
+        "cta_label": "",
+        "cta_url": "",
         "max_products": 4,
         "color_scheme": "scheme-1"
       }
@@ -41,7 +52,7 @@
   },
   "order": [
     "main",
-    "rw_pdp_accordions",
+    "rw_pdp_story_VBtRqD",
     "product_recommendations_qggXJq"
   ]
 }
