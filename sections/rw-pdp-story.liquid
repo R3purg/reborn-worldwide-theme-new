@@ -2,10 +2,11 @@
   assign s = section.settings
   assign chapter_num = product.metafields.custom.chapter | default: ''
   assign chapter_name = product.metafields.custom.chapter_name | default: ''
-  assign story_img_alt = s.story_image.alt | default: s.story_heading
+  assign story_img = s.story_image | default: product.featured_image
+  assign story_img_alt = story_img.alt | default: s.story_heading | default: product.title
 %}
 
-{%- if s.story_heading != blank or s.story_image != blank -%}
+{%- if s.story_heading != blank or story_img != blank -%}
   <div class="section-background color-{{ s.color_scheme }}"></div>
   <section
     class="section rw-pdp-story color-{{ s.color_scheme }}"
@@ -14,9 +15,9 @@
   >
     <div class="rw-pdp-story__inner">
       <div class="rw-pdp-story__media">
-        {%- if s.story_image != blank -%}
+        {%- if story_img != blank -%}
           {{
-            s.story_image
+            story_img
             | image_url: width: 900
             | image_tag: loading: 'lazy', alt: story_img_alt, class: 'rw-pdp-story__img'
           }}
@@ -27,16 +28,16 @@
         {%- endif -%}
       </div>
       <div class="rw-pdp-story__body">
-        {%- if chapter_num != blank -%}
+        {%- if s.story_kicker != blank -%}
+          <div class="rw-pdp-story__kicker">{{ s.story_kicker }}</div>
+        {%- elsif chapter_num != blank -%}
           <div class="rw-pdp-story__kicker">
             CHAPTER {{ chapter_num -}}
             {%- if chapter_name != blank %} // {{ chapter_name | upcase }}{% endif %}
           </div>
-        {%- elsif s.story_kicker != blank -%}
-          <div class="rw-pdp-story__kicker">{{ s.story_kicker }}</div>
         {%- endif -%}
         {%- if s.story_heading != blank -%}
-          <p class="rw-pdp-story__heading">{{ s.story_heading }}</p>
+          <p class="rw-pdp-story__heading">{{ s.story_heading | newline_to_br }}</p>
         {%- endif -%}
         {%- if s.story_text != blank -%}
           <p class="rw-pdp-story__text">{{ s.story_text }}</p>
@@ -149,15 +150,15 @@
     margin-top: 28px;
     padding: 14px 22px;
     border: 1px solid rgb(var(--color-foreground));
-    background: rgb(var(--color-foreground));
-    color: rgb(var(--color-background));
+    background: rgb(var(--color-background));
+    color: rgb(var(--color-foreground));
     font-family: var(--font-accent--family);
     font-size: 13px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     border-radius: 999px;
     text-decoration: none;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, background 0.2s, color 0.2s;
   }
   .rw-pdp-story__cta:hover {
     opacity: 0.85;
@@ -194,7 +195,8 @@
     {
       "type": "text",
       "id": "story_kicker",
-      "label": "Kicker (overridden by product chapter metafield)"
+      "label": "Kicker",
+      "info": "Used when supplied; otherwise the product chapter metafield is shown."
     },
     {
       "type": "textarea",
@@ -215,7 +217,7 @@
       "type": "text",
       "id": "story_link_label",
       "label": "CTA label",
-      "default": "Shop the chapter"
+      "default": "Shop the whole chapter"
     }
   ],
   "presets": [

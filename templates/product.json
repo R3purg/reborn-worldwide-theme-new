@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -25,13 +16,25 @@
         "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>"
       }
     },
+    "rw_pdp_story_q3Kp9n": {
+      "type": "rw-pdp-story",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "scheme-4",
+        "story_kicker": "",
+        "story_heading": "",
+        "story_text": "",
+        "story_link_url": "",
+        "story_link_label": "Shop the whole chapter"
+      }
+    },
     "product_recommendations_qggXJq": {
       "type": "rw-product-recommendations",
       "settings": {
         "label": "// COMPLETE THE LOOK",
         "heading": "You'll want these too",
-        "cta_label": "",
-        "cta_url": "",
+        "cta_label": "All of chapter 01",
+        "cta_url": "shopify://collections/chapter-01",
         "max_products": 4,
         "color_scheme": "scheme-1"
       }
@@ -39,6 +42,7 @@
   },
   "order": [
     "main",
+    "rw_pdp_story_q3Kp9n",
     "product_recommendations_qggXJq"
   ]
 }

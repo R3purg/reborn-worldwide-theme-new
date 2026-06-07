@@ -1,12 +1,3 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
@@ -30,12 +21,11 @@
       "name": "RW Chapter Story",
       "settings": {
         "color_scheme": "scheme-4",
-        "story_image": "shopify://shop_images/CHAOS_B_ANIMEFAN_FRONT.png",
-        "story_kicker": "",
-        "story_heading": "Chapter 03 - Broadcast From a Better World",
-        "story_text": "In the morning she sat in silence, but her soul was loud. Through every winter, every power cut, she held on.",
-        "story_link_url": "shopify://collections/personal-care",
-        "story_link_label": "Shop the whole season"
+        "story_kicker": "CHAPTER 01 // THE ANTI-HERO AWAKENS",
+        "story_heading": "He doesn't live in the swamp.\nHe owns it.",
+        "story_text": "Cheap cigarettes, cheaper dreams, and a lease nobody signed. The hero they never asked for — the problem they can't ignore. This tee is the uniform.",
+        "story_link_url": "shopify://collections/chapter-01",
+        "story_link_label": "Shop the whole chapter"
       }
     },
     "product_recommendations_qggXJq": {
@@ -43,8 +33,8 @@
       "settings": {
         "label": "// COMPLETE THE LOOK",
         "heading": "You'll want these too",
-        "cta_label": "",
-        "cta_url": "",
+        "cta_label": "All of chapter 01",
+        "cta_url": "shopify://collections/chapter-01",
         "max_products": 4,
         "color_scheme": "scheme-1"
       }

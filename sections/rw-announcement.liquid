@@ -1,38 +1,28 @@
 {% liquid
   assign s = section.settings
-  assign center_items = 'NEXT DROP // CHAPTER 04 — FRI 22:00 CET,STUDIO // KRAKÓW · BERLIN · LISBON' | split: ','
-  if s.center_messages != blank
-    assign center_items = s.center_messages | newline_to_br | split: '<br />'
-  endif
+  assign center_items = s.center_messages | default: "NEXT DROP // SEASON 02 — WED 00:00 EET\nSTUDIO // KAUNAS · VILNIUS" | newline_to_br | split: '<br />'
 %}
 
-<div
+<aside
   class="rw-announce color-{{ s.color_scheme }}"
   data-section-id="{{ section.id }}"
   id="rw-announce-{{ section.id }}"
+  aria-label="Store announcements"
 >
   <div class="rw-announce__inner">
-    {%- comment -%} Left — shipping threshold {%- endcomment -%}
     <div class="rw-announce__left">
       {{ s.left_text | default: 'SHIP // WORLDWIDE — FREE OVER €120' }}
     </div>
 
-    {%- comment -%} Center — rotating messages {%- endcomment -%}
-    <div class="rw-announce__center" aria-live="polite" aria-atomic="true">
+    <div class="rw-announce__center" aria-label="Current announcements">
       {%- for msg in center_items -%}
-        <span
-          class="rw-announce__msg{% if forloop.first %} is-active{% endif %}"
-          data-index="{{ forloop.index0 }}"
-        >
-          {{- msg | strip -}}
-        </span>
+        <span class="rw-announce__msg">{{- msg | strip -}}</span>
         {%- unless forloop.last -%}
           <span class="rw-announce__sep" aria-hidden="true"> /// </span>
         {%- endunless -%}
       {%- endfor -%}
     </div>
 
-    {%- comment -%} Right — localization + language {%- endcomment -%}
     <div class="rw-announce__right">
       {%- if localization.available_countries.size > 1 -%}
         {% form 'localization', id: 'rw-announce-loc-{{ section.id }}', class: 'rw-announce__loc-form' %}
@@ -56,19 +46,16 @@
           </select>
         {% endform %}
       {%- else -%}
-        <span>
-          {{- localization.country.currency.iso_code }}
-          {{ localization.country.currency.symbol -}}
-        </span>
+        <span>{{- localization.country.currency.iso_code }} {{ localization.country.currency.symbol -}}</span>
       {%- endif -%}
       <span class="rw-announce__lang">{{ request.locale.iso_code | upcase | slice: 0, 2 }}</span>
     </div>
   </div>
-</div>
+</aside>
 
 {% stylesheet %}
   .rw-announce {
-    border-bottom: 1px solid rgba(var(--color-foreground-rgb, var(--color-foreground)), 0.15);
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
   }
 
   .rw-announce__inner {
@@ -82,8 +69,9 @@
   }
 
   .rw-announce__left,
-  .rw-announce__right,
   .rw-announce__center,
+  .rw-announce__right,
+  .rw-announce__msg,
   .rw-announce__sep,
   .rw-announce__lang {
     font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
@@ -100,11 +88,11 @@
   .rw-announce__center {
     display: flex;
     align-items: center;
-    gap: 0;
-    flex: 1;
     justify-content: center;
-    overflow: hidden;
+    flex: 1;
+    min-width: 0;
     white-space: nowrap;
+    overflow: hidden;
     opacity: 0.85;
   }
 
@@ -125,18 +113,15 @@
   }
 
   .rw-announce__select {
+    appearance: none;
+    -webkit-appearance: none;
     background: transparent;
     color: inherit;
     border: 1px solid rgba(255, 255, 255, 0.25);
     border-radius: 999px;
     padding: 4px 10px;
-    font-family: inherit;
-    font-size: 11px;
-    letter-spacing: inherit;
-    text-transform: uppercase;
+    font: inherit;
     cursor: pointer;
-    appearance: none;
-    -webkit-appearance: none;
   }
 
   .rw-announce__loc-form {
@@ -157,30 +142,6 @@
     }
   }
 {% endstylesheet %}
-
-{% javascript %}
-  (function () {
-    const INTERVAL = 4000;
-
-    document.querySelectorAll('[id^="rw-announce-"]').forEach(function (bar) {
-      const msgs = bar.querySelectorAll('.rw-announce__msg');
-      const seps = bar.querySelectorAll('.rw-announce__sep');
-      if (msgs.length < 2) return;
-
-      let current = 0;
-
-      function rotate() {
-        msgs[current].classList.remove('is-active');
-        if (seps[current]) seps[current].classList.remove('is-active');
-        current = (current + 1) % msgs.length;
-        msgs[current].classList.add('is-active');
-        if (seps[current]) seps[current].classList.add('is-active');
-      }
-
-      setInterval(rotate, INTERVAL);
-    });
-  })();
-{% endjavascript %}
 
 {% schema %}
 {
@@ -205,8 +166,8 @@
       "type": "textarea",
       "id": "center_messages",
       "label": "Centre messages (one per line)",
-      "info": "Each line rotates every 4 s. Leave blank for defaults.",
-      "placeholder": "NEXT DROP // CHAPTER 04 — FRI 22:00 CET\nSTUDIO // KRAKÓW · BERLIN · LISBON"
+      "info": "Each line is shown inline in the center strip.",
+      "placeholder": "NEXT DROP // SEASON 02 — WED 00:00 EET\nSTUDIO // KAUNAS · VILNIUS"
     }
   ],
   "presets": [
