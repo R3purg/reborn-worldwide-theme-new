@@ -755,7 +755,7 @@
       left: 14px;
       padding: 6px 11px;
       background: rgba(var(--color-button), 1);
-      color: rgb(var(--color-background));
+      color: rgb(var(--color-foreground));
       border: 1px solid rgb(var(--color-foreground));
       font-family: var(--font-accent--family);
       font-size: 10px;
@@ -836,7 +836,7 @@
     .rw-pdp-info__save-badge {
       padding: 4px 9px;
       background: rgba(var(--color-button), 1);
-      color: rgb(var(--color-background));
+      color: rgb(var(--color-foreground));
       border: 1px solid rgb(var(--color-foreground));
       font-family: var(--font-accent--family);
       font-size: 10px;
@@ -1126,6 +1126,8 @@
 
     .rw-pdp-acc__body {
       overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.35s ease;
     }
     .rw-pdp-acc__content {
       padding-bottom: 20px;
@@ -1313,6 +1315,7 @@
           this._bindGallery(sectionId);
           this._bindOptionButtons();
           this._bindQty(sectionId);
+          this._bindAccordions();
           this._bindStickyBar(sectionId);
           this._syncState(sectionId);
         }
@@ -1685,6 +1688,38 @@
 
           const counterCur = gallery.querySelector('.rw-pdp-gallery__counter-cur');
           if (counterCur) counterCur.textContent = String(Number(targetIndex) + 1).padStart(2, '0');
+        }
+
+        _bindAccordions() {
+          const accs = this.querySelectorAll('.rw-pdp-acc');
+          accs.forEach((det) => {
+            const summary = det.querySelector('.rw-pdp-acc__header');
+            const body = det.querySelector('.rw-pdp-acc__body');
+            if (!summary || !body) return;
+
+            body.style.maxHeight = det.open ? body.scrollHeight + 'px' : '0';
+
+            summary.addEventListener('click', (e) => {
+              e.preventDefault();
+              if (det.open) {
+                body.style.maxHeight = body.scrollHeight + 'px';
+                body.offsetHeight; // force reflow
+                body.style.maxHeight = '0';
+                body.addEventListener(
+                  'transitionend',
+                  () => {
+                    det.removeAttribute('open');
+                  },
+                  { once: true }
+                );
+              } else {
+                det.setAttribute('open', '');
+                body.style.maxHeight = '0';
+                body.offsetHeight; // force reflow
+                body.style.maxHeight = body.scrollHeight + 'px';
+              }
+            });
+          });
         }
 
         _bindStickyBar(sectionId) {
