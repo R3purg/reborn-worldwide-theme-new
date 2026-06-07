@@ -1,6 +1,6 @@
 {% liquid
   assign s = section.settings
-  assign center_items = s.center_messages | default: "NEXT DROP // CHAPTER 04 — FRI 22:00 CET\nSTUDIO // KRAKÓW · BERLIN · LISBON" | newline_to_br | split: '<br />'
+  assign center_items = s.center_messages | default: "NEXT DROP // SEASON 02 — WED 00:00 EET\nSTUDIO // KAUNAS · VILNIUS" | newline_to_br | split: '<br />'
 %}
 
 <aside
@@ -55,7 +55,7 @@
 
 {% stylesheet %}
   .rw-announce {
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid rgba(var(--color-foreground-rgb), 0.18);
   }
 
   .rw-announce__inner {
@@ -94,12 +94,11 @@
     white-space: nowrap;
     overflow: hidden;
     opacity: 0.85;
-    gap: 18px;
   }
 
   .rw-announce__sep {
     opacity: 0.4;
-    margin-inline: 0;
+    margin-inline: 8px;
   }
 
   .rw-announce__right {
@@ -129,6 +128,19 @@
     display: inline-flex;
   }
 
+  @media (max-width: 749px) {
+    .rw-announce__inner {
+      padding-inline: 16px;
+    }
+
+    .rw-announce__left {
+      display: none;
+    }
+
+    .rw-announce__center {
+      justify-content: flex-start;
+    }
+  }
 {% endstylesheet %}
 
 {% schema %}
@@ -155,7 +167,7 @@
       "id": "center_messages",
       "label": "Centre messages (one per line)",
       "info": "Each line is shown inline in the center strip.",
-      "placeholder": "NEXT DROP // CHAPTER 04 — FRI 22:00 CET\nSTUDIO // KRAKÓW · BERLIN · LISBON"
+      "placeholder": "NEXT DROP // SEASON 02 — WED 00:00 EET\nSTUDIO // KAUNAS · VILNIUS"
     }
   ],
   "presets": [

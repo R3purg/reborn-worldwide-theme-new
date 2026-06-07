@@ -15,7 +15,8 @@
       {%- comment -%} Brand column {%- endcomment -%}
       <div class="rw-footer__brand">
         <a href="{{ routes.root_url }}" class="rw-footer__logo" aria-label="{{ shop.name }}">
-          <div class="rw-footer__logo-main">REBORN<br><span class="rw-footer__logo-sub">// WW</span></div>
+          <span class="rw-footer__logo-main">REBORN</span>
+          <span class="rw-footer__logo-sub">// WW</span>
         </a>
         {%- if s.tagline != blank -%}
           <p class="rw-footer__tagline">{{ s.tagline }}</p>
@@ -120,7 +121,9 @@
 
   /* ── Brand ─────────────────────────────────────────────────── */
   .rw-footer__logo {
-    display: block;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0;
     text-decoration: none;
     color: inherit;
     line-height: 0.9;
@@ -136,13 +139,14 @@
   }
 
   .rw-footer__logo-sub {
-    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 18px;
     font-weight: 400;
     color: rgba(var(--color-button), 1);
-    display: block;
+    margin-left: 8px;
     line-height: 1;
-    margin-top: 4px;
+    align-self: flex-end;
+    padding-bottom: 6px;
   }
 
   .rw-footer__tagline {
@@ -155,7 +159,7 @@
 
   /* ── Nav columns ───────────────────────────────────────────── */
   .rw-footer__col-heading {
-    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -197,7 +201,7 @@
 
   .rw-footer__copy,
   .rw-footer__payments {
-    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -210,7 +214,7 @@
   }
 
   .rw-footer__social-link {
-    font-family: var(--font-accent--family, 'JetBrains Mono', ui-monospace, monospace);
+    font-family: var(--font-heading--family, 'JetBrains Mono', ui-monospace, monospace);
     font-size: 11px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
