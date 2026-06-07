@@ -15,17 +15,14 @@
         "color_scheme": "scheme-1",
         "sticky_bar": true,
         "show_buy_now": true,
+        "size_guide_url": "",
         "trust_shipping": "over €120",
         "trust_returns_label": "14-DAY",
         "trust_returns": "returns",
         "trust_made_in_label": "HAND-MADE",
-        "trust_made_in": "in Kraków"
-      }
-    },
-    "rw_pdp_story": {
-      "type": "rw-pdp-story",
-      "settings": {
-        "color_scheme": "scheme-4"
+        "trust_made_in": "in Kraków",
+        "details_and_fit": "",
+        "shipping_returns_text": "<p>Tracked worldwide shipping, free over €120. Dispatched from Kraków within 48h. 14-day returns on unworn pieces — minus the journey back. Drops don't restock, so size carefully.</p>"
       }
     },
     "product_recommendations_qggXJq": {
@@ -33,6 +30,8 @@
       "settings": {
         "label": "// COMPLETE THE LOOK",
         "heading": "You'll want these too",
+        "cta_label": "",
+        "cta_url": "",
         "max_products": 4,
         "color_scheme": "scheme-1"
       }
@@ -40,7 +39,6 @@
   },
   "order": [
     "main",
-    "rw_pdp_story",
     "product_recommendations_qggXJq"
   ]
 }
