@@ -1,0 +1,391 @@
+{
+  "sections": {
+    "rw_about_hero_1": {
+      "type": "rw-about-hero",
+      "settings": {
+        "kicker": "// ABOUT — REBORN WORLDWIDE",
+        "meta_line": "EST. KRAKÓW 2024",
+        "heading_line_1": "FOUR PEOPLE.",
+        "heading_accent": "ONE",
+        "heading_line_2": "STUBBORN IDEA.",
+        "intro": "<p>Reborn is an independent streetwear studio making clothes for people who were told to sit down — and didn't. We release in chapters, by hand, and we never look back.</p>",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "rw_about_gallery_1": {
+      "type": "rw-about-gallery",
+      "blocks": {
+        "img_1": {
+          "type": "image",
+          "settings": { "caption": "Screens drying, ink everywhere" }
+        },
+        "img_2": {
+          "type": "image",
+          "settings": { "caption": "Pulling a print by hand" }
+        },
+        "img_3": {
+          "type": "image",
+          "settings": { "caption": "Packing day, drop morning" }
+        },
+        "img_4": {
+          "type": "image",
+          "settings": { "caption": "Rack of finished chapter pieces" }
+        }
+      },
+      "block_order": ["img_1", "img_2", "img_3", "img_4"],
+      "settings": {
+        "kicker": "// THE STUDIO, UNRETOUCHED",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "marquee_about_1": {
+      "type": "marquee",
+      "blocks": {
+        "txt_1": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>MAKE LESS</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "div_1": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "txt_2": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>MEAN MORE</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "div_2": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "txt_3": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>NEVER RESTOCK</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "div_3": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "txt_4": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>BY HAND</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "div_4": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        },
+        "txt_5": {
+          "type": "text",
+          "settings": {
+            "text": "<h2>FROM THE EAST</h2>",
+            "width": "fit-content",
+            "max_width": "normal",
+            "alignment": "left",
+            "type_preset": "h2",
+            "font": "var(--font-heading--family)",
+            "font_size": "1rem",
+            "line_height": "normal",
+            "letter_spacing": "normal",
+            "case": "uppercase",
+            "wrap": "nowrap",
+            "color": "var(--color-foreground)",
+            "background": false,
+            "background_color": "#00000026",
+            "corner_radius": 0,
+            "padding-block-start": 0,
+            "padding-block-end": 0,
+            "padding-inline-start": 0,
+            "padding-inline-end": 0
+          },
+          "blocks": {}
+        },
+        "div_5": {
+          "type": "_divider",
+          "settings": {
+            "thickness": 1,
+            "corner_radius": "square",
+            "width_percent": 100,
+            "padding-block-start": 0,
+            "padding-block-end": 0
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": ["txt_1", "div_1", "txt_2", "div_2", "txt_3", "div_3", "txt_4", "div_4", "txt_5", "div_5"],
+      "settings": {
+        "movement_direction": "reverse",
+        "color_scheme": "scheme-4",
+        "padding-block-start": 20,
+        "padding-block-end": 20,
+        "gap_between_elements": 48
+      }
+    },
+    "rw_about_story_1": {
+      "type": "rw-about-story",
+      "blocks": {
+        "row_1": {
+          "type": "row",
+          "settings": {
+            "side": "left",
+            "image_alt": "The Kraków garage — two borrowed screens",
+            "kicker": "// HOW IT STARTED",
+            "heading": "It started in a garage with a borrowed rig.",
+            "body": "<p>No business plan, no investors, no warehouse. Just two screens, a kettle that's seen things, and a stubborn idea: make clothes that argue with you a little, and make them so well you can't ignore them. Chapter 01 sold out over a weekend. We've never made it again.</p>"
+          }
+        },
+        "row_2": {
+          "type": "row",
+          "settings": {
+            "side": "right",
+            "image_alt": "Lena at the light table — designing a chapter",
+            "kicker": "// HOW WE WORK",
+            "heading": "We write the story before we cut the cloth.",
+            "body": "<p>Every chapter is built around a character and a world, not a season. We design the pieces to live inside that story, make exactly 250, drop them once, and move on. It's slower, harder, and far more fun than chasing a trend calendar.</p>"
+          }
+        }
+      },
+      "block_order": ["row_1", "row_2"],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "rw_about_values_1": {
+      "type": "rw-about-values",
+      "blocks": {
+        "val_1": {
+          "type": "value",
+          "settings": {
+            "title": "Make less",
+            "body": "Four chapters a year, 250 pieces each. Scarcity isn't a tactic — it's the only way four people make things they're proud of."
+          }
+        },
+        "val_2": {
+          "type": "value",
+          "settings": {
+            "title": "By hand",
+            "body": "Every piece pulled on our own screens, water-based ink, in the room we work in. No third-party factory, no middlemen."
+          }
+        },
+        "val_3": {
+          "type": "value",
+          "settings": {
+            "title": "No restocks",
+            "body": "When a chapter sells out, it's gone. The work stays honest because we can't lean on a warehouse of safe reprints."
+          }
+        },
+        "val_4": {
+          "type": "value",
+          "settings": {
+            "title": "From the East",
+            "body": "Born in a Kraków garage, grown across Berlin and Lisbon. The most interesting streetwear isn't where you think it is."
+          }
+        }
+      },
+      "block_order": ["val_1", "val_2", "val_3", "val_4"],
+      "settings": {
+        "heading": "What we stand on",
+        "sub_copy": "Four rules we've never broken, even when it cost us.",
+        "color_scheme": "scheme-4"
+      }
+    },
+    "rw_about_stats_1": {
+      "type": "rw-about-stats",
+      "blocks": {
+        "stat_1": { "type": "stat", "settings": { "number": "04", "label": "chapters / year" } },
+        "stat_2": { "type": "stat", "settings": { "number": "250", "label": "pieces / chapter" } },
+        "stat_3": { "type": "stat", "settings": { "number": "00", "label": "restocks. ever." } },
+        "stat_4": { "type": "stat", "settings": { "number": "40K", "label": "on the list" } }
+      },
+      "block_order": ["stat_1", "stat_2", "stat_3", "stat_4"],
+      "settings": {
+        "orange_bg": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "rw_about_timeline_1": {
+      "type": "rw-about-timeline",
+      "blocks": {
+        "ms_1": {
+          "type": "milestone",
+          "settings": {
+            "year": "2024",
+            "title": "The garage",
+            "body": "Two borrowed screens, a kettle, and a refusal to print logos on blanks. Chapter 01 — My Swamp — sells out in a weekend."
+          }
+        },
+        "ms_2": {
+          "type": "milestone",
+          "settings": {
+            "year": "2025",
+            "title": "Three cities",
+            "body": "Berlin showroom opens, Lisbon studio follows. Chapters 02 and 03 evaporate in minutes. The list grows past 40k."
+          }
+        },
+        "ms_3": {
+          "type": "milestone",
+          "settings": {
+            "year": "2026",
+            "title": "Vol. 04",
+            "body": "Chapter 04 — Bikini Bling — drops worldwide. Same four people. Same screens. Still no restocks."
+          }
+        }
+      },
+      "block_order": ["ms_1", "ms_2", "ms_3"],
+      "settings": {
+        "kicker": "// THE SHORT HISTORY",
+        "heading": "How we got here",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "rw_about_team_1": {
+      "type": "rw-about-team",
+      "blocks": {
+        "mem_1": { "type": "member", "settings": { "name": "Marek", "role": "Print + production", "city": "Kraków" } },
+        "mem_2": { "type": "member", "settings": { "name": "Lena", "role": "Design + story", "city": "Berlin" } },
+        "mem_3": { "type": "member", "settings": { "name": "Tomas", "role": "Photography", "city": "Lisbon" } },
+        "mem_4": { "type": "member", "settings": { "name": "Ola", "role": "Everything else", "city": "Kraków" } }
+      },
+      "block_order": ["mem_1", "mem_2", "mem_3", "mem_4"],
+      "settings": {
+        "heading": "The four of us",
+        "kicker": "// THE WHOLE COMPANY",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "rw_about_cta_1": {
+      "type": "rw-about-cta",
+      "settings": {
+        "kicker": "// THAT'S US. NOW YOUR MOVE.",
+        "heading": "Wear the story.",
+        "bg_text": "REBORN WORLDWIDE",
+        "cta_primary_label": "Shop the collections",
+        "cta_primary_url": "/collections/all",
+        "cta_secondary_label": "Read the journal",
+        "cta_secondary_url": "/blogs/journal",
+        "color_scheme": "scheme-4"
+      }
+    }
+  },
+  "order": [
+    "rw_about_hero_1",
+    "rw_about_gallery_1",
+    "marquee_about_1",
+    "rw_about_story_1",
+    "rw_about_values_1",
+    "rw_about_stats_1",
+    "rw_about_timeline_1",
+    "rw_about_team_1",
+    "rw_about_cta_1"
+  ]
+}

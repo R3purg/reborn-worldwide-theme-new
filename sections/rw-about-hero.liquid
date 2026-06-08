@@ -1,0 +1,170 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-about-hero color-{{ s.color_scheme }}">
+  <div class="rw-about-hero__inner">
+    <div class="rw-about-hero__meta">
+      <span>{{ s.kicker }}</span>
+      <span>{{ s.meta_line }}</span>
+    </div>
+
+    <h1 class="rw-about-hero__title">
+      {{ s.heading_line_1 }}<br>
+      <span class="rw-about-hero__title-accent">{{ s.heading_accent }}</span> {{ s.heading_line_2 }}
+    </h1>
+
+    <div class="rw-about-hero__grid">
+      <div class="rw-about-hero__media">
+        {%- if s.image != blank -%}
+          {{
+            s.image
+            | image_url: width: 1400
+            | image_tag: loading: 'eager', preload: true, class: 'rw-about-hero__img', alt: s.image.alt
+            | default: 'Reborn Worldwide studio'
+          }}
+        {%- else -%}
+          <div class="rw-about-hero__ph"></div>
+        {%- endif -%}
+      </div>
+      <div class="rw-about-hero__intro">{{ s.intro }}</div>
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-about-hero {
+    padding: 24px 24px 0;
+  }
+  .rw-about-hero__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-about-hero__meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+  .rw-about-hero__title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(56px, 14vw, 220px);
+    line-height: 0.84;
+    letter-spacing: -0.01em;
+    margin: 14px 0 0;
+    padding-bottom: 0.1em;
+  }
+  .rw-about-hero__title-accent {
+    color: rgb(var(--color-button));
+  }
+  .rw-about-hero__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 24px;
+    margin-top: 28px;
+    align-items: end;
+  }
+  .rw-about-hero__media {
+    aspect-ratio: 16 / 8;
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .rw-about-hero__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-about-hero__ph {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 14px, transparent 14px 28px), #1a1a1a;
+  }
+  .rw-about-hero__intro {
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.5;
+    font-weight: 500;
+    text-wrap: pretty;
+  }
+  .rw-about-hero__intro p {
+    margin: 0;
+  }
+  @media (max-width: 989px) {
+    .rw-about-hero__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 749px) {
+    .rw-about-hero {
+      padding: 16px 16px 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW About hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// ABOUT — REBORN WORLDWIDE"
+    },
+    {
+      "type": "text",
+      "id": "meta_line",
+      "label": "Meta line",
+      "default": "EST. KRAKÓW 2024"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_1",
+      "label": "Headline — line 1",
+      "default": "FOUR PEOPLE."
+    },
+    {
+      "type": "text",
+      "id": "heading_accent",
+      "label": "Headline — accent word",
+      "default": "ONE"
+    },
+    {
+      "type": "text",
+      "id": "heading_line_2",
+      "label": "Headline — line 2 remainder",
+      "default": "STUBBORN IDEA."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Studio image",
+      "info": "Group shot outside the Kraków garage, full bleed"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro copy",
+      "default": "<p>Reborn is an independent streetwear studio making clothes for people who were told to sit down — and didn't. We release in chapters, by hand, and we never look back.</p>"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW About hero"
+    }
+  ]
+}
+{% endschema %}

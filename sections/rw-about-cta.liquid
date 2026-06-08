@@ -1,0 +1,155 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-about-cta color-{{ s.color_scheme }}">
+  <div class="rw-about-cta__inner">
+    {%- if s.kicker != blank -%}
+      <div class="rw-about-cta__kicker">{{ s.kicker }}</div>
+    {%- endif -%}
+    <h2 class="rw-about-cta__heading">{{ s.heading }}</h2>
+    <div class="rw-about-cta__btns">
+      {%- if s.cta_primary_label != blank -%}
+        <a href="{{ s.cta_primary_url | default: '/collections/all' }}" class="rw-btn rw-btn--lg rw-btn--orange">
+          {{ s.cta_primary_label }} →
+        </a>
+      {%- endif -%}
+      {%- if s.cta_secondary_label != blank -%}
+        <a href="{{ s.cta_secondary_url | default: '#' }}" class="rw-btn rw-btn--lg rw-btn--ghost rw-about-cta__ghost">
+          {{ s.cta_secondary_label }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- if s.bg_text != blank -%}
+    <div class="rw-about-cta__bg-text" aria-hidden="true">{{ s.bg_text }}</div>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+  .rw-about-cta {
+    padding: 96px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .rw-about-cta__inner {
+    max-width: 900px;
+    margin-inline: auto;
+    position: relative;
+    z-index: 2;
+  }
+  .rw-about-cta__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 18px;
+  }
+  .rw-about-cta__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(44px, 7vw, 108px);
+    line-height: 0.9;
+    margin: 0;
+    padding-bottom: 0.1em;
+  }
+  .rw-about-cta__btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 32px;
+    flex-wrap: wrap;
+  }
+  .rw-about-cta__ghost {
+    color: var(--color-background);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+  .rw-about-cta__bg-text {
+    position: absolute;
+    inset: auto 0 -8% 0;
+    text-align: center;
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(120px, 20vw, 320px);
+    color: rgba(255, 255, 255, 0.04);
+    white-space: nowrap;
+    pointer-events: none;
+    line-height: 1;
+    z-index: 1;
+    user-select: none;
+  }
+  @media (max-width: 749px) {
+    .rw-about-cta {
+      padding: 64px 16px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW About CTA",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// THAT'S US. NOW YOUR MOVE."
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Wear the story."
+    },
+    {
+      "type": "text",
+      "id": "bg_text",
+      "label": "Background ghost text",
+      "default": "REBORN WORLDWIDE"
+    },
+    {
+      "type": "header",
+      "content": "CTAs"
+    },
+    {
+      "type": "text",
+      "id": "cta_primary_label",
+      "label": "Primary CTA label",
+      "default": "Shop the collections"
+    },
+    {
+      "type": "url",
+      "id": "cta_primary_url",
+      "label": "Primary CTA URL"
+    },
+    {
+      "type": "text",
+      "id": "cta_secondary_label",
+      "label": "Secondary CTA label",
+      "default": "Read the journal"
+    },
+    {
+      "type": "url",
+      "id": "cta_secondary_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW About CTA"
+    }
+  ]
+}
+{% endschema %}

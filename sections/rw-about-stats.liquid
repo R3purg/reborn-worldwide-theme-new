@@ -1,0 +1,117 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-about-stats color-{{ s.color_scheme }}{% if s.orange_bg %} rw-about-stats--orange{% endif %}">
+  <div class="rw-about-stats__inner">
+    {%- if section.blocks.size > 0 -%}
+      <div class="rw-about-stats__grid">
+        {%- for block in section.blocks -%}
+          <div class="rw-about-stats__cell" {{ block.shopify_attributes }}>
+            <div class="rw-about-stats__num">{{ block.settings.number }}</div>
+            <div class="rw-about-stats__lbl">{{ block.settings.label }}</div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-about-stats {
+    padding: 72px 24px;
+    border-bottom: 1px solid var(--color-foreground);
+  }
+  .rw-about-stats__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-about-stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+  }
+  .rw-about-stats__num {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(56px, 8vw, 120px);
+    line-height: 0.85;
+  }
+  .rw-about-stats__lbl {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 8px;
+    opacity: 0.75;
+  }
+  .rw-about-stats.rw-about-stats--orange {
+    background: rgb(var(--color-button));
+    color: rgb(var(--color-button-label));
+    border-bottom-color: rgb(var(--color-button-label));
+  }
+  @media (max-width: 749px) {
+    .rw-about-stats {
+      padding: 48px 16px;
+    }
+    .rw-about-stats__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW About stats",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "orange_bg",
+      "label": "Orange accent background",
+      "info": "Overrides background with the button/accent colour",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "label": "Number",
+          "default": "04"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "chapters / year"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW About stats",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "04", "label": "chapters / year" } },
+        { "type": "stat", "settings": { "number": "250", "label": "pieces / chapter" } },
+        { "type": "stat", "settings": { "number": "00", "label": "restocks. ever." } },
+        { "type": "stat", "settings": { "number": "40K", "label": "on the list" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

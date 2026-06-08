@@ -1,0 +1,201 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-about-story color-{{ s.color_scheme }}">
+  <div class="rw-about-story__inner">
+    {%- for block in section.blocks -%}
+      <div class="rw-about-story__row{% if block.settings.side == 'right' %} rw-about-story__row--reverse{% endif %}" {{ block.shopify_attributes }}>
+        <div class="rw-about-story__media">
+          {%- if block.settings.image != blank -%}
+            {{
+              block.settings.image
+              | image_url: width: 800
+              | image_tag: loading: 'lazy', class: 'rw-about-story__img', alt: block.settings.image_alt
+              | default: ''
+            }}
+          {%- else -%}
+            <div class="rw-about-story__ph"></div>
+          {%- endif -%}
+        </div>
+        <div class="rw-about-story__copy">
+          <div class="rw-about-story__kicker">{{ block.settings.kicker }}</div>
+          <h2 class="rw-about-story__heading">{{ block.settings.heading }}</h2>
+          <div class="rw-about-story__body">{{ block.settings.body }}</div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-about-story {
+    padding: 88px 24px;
+  }
+  .rw-about-story__inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 88px;
+  }
+  .rw-about-story__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .rw-about-story__row--reverse .rw-about-story__media {
+    order: 2;
+  }
+  .rw-about-story__media {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    background: #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  .rw-about-story__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-about-story__ph {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 14px, transparent 14px 28px), #1a1a1a;
+  }
+  .rw-about-story__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--color-button));
+    margin-bottom: 16px;
+  }
+  .rw-about-story__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(30px, 3.6vw, 52px);
+    line-height: 0.96;
+    margin: 0;
+    padding-bottom: 0.08em;
+    text-wrap: balance;
+  }
+  .rw-about-story__body {
+    font-size: 18px;
+    line-height: 1.65;
+    margin-top: 20px;
+    max-width: 480px;
+    text-wrap: pretty;
+  }
+  .rw-about-story__body p {
+    margin: 0;
+  }
+  @media (max-width: 989px) {
+    .rw-about-story__row,
+    .rw-about-story__row--reverse .rw-about-story__media {
+      grid-template-columns: 1fr;
+      order: initial;
+    }
+  }
+  @media (max-width: 749px) {
+    .rw-about-story {
+      padding: 56px 16px;
+    }
+    .rw-about-story__inner {
+      gap: 56px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW About story",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Story row",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "select",
+          "id": "side",
+          "label": "Image side",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "image_alt",
+          "label": "Image alt text",
+          "default": "The Kraków garage — two borrowed screens"
+        },
+        {
+          "type": "text",
+          "id": "kicker",
+          "label": "Kicker",
+          "default": "// HOW IT STARTED"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "It started in a garage with a borrowed rig."
+        },
+        {
+          "type": "richtext",
+          "id": "body",
+          "label": "Body text",
+          "default": "<p>No business plan, no investors, no warehouse. Just two screens, a kettle that's seen things, and a stubborn idea: make clothes that argue with you a little, and make them so well you can't ignore them. Chapter 01 sold out over a weekend. We've never made it again.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW About story",
+      "blocks": [
+        {
+          "type": "row",
+          "settings": {
+            "side": "left",
+            "image_alt": "The Kraków garage — two borrowed screens",
+            "kicker": "// HOW IT STARTED",
+            "heading": "It started in a garage with a borrowed rig.",
+            "body": "<p>No business plan, no investors, no warehouse. Just two screens, a kettle that's seen things, and a stubborn idea: make clothes that argue with you a little, and make them so well you can't ignore them. Chapter 01 sold out over a weekend. We've never made it again.</p>"
+          }
+        },
+        {
+          "type": "row",
+          "settings": {
+            "side": "right",
+            "image_alt": "Lena at the light table — designing a chapter",
+            "kicker": "// HOW WE WORK",
+            "heading": "We write the story before we cut the cloth.",
+            "body": "<p>Every chapter is built around a character and a world, not a season. We design the pieces to live inside that story, make exactly 250, drop them once, and move on. It's slower, harder, and far more fun than chasing a trend calendar.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

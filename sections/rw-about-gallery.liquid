@@ -1,0 +1,135 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-about-gallery color-{{ s.color_scheme }}">
+  <div class="rw-about-gallery__inner">
+    {%- if s.kicker != blank -%}
+      <div class="rw-about-gallery__kicker">{{ s.kicker }}</div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="rw-about-gallery__grid">
+        {%- for block in section.blocks -%}
+          <div class="rw-about-gallery__tile" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{
+                block.settings.image
+                | image_url: width: 600
+                | image_tag: loading: 'lazy', class: 'rw-about-gallery__img', alt: block.settings.caption
+                | default: ''
+              }}
+            {%- else -%}
+              <div class="rw-about-gallery__ph"></div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-about-gallery {
+    padding: 48px 24px 0;
+  }
+  .rw-about-gallery__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+  }
+  .rw-about-gallery__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-bottom: 16px;
+  }
+  .rw-about-gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .rw-about-gallery__tile {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rw-about-gallery__tile:hover {
+    transform: translateY(-4px);
+  }
+  .rw-about-gallery__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-about-gallery__ph {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 14px, transparent 14px 28px), #1a1a1a;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
+  @media (max-width: 989px) {
+    .rw-about-gallery__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 749px) {
+    .rw-about-gallery {
+      padding: 32px 16px 0;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW About gallery",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// THE STUDIO, UNRETOUCHED"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "caption",
+          "label": "Alt text / caption",
+          "default": "Studio shot"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW About gallery",
+      "blocks": [
+        { "type": "image", "settings": { "caption": "Screens drying, ink everywhere" } },
+        { "type": "image", "settings": { "caption": "Pulling a print by hand" } },
+        { "type": "image", "settings": { "caption": "Packing day, drop morning" } },
+        { "type": "image", "settings": { "caption": "Rack of finished chapter pieces" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
