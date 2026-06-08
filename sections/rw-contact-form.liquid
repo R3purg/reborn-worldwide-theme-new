@@ -1,0 +1,705 @@
+{% liquid
+  assign s = section.settings
+  assign form_id = 'ContactForm-' | append: section.id
+  assign topics = s.topics | newline_to_br | split: '<br />'
+%}
+
+<section class="rw-contact-body color-{{ s.color_scheme }}">
+  <div class="rw-contact-body__inner rw-contact-body--{{ s.layout }}">
+
+    <div class="rw-contact-body__form-card">
+      {%- form 'contact', id: form_id, class: 'rw-contact-form' -%}
+        <input type="hidden" name="contact[id]" value="{{ form_id }}">
+
+        {%- if form.posted_successfully? and form.id == form_id -%}
+          <div class="rw-contact-form__success" tabindex="-1" autofocus>
+            <span class="rw-contact-form__success-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="none" aria-hidden="true">
+                <path d="m5 12 5 5 9-11"/>
+              </svg>
+            </span>
+            <h2 class="rw-contact-form__success-title">{{ s.success_title }}</h2>
+            <p class="rw-contact-form__success-copy">
+              {{ s.success_copy }}
+              {%- if form.email != blank -%}
+                <span class="rw-contact-form__success-email">{{ form.email }}</span>
+              {%- endif -%}
+            </p>
+            <a href="{{ request.path }}" class="rw-btn rw-btn--md rw-btn--ghost">{{ s.success_cta_label }}</a>
+          </div>
+        {%- else -%}
+          <div class="rw-contact-form__row">
+            <div class="rw-field">
+              <label for="{{ form_id }}-name">{{ 'blocks.contact_form.name' | t }} *</label>
+              <input
+                type="text"
+                id="{{ form_id }}-name"
+                class="rw-field__input"
+                name="contact[name]"
+                value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+                autocomplete="name"
+                placeholder="{{ s.name_placeholder }}"
+                required
+              >
+            </div>
+            <div class="rw-field{% if form.errors contains 'email' %} rw-field--invalid{% endif %}">
+              <label for="{{ form_id }}-email">{{ 'blocks.contact_form.email' | t }} *</label>
+              <input
+                type="email"
+                id="{{ form_id }}-email"
+                class="rw-field__input"
+                name="contact[email]"
+                value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                autocomplete="email"
+                spellcheck="false"
+                autocapitalize="off"
+                placeholder="{{ s.email_placeholder }}"
+                aria-required="true"
+                {% if form.errors contains 'email' %}
+                  aria-invalid="true"
+                  aria-describedby="{{ form_id }}-email-error"
+                {% endif %}
+                required
+              >
+              {%- if form.errors contains 'email' -%}
+                <span class="rw-field__err" id="{{ form_id }}-email-error">
+                  {{- form.errors.translated_fields.email | capitalize }} {{ form.errors.messages.email -}}
+                </span>
+              {%- endif -%}
+            </div>
+          </div>
+
+          <div class="rw-contact-form__row">
+            <div class="rw-field">
+              <label for="{{ form_id }}-topic">{{ 'blocks.contact_form.topic' | t }}</label>
+              <select id="{{ form_id }}-topic" class="rw-field__input" name="contact[topic]">
+                {%- for topic in topics -%}
+                  {%- assign topic = topic | strip -%}
+                  {%- if topic != blank -%}
+                    <option {% if topic == s.default_topic %}selected{% endif %}>{{ topic }}</option>
+                  {%- endif -%}
+                {%- endfor -%}
+              </select>
+            </div>
+            <div class="rw-field">
+              <label for="{{ form_id }}-order">
+                {{ 'blocks.contact_form.order_number' | t }}
+                <span class="rw-field__optional">({{ 'blocks.contact_form.optional' | t }})</span>
+              </label>
+              <input
+                type="text"
+                id="{{ form_id }}-order"
+                class="rw-field__input"
+                name="contact[order_number]"
+                placeholder="{{ s.order_placeholder }}"
+              >
+            </div>
+          </div>
+
+          <div class="rw-field">
+            <label for="{{ form_id }}-phone">
+              {{ 'blocks.contact_form.phone' | t }}
+              <span class="rw-field__optional">({{ 'blocks.contact_form.optional' | t }})</span>
+            </label>
+            <input
+              type="tel"
+              id="{{ form_id }}-phone"
+              class="rw-field__input"
+              name="contact[phone]"
+              value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}"
+              autocomplete="tel"
+              pattern="[0-9\-\+\s]*"
+              placeholder="{{ s.phone_placeholder }}"
+            >
+          </div>
+
+          <div class="rw-field">
+            <label for="{{ form_id }}-body">{{ 'blocks.contact_form.comment' | t }} *</label>
+            <textarea
+              id="{{ form_id }}-body"
+              class="rw-field__input rw-field__input--textarea"
+              name="contact[body]"
+              placeholder="{{ s.message_placeholder }}"
+              required
+            >{{- form.body -}}</textarea>
+          </div>
+
+          <div class="rw-contact-form__footer">
+            <span class="rw-contact-form__note">{{ s.form_note }}</span>
+            <button type="submit" class="rw-btn rw-btn--md rw-btn--solid">
+              {{ s.submit_label }} →
+            </button>
+          </div>
+        {%- endif -%}
+      {%- endform -%}
+    </div>
+
+    <aside class="rw-contact-body__sidebar">
+      {%- assign channel_blocks = section.blocks | where: 'type', 'channel' -%}
+      {%- if channel_blocks.size > 0 -%}
+        <div class="rw-contact-card">
+          {%- if s.channels_heading != blank -%}
+            <div class="rw-contact-card__kicker">{{ s.channels_heading }}</div>
+          {%- endif -%}
+          <div class="rw-contact-card__list">
+            {%- for block in channel_blocks -%}
+              <a
+                href="{{ block.settings.link | default: '#' }}"
+                class="rw-contact-card__row"
+                {{ block.shopify_attributes }}
+              >
+                <span class="rw-contact-card__row-label">{{ block.settings.label }}</span>
+                <span class="rw-contact-card__row-value">{{ block.settings.value }}</span>
+              </a>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- assign studio_blocks = section.blocks | where: 'type', 'studio' -%}
+      {%- if studio_blocks.size > 0 -%}
+        <div class="rw-contact-card">
+          {%- if s.studios_heading != blank -%}
+            <div class="rw-contact-card__kicker">{{ s.studios_heading }}</div>
+          {%- endif -%}
+          <div class="rw-contact-card__studios">
+            {%- for block in studio_blocks -%}
+              <div class="rw-contact-card__studio" {{ block.shopify_attributes }}>
+                <span class="rw-contact-card__dot"></span>
+                <div>
+                  <div class="rw-contact-card__studio-name">
+                    {{ block.settings.city }}
+                    <span class="rw-contact-card__studio-role">{{ block.settings.role }}</span>
+                  </div>
+                  <div class="rw-contact-card__studio-addr">{{ block.settings.address }}</div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if s.hours_heading != blank -%}
+        <div class="rw-contact-card rw-contact-card--dark">
+          <div class="rw-contact-card__kicker">{{ s.hours_heading }}</div>
+          <div class="rw-contact-card__hours-row">
+            <span>{{ s.weekday_label }}</span>
+            <span class="rw-contact-card__mono">{{ s.weekday_hours }}</span>
+          </div>
+          <div class="rw-contact-card__hours-row rw-contact-card__hours-row--dim">
+            <span>{{ s.weekend_label }}</span>
+            <span class="rw-contact-card__mono">{{ s.weekend_hours }}</span>
+          </div>
+          {%- if s.hours_note != blank -%}
+            <p class="rw-contact-card__note">{{ s.hours_note }}</p>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </aside>
+
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-contact-body {
+    padding: 48px 24px 96px;
+  }
+  .rw-contact-body__inner {
+    max-width: 1180px;
+    margin-inline: auto;
+    display: grid;
+    gap: 48px;
+    align-items: start;
+  }
+  .rw-contact-body--split {
+    grid-template-columns: 1.4fr 1fr;
+  }
+  .rw-contact-body--stacked {
+    grid-template-columns: 1fr;
+  }
+  @media (max-width: 989px) {
+    .rw-contact-body__inner {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* form card */
+  .rw-contact-body__form-card {
+    border: 1px solid var(--color-foreground);
+    background: rgb(var(--color-background));
+    padding: clamp(24px, 3vw, 40px);
+  }
+  .rw-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .rw-contact-form__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 749px) {
+    .rw-contact-form__row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* fields */
+  .rw-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .rw-field label {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+  .rw-field__optional {
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .rw-field__input {
+    width: 100%;
+    background: var(--color-input-background);
+    border: var(--style-border-width-inputs) solid var(--color-input-border);
+    border-radius: var(--style-border-radius-inputs);
+    padding: var(--padding-lg) var(--padding-xl);
+    font-family: var(--font-body--family);
+    font-size: 15px;
+    color: var(--color-input-text);
+    outline: none;
+  }
+  .rw-field__input:focus {
+    border-color: rgb(var(--color-button));
+    box-shadow: 0 0 0 3px rgba(var(--color-button), 0.3);
+  }
+  .rw-field__input--textarea {
+    resize: vertical;
+    min-height: var(--input-textarea-min-height, 140px);
+  }
+  .rw-field--invalid .rw-field__input {
+    border-color: #c0392b;
+    box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.18);
+  }
+  .rw-field__err {
+    font-family: var(--font-accent--family);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #c0392b;
+  }
+
+  /* footer / submit */
+  .rw-contact-form__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .rw-contact-form__note {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+  /* success state */
+  .rw-contact-form__success {
+    padding: 40px 8px;
+    text-align: center;
+  }
+  .rw-contact-form__success-icon {
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--color-foreground);
+    border-radius: 999px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(var(--color-button));
+    color: var(--color-foreground);
+  }
+  .rw-contact-form__success-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .rw-contact-form__success-title {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: 36px;
+    margin: 0;
+  }
+  .rw-contact-form__success-copy {
+    font-family: var(--font-accent--family);
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin: 12px 0 0;
+  }
+  .rw-contact-form__success-email {
+    color: var(--color-foreground);
+  }
+  .rw-contact-form__success > .rw-btn {
+    margin-top: 28px;
+  }
+
+  /* sidebar */
+  .rw-contact-body__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rw-contact-card {
+    border: 1px solid var(--color-foreground);
+    background: rgb(var(--color-background));
+    padding: 24px;
+  }
+  .rw-contact-card--dark {
+    background: var(--color-foreground);
+    color: rgb(var(--color-background));
+  }
+  .rw-contact-card__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-bottom: 16px;
+  }
+  .rw-contact-card--dark .rw-contact-card__kicker {
+    color: inherit;
+    opacity: 0.6;
+  }
+
+  /* direct lines */
+  .rw-contact-card__list {
+    display: flex;
+    flex-direction: column;
+  }
+  .rw-contact-card__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-top: 1px solid var(--color-border);
+    text-decoration: none;
+  }
+  .rw-contact-card__row:first-child {
+    border-top: none;
+  }
+  .rw-contact-card__row-label {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+  }
+  .rw-contact-card__row-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-foreground);
+  }
+
+  /* studios */
+  .rw-contact-card__studios {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .rw-contact-card__studio {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .rw-contact-card__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: rgb(var(--color-button));
+    margin-top: 6px;
+    flex-shrink: 0;
+  }
+  .rw-contact-card__studio-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+  .rw-contact-card__studio-role {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-left: 4px;
+    font-weight: 400;
+  }
+  .rw-contact-card__studio-addr {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: normal;
+    text-transform: none;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-top: 4px;
+  }
+
+  /* support hours */
+  .rw-contact-card__hours-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 6px 0;
+  }
+  .rw-contact-card__hours-row--dim {
+    opacity: 0.6;
+  }
+  .rw-contact-card__mono {
+    font-family: var(--font-accent--family);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .rw-contact-card__note {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: normal;
+    text-transform: none;
+    opacity: 0.7;
+    line-height: 1.7;
+    margin: 14px 0 0;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Contact form",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "split", "label": "Split" },
+        { "value": "stacked", "label": "Stacked" }
+      ],
+      "default": "split"
+    },
+    {
+      "type": "header",
+      "content": "Form copy"
+    },
+    {
+      "type": "text",
+      "id": "name_placeholder",
+      "label": "Name placeholder",
+      "default": "Your name"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "you@somewhere.cool"
+    },
+    {
+      "type": "textarea",
+      "id": "topics",
+      "label": "Topic options (one per line)",
+      "default": "General\nOrder / shipping\nReturns\nWholesale\nPress\nJust saying hi"
+    },
+    {
+      "type": "text",
+      "id": "default_topic",
+      "label": "Default topic",
+      "default": "General"
+    },
+    {
+      "type": "text",
+      "id": "order_placeholder",
+      "label": "Order # placeholder",
+      "default": "RW-000000"
+    },
+    {
+      "type": "text",
+      "id": "phone_placeholder",
+      "label": "Phone placeholder",
+      "default": "+48 …"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message placeholder",
+      "default": "What's on your mind?"
+    },
+    {
+      "type": "text",
+      "id": "form_note",
+      "label": "Form note",
+      "default": "* required · we reply within 24h"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Send message"
+    },
+    {
+      "type": "header",
+      "content": "Success state"
+    },
+    {
+      "type": "text",
+      "id": "success_title",
+      "label": "Success title",
+      "default": "Message sent."
+    },
+    {
+      "type": "text",
+      "id": "success_copy",
+      "label": "Success copy (echoes the sender's email after)",
+      "default": "Thanks — we'll reply within a day. Probably sooner."
+    },
+    {
+      "type": "text",
+      "id": "success_cta_label",
+      "label": "Success button label",
+      "default": "Send another"
+    },
+    {
+      "type": "header",
+      "content": "Direct lines card"
+    },
+    {
+      "type": "text",
+      "id": "channels_heading",
+      "label": "Heading",
+      "default": "// DIRECT LINES"
+    },
+    {
+      "type": "header",
+      "content": "Studios card"
+    },
+    {
+      "type": "text",
+      "id": "studios_heading",
+      "label": "Heading",
+      "default": "// STUDIOS"
+    },
+    {
+      "type": "header",
+      "content": "Support hours card"
+    },
+    {
+      "type": "text",
+      "id": "hours_heading",
+      "label": "Heading",
+      "default": "// SUPPORT HOURS"
+    },
+    {
+      "type": "text",
+      "id": "weekday_label",
+      "label": "Weekday label",
+      "default": "Mon — Fri"
+    },
+    {
+      "type": "text",
+      "id": "weekday_hours",
+      "label": "Weekday hours",
+      "default": "09:00 — 18:00 CET"
+    },
+    {
+      "type": "text",
+      "id": "weekend_label",
+      "label": "Weekend label",
+      "default": "Sat — Sun"
+    },
+    {
+      "type": "text",
+      "id": "weekend_hours",
+      "label": "Weekend hours",
+      "default": "Closed (we're printing)"
+    },
+    {
+      "type": "text",
+      "id": "hours_note",
+      "label": "Note",
+      "default": "Drop days are chaos — replies may lag by a few hours. Worth it."
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "channel",
+      "name": "Direct line",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "EMAIL"
+        },
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "hey@reborn.ww"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    },
+    {
+      "type": "studio",
+      "name": "Studio",
+      "settings": [
+        {
+          "type": "text",
+          "id": "city",
+          "label": "City",
+          "default": "KRAKÓW"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Role",
+          "default": "Print + HQ"
+        },
+        {
+          "type": "text",
+          "id": "address",
+          "label": "Address",
+          "default": "ul. Mogilska 43, 31-545"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Contact form",
+      "blocks": [
+        { "type": "channel", "settings": { "label": "EMAIL", "value": "hey@reborn.ww", "link": "mailto:hey@reborn.ww" } },
+        { "type": "channel", "settings": { "label": "ORDERS", "value": "orders@reborn.ww", "link": "mailto:orders@reborn.ww" } },
+        { "type": "channel", "settings": { "label": "PRESS", "value": "press@reborn.ww", "link": "mailto:press@reborn.ww" } },
+        { "type": "channel", "settings": { "label": "INSTAGRAM", "value": "@reborn.wxrldwide", "link": "https://instagram.com" } },
+        { "type": "studio", "settings": { "city": "KRAKÓW", "role": "Print + HQ", "address": "ul. Mogilska 43, 31-545" } },
+        { "type": "studio", "settings": { "city": "BERLIN", "role": "Showroom", "address": "Oranienstraße 12, 10997" } },
+        { "type": "studio", "settings": { "city": "LISBON", "role": "Studio", "address": "R. do Século 99, 1200-433" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

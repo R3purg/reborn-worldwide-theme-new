@@ -1,0 +1,156 @@
+{% liquid
+  assign s = section.settings
+%}
+
+<section class="rw-contact-links color-{{ s.color_scheme }}">
+  <div class="rw-contact-links__inner">
+    {%- if s.kicker != blank -%}
+      <div class="rw-contact-links__kicker">{{ s.kicker }}</div>
+    {%- endif -%}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="rw-contact-links__grid">
+        {%- for block in section.blocks -%}
+          <a
+            href="{{ block.settings.url | default: '#' }}"
+            class="rw-contact-links__card"
+            {{ block.shopify_attributes }}
+          >
+            <div>
+              <div class="rw-contact-links__card-title">{{ block.settings.title }}</div>
+              <p class="rw-contact-links__card-desc">{{ block.settings.description }}</p>
+            </div>
+            <div class="rw-contact-links__card-cta">{{ s.link_label }} →</div>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% stylesheet %}
+  .rw-contact-links {
+    border-top: 1px solid var(--color-border);
+    padding: 56px 24px;
+  }
+  .rw-contact-links__inner {
+    max-width: 1180px;
+    margin-inline: auto;
+  }
+  .rw-contact-links__kicker {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-bottom: 24px;
+  }
+  .rw-contact-links__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 749px) {
+    .rw-contact-links__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  .rw-contact-links__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+    min-height: 150px;
+    border: 1px solid var(--color-foreground);
+    background: rgb(var(--color-background));
+    text-decoration: none;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rw-contact-links__card:hover {
+    transform: translateY(-4px);
+  }
+  .rw-contact-links__card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-foreground);
+  }
+  .rw-contact-links__card-desc {
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin: 8px 0 0;
+  }
+  .rw-contact-links__card-cta {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW Contact links",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "// MAYBE THE ANSWER'S HERE"
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Card link label",
+      "default": "Read"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Link card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Shipping & returns"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "Tracked worldwide, free over €120, 14-day returns."
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW Contact links",
+      "blocks": [
+        { "type": "link", "settings": { "title": "Shipping & returns", "description": "Tracked worldwide, free over €120, 14-day returns.", "url": "/pages/shipping-returns" } },
+        { "type": "link", "settings": { "title": "Size guide", "description": "Boxy fits run big — full measurements per piece.", "url": "/pages/size-guide" } },
+        { "type": "link", "settings": { "title": "The drop system", "description": "250 pieces, no restocks. How it works.", "url": "/blogs/journal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
