@@ -436,45 +436,45 @@
           "type": "member",
           "settings": {
             "image": "shopify://shop_images/4.png",
-            "name": "Marek",
-            "role": "Print + production",
-            "city": "Kraków"
+            "name": "",
+            "role": "",
+            "city": ""
           }
         },
         "mem_2": {
           "type": "member",
           "settings": {
             "image": "shopify://shop_images/5.png",
-            "name": "Lena",
-            "role": "Design + story",
-            "city": "Berlin"
+            "name": "",
+            "role": "",
+            "city": ""
           }
         },
         "mem_3": {
           "type": "member",
           "settings": {
             "image": "shopify://shop_images/6.png",
-            "name": "Tomas",
-            "role": "Photography",
-            "city": "Lisbon"
+            "name": "",
+            "role": "",
+            "city": ""
           }
         },
         "mem_4": {
           "type": "member",
           "settings": {
             "image": "shopify://shop_images/7_42487f9b-be99-4dcb-aa9a-ff6f51514628.png",
-            "name": "Ola",
-            "role": "Everything else",
-            "city": "Kraków"
+            "name": "",
+            "role": "",
+            "city": ""
           }
         },
         "member_jJGhFJ": {
           "type": "member",
           "settings": {
             "image": "shopify://shop_images/8_fd213617-522c-497d-9e51-6419a8cee197.png",
-            "name": "Marek",
-            "role": "Print + production",
-            "city": "Kraków"
+            "name": "",
+            "role": "",
+            "city": ""
           }
         }
       },
