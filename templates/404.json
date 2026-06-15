@@ -284,7 +284,7 @@
           "type": "link_card",
           "settings": {
             "title": "New arrivals",
-            "url": "",
+            "url": "shopify://collections/personal-care",
             "description": "The latest chapter, still warm"
           }
         },
@@ -292,7 +292,7 @@
           "type": "link_card",
           "settings": {
             "title": "Collections",
-            "url": "",
+            "url": "shopify://collections",
             "description": "Every chapter, every regular"
           }
         },
@@ -300,7 +300,7 @@
           "type": "link_card",
           "settings": {
             "title": "The journal",
-            "url": "",
+            "url": "shopify://blogs/news",
             "description": "Drop stories + studio notes"
           }
         },
@@ -308,7 +308,7 @@
           "type": "link_card",
           "settings": {
             "title": "About",
-            "url": "",
+            "url": "shopify://pages/about",
             "description": "Four people, one stubborn idea"
           }
         }
@@ -321,13 +321,14 @@
       ],
       "name": "RW 404",
       "settings": {
-        "eyebrow": "Error 404 — page not found",
+        "eyebrow": "Error 404 - page not found",
         "status_label": "Status: lost in the swamp",
         "glitch": true,
         "heading": "This page sold out. Or never existed.",
-        "intro": "<p>Either the link's broken, the drop's gone, or you typed something the swamp doesn't recognise. No restocks on URLs either — let's get you somewhere real.</p>",
+        "intro": "<p>Either the link's broken, the drop's gone, or you typed something the swamp doesn't recognise. No restocks on URLs either - let's get you somewhere real.</p>",
         "search_placeholder": "Search the worldwide…",
         "home_label": "Back to home",
+        "image": "shopify://shop_images/hero-1-alt.png",
         "show_links": true,
         "links_heading": "or try one of these",
         "card_cta_label": "Go",
