@@ -1,219 +1,225 @@
 
-
-<script
-  src="{{ 'results-list.js' | asset_url }}"
-  type="module"
-  fetchpriority="low"
-></script>
+{%- liquid
+  assign search_products = search.results | where: "object_type", "product"
+  assign search_articles = search.results | where: "object_type", "article"
+  assign search_pages    = search.results | where: "object_type", "page"
+  assign product_count   = search_products.size
+  assign article_count   = search_articles.size
+  assign page_count      = search_pages.size
+-%}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
 
-<results-list
-  class="section product-grid-container spacing-style color-{{ section.settings.color_scheme }}"
-  style="--padding-block-start: {{ section.settings.padding-block-start }}px; --padding-block-end: {{ section.settings.padding-block-end }}px;"
-  section-id="{{ section.id }}"
-  infinite-scroll="{{ section.settings.enable_infinite_scroll }}"
->
-  {% render 'skip-to-content-link', href: '#ResultsList', text: 'accessibility.skip_to_results_list' %}
+{%- unless search.performed -%}
 
-  <div
-    class="collection-wrapper grid gap-style"
-  >
-    {% assign products_per_page = 24 %}
+  {%- comment -%} No query — popular products {%- endcomment -%}
+  <section class="rw-search-popular color-{{ section.settings.color_scheme }}">
+    <div class="rw-search-popular__inner">
+      <p class="rw-search-section-label">// POPULAR RIGHT NOW</p>
+      <div class="rw-search-popular-grid">
+        {%- for product in collections.all.products limit: 4 -%}
+          {%- render 'resource-card',
+            resource: product,
+            resource_type: 'product',
+            image_aspect_ratio: '0.8',
+            image_hover: true
+          -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
 
-    {% if section.settings.enable_infinite_scroll == false %}
-      {% assign products_per_page = section.settings.products_per_page %}
-    {% endif %}
+{%- else -%}
 
-    {% paginate search.results by products_per_page %}
-      {% if search.results_count > 0 %}
-        {% content_for 'block', type: 'filters', id: 'filters', results: search, results_size: search.results_count %}
-        {% assign products = search.results | where: 'object_type', 'product' %}
-      {% else %}
-        {% assign collection = settings.empty_state_collection | default: collections.all %}
-        {% assign default_title = 'content.search_results_resource_products' | t %}
-        {% assign title = settings.empty_state_collection.title | default: default_title %}
-        {% assign products = collection.products %}
-      {% endif %}
+  {%- comment -%} Type tabs + sort bar (sticky below header) {%- endcomment -%}
+  <div class="rw-search-tabs-bar" role="navigation" aria-label="Filter search results by type">
+    <div class="rw-search-tabs-bar__inner">
+      <div class="rw-search-tabs" role="tablist">
+        {%- assign base_q = search.terms | url_encode -%}
+        {%- assign tab_types = "all,product,article,page" | split: "," -%}
+        {%- assign tab_labels = "All,Products,Journal,Pages" | split: "," -%}
+        {%- for tab_type in tab_types -%}
+          {%- assign tab_label = tab_labels[forloop.index0] -%}
+          {%- if tab_type == "all" -%}
+            {%- assign tab_href = routes.search_url | append: '?q=' | append: base_q | append: '&type=product,article,page' -%}
+          {%- else -%}
+            {%- assign tab_href = routes.search_url | append: '?q=' | append: base_q | append: '&type=' | append: tab_type -%}
+          {%- endif -%}
+          <a
+            href="{{ tab_href }}"
+            class="rw-type-tab"
+            data-search-type="{{ tab_type }}"
+            role="tab"
+          >{{ tab_label }}</a>
+        {%- endfor -%}
+      </div>
 
-      {% capture children %}
-        {% for product in products %}
-          <li
-            id="{{ section.id }}-{{ product.id }}"
-            class="product-grid__item product-grid__item--{{ forloop.index0 }}"
-            data-page="{{ paginate.current_page }}"
-            data-product-id="{{ product.id }}"
-            ref="cards[]"
-          >
-            {% content_for 'block', type: '_product-card', id: 'product-card', closest.product: product %}
-          </li>
-        {% endfor %}
-      {% endcapture %}
-
-      {% render 'product-grid',
-        section: section,
-        children: children,
-        products: products,
-        paginate: paginate,
-        enable_infinite_scroll: section.settings.enable_infinite_scroll,
-        title: title
-      %}
-    {% endpaginate %}
+      {%- if product_count > 0 -%}
+        <label class="rw-search-sort-label">
+          <span>SORT</span>
+          <select id="rw-search-sort" class="rw-search-sort-select" aria-label="Sort results">
+            <option value="relevance">Relevance</option>
+            <option value="price-ascending">Price &#8593;</option>
+            <option value="price-descending">Price &#8595;</option>
+            <option value="title-ascending">A&ndash;Z</option>
+          </select>
+        </label>
+      {%- endif -%}
+    </div>
   </div>
-</results-list>
+
+  {%- comment -%} Results {%- endcomment -%}
+  <section
+    class="rw-search-results color-{{ section.settings.color_scheme }}"
+    style="padding-block-start: {{ section.settings.padding-block-start }}px; padding-block-end: {{ section.settings.padding-block-end }}px;"
+  >
+    <div class="rw-search-results__inner">
+
+      {%- if search.results_count == 0 -%}
+
+        {%- comment -%} No results {%- endcomment -%}
+        {%- assign fallback_suggestions = "My Swamp,Hoodie,Chapter 04,Heavyweight Tee" | split: "," -%}
+        <div class="rw-search-noresults">
+          <h2 class="rw-search-noresults__heading">Nothing matches that.</h2>
+          <p class="rw-search-noresults__hint">// CHECK THE SPELLING, OR TRY SOMETHING BROADER</p>
+          <div class="rw-search-suggestions rw-search-suggestions--inline">
+            {%- for s in fallback_suggestions -%}
+              <a href="{{ routes.search_url }}?q={{ s | url_encode }}&type=product,article,page" class="rw-search-suggestion">{{ s }}</a>
+            {%- endfor -%}
+          </div>
+        </div>
+
+      {%- else -%}
+
+        {%- paginate search.results by 24 -%}
+
+          {%- comment -%} Products {%- endcomment -%}
+          {%- if product_count > 0 -%}
+            <div class="rw-search-group" id="rw-search-products">
+              <div class="rw-search-group__header">
+                <h2 class="rw-search-group__title">Products</h2>
+                <span class="rw-search-group__count">{{ product_count }}</span>
+              </div>
+              <div class="rw-search-products-grid">
+                {%- for product in search_products -%}
+                  {%- render 'resource-card',
+                    resource: product,
+                    resource_type: 'product',
+                    image_aspect_ratio: '0.8',
+                    image_hover: true
+                  -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Journal articles {%- endcomment -%}
+          {%- if article_count > 0 -%}
+            <div class="rw-search-group" id="rw-search-articles">
+              <div class="rw-search-group__header">
+                <h2 class="rw-search-group__title">From the journal</h2>
+                <span class="rw-search-group__count">{{ article_count }}</span>
+              </div>
+              <div class="rw-search-articles-grid">
+                {%- for article in search_articles -%}
+                  <a href="{{ article.url }}" class="rw-article-card">
+                    <div class="rw-article-card__image-wrap">
+                      {%- if article.image -%}
+                        {{ article.image | image_url: width: 800 | image_tag:
+                          loading: 'lazy',
+                          class: 'rw-article-card__image',
+                          alt: article.image.alt | default: article.title,
+                          widths: '400, 600, 800'
+                        }}
+                      {%- else -%}
+                        <div class="rw-article-card__placeholder" aria-hidden="true"></div>
+                      {%- endif -%}
+                      {%- if article.blog.title != blank -%}
+                        <span class="rw-article-card__cat">{{ article.blog.title | upcase }}</span>
+                      {%- endif -%}
+                    </div>
+                    <div class="rw-article-card__body">
+                      <div class="rw-article-card__meta">
+                        <span>{{ article.published_at | date: "%d %b %Y" | upcase }}</span>
+                        <span aria-hidden="true">&middot;</span>
+                        <span>{{ article.content | strip_html | split: " " | size | divided_by: 200 | at_least: 1 }} MIN</span>
+                      </div>
+                      <h3 class="rw-article-card__title">{{ article.title }}</h3>
+                      <p class="rw-article-card__excerpt">{{ article.excerpt | default: article.content | strip_html | truncate: 120 }}</p>
+                    </div>
+                  </a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- comment -%} Pages {%- endcomment -%}
+          {%- if page_count > 0 -%}
+            <div class="rw-search-group" id="rw-search-pages">
+              <div class="rw-search-group__header">
+                <h2 class="rw-search-group__title">Pages</h2>
+                <span class="rw-search-group__count">{{ page_count }}</span>
+              </div>
+              <div class="rw-search-pages-grid">
+                {%- for page in search_pages -%}
+                  <a href="{{ page.url }}" class="rw-page-card">
+                    <div>
+                      <div class="rw-page-card__title">{{ page.title }}</div>
+                      <div class="rw-page-card__excerpt">{{ page.content | strip_html | truncate: 100 }}</div>
+                    </div>
+                    <svg class="rw-page-card__arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+                  </a>
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+          {%- if paginate.pages > 1 -%}
+            {%- render 'pagination-controls', paginate: paginate -%}
+          {%- endif -%}
+
+        {%- endpaginate -%}
+
+      {%- endif -%}
+
+    </div>
+  </section>
+
+{%- endunless -%}
+
+<script>
+(function () {
+  var params = new URLSearchParams(location.search);
+  var type = params.get('type') || 'product,article,page';
+  var sortBy = params.get('sort_by') || 'relevance';
+
+  document.querySelectorAll('[data-search-type]').forEach(function (tab) {
+    var tabType = tab.dataset.searchType;
+    var isActive =
+      tabType === type ||
+      (tabType === 'all' && (type === 'product,article,page' || !params.has('type')));
+    if (isActive) {
+      tab.classList.add('rw-type-tab--active');
+      tab.setAttribute('aria-current', 'page');
+    }
+  });
+
+  var sel = document.getElementById('rw-search-sort');
+  if (sel) {
+    sel.value = sortBy;
+    sel.addEventListener('change', function () {
+      var p = new URLSearchParams(location.search);
+      p.set('sort_by', sel.value);
+      location.search = p.toString();
+    });
+  }
+})();
+</script>
 
 {% schema %}
 {
   "name": "t:names.search_results",
   "settings": [
-    {
-      "type": "paragraph",
-      "content": "t:content.edit_empty_state_collection_in_theme_settings"
-    },
-    {
-      "type": "select",
-      "id": "layout_type",
-      "label": "t:settings.type",
-      "options": [
-        {
-          "value": "grid",
-          "label": "t:options.grid"
-        },
-        {
-          "value": "organic",
-          "label": "t:options.editorial"
-        }
-      ],
-      "default": "grid"
-    },
-    {
-      "type": "select",
-      "id": "product_card_size",
-      "label": "t:settings.card_size",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:options.small"
-        },
-        {
-          "value": "medium",
-          "label": "t:options.medium"
-        },
-        {
-          "value": "large",
-          "label": "t:options.large"
-        },
-        {
-          "value": "extra-large",
-          "label": "t:options.extra_large"
-        }
-      ],
-      "default": "medium",
-      "visible_if": "{{ section.settings.layout_type == 'grid' }}"
-    },
-    {
-      "type": "select",
-      "id": "mobile_product_card_size",
-      "label": "t:settings.mobile_card_size",
-      "options": [
-        {
-          "value": "small",
-          "label": "t:options.small"
-        },
-        {
-          "value": "large",
-          "label": "t:options.large"
-        }
-      ],
-      "default": "small"
-    },
-    {
-      "type": "checkbox",
-      "id": "enable_infinite_scroll",
-      "label": "t:settings.auto_load_products",
-      "default": true
-    },
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "t:settings.products_per_page",
-      "min": 8,
-      "max": 36,
-      "step": 4,
-      "default": 24,
-      "visible_if": "{{ section.settings.enable_infinite_scroll == false }}"
-    },
-    {
-      "type": "header",
-      "content": "t:content.layout"
-    },
-    {
-      "type": "select",
-      "id": "product_grid_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "centered",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "centered"
-    },
-    {
-      "type": "checkbox",
-      "id": "full_width_on_mobile",
-      "label": "t:settings.full_width_on_mobile",
-      "default": true,
-      "visible_if": "{{ section.settings.product_grid_width != 'full-width' }}"
-    },
-    {
-      "type": "range",
-      "id": "columns_gap_horizontal",
-      "label": "t:settings.horizontal_gap",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "columns_gap_vertical",
-      "label": "t:settings.vertical_gap",
-      "min": 0,
-      "max": 50,
-      "step": 1,
-      "unit": "px",
-      "default": 16
-    },
-    {
-      "type": "range",
-      "id": "padding-inline-start",
-      "label": "t:settings.left_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "range",
-      "id": "padding-inline-end",
-      "label": "t:settings.right_padding",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
-    },
-    {
-      "type": "header",
-      "content": "t:content.section_layout"
-    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
@@ -221,24 +227,28 @@
       "default": "scheme-1"
     },
     {
+      "type": "header",
+      "content": "t:content.section_layout"
+    },
+    {
       "type": "range",
       "id": "padding-block-start",
       "label": "t:settings.top_padding",
       "min": 0,
       "max": 100,
-      "step": 1,
+      "step": 4,
       "unit": "px",
-      "default": 8
+      "default": 40
     },
     {
       "type": "range",
       "id": "padding-block-end",
       "label": "t:settings.bottom_padding",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 8
+      "default": 96
     }
   ],
   "presets": []

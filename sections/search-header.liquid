@@ -1,53 +1,60 @@
 
+{%- assign suggestions = "My Swamp,Hoodie,Chapter 04,Heavyweight Tee,Cap,Bikini Bling" | split: "," -%}
 
 <div class="section-background color-{{ section.settings.color_scheme }}"></div>
-<div class="section section--page-width color-{{ section.settings.color_scheme }}">
-  <div
-    class="spacing-style search-page__header"
-    style="
-      --horizontal-alignment: {{ section.settings.alignment }};
-      {% render 'spacing-style', settings: section.settings %}
-    "
-  >
-    {% assign heading_text = 'content.search' | t %}
 
-    {% if search.performed %}
-      {% assign heading_text = 'content.search_results' | t %}
-    {% endif %}
+<section class="rw-search-header color-{{ section.settings.color_scheme }}">
+  <div class="rw-search-header__inner" style="padding-block-start: {{ section.settings.padding-block-start }}px; padding-block-end: {{ section.settings.padding-block-end }}px;">
 
-    {% capture heading_text %}
-      <h3>{{ heading_text }}</h3>
-    {% endcapture %}
+    <p class="rw-search-eyebrow">// SEARCH THE WORLDWIDE</p>
 
-    {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
-    {% content_for 'block', id: 'search', type: '_search-input' %}
+    <form action="{{ routes.search_url }}" method="get" class="rw-search-form" role="search">
+      <input type="hidden" name="type" value="product,article,page">
+      <input type="hidden" name="options[prefix]" value="last">
+      <div class="rw-search-pill">
+        <button type="submit" class="rw-search-pill__submit" aria-label="{{ 'general.search.search' | t | default: 'Search' }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        </button>
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="Search products, journal, pages&hellip;"
+          aria-label="{{ 'general.search.search' | t | default: 'Search' }}"
+          class="rw-search-input"
+          autocomplete="off"
+        >
+        {%- if search.performed and search.terms != blank -%}
+          <a href="{{ routes.search_url }}" class="rw-search-clear" aria-label="Clear search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 6 12 12M6 18 18 6"/></svg>
+          </a>
+        {%- endif -%}
+      </div>
+    </form>
+
+    <p class="rw-search-meta">
+      {%- if search.performed -%}
+        {{ search.results_count }}&nbsp;{%- if search.results_count == 1 -%}RESULT{%- else -%}RESULTS{%- endif -%}&nbsp;FOR &ldquo;{{ search.terms | upcase }}&rdquo;
+      {%- else -%}
+        TYPE TO SEARCH &mdash; OR TRY ONE OF THESE
+      {%- endif -%}
+    </p>
+
+    {%- unless search.performed -%}
+      <div class="rw-search-suggestions" aria-label="Search suggestions">
+        {%- for s in suggestions -%}
+          <a href="{{ routes.search_url }}?q={{ s | url_encode }}&type=product,article,page" class="rw-search-suggestion">{{ s }}</a>
+        {%- endfor -%}
+      </div>
+    {%- endunless -%}
+
   </div>
-</div>
+</section>
 
 {% schema %}
 {
   "name": "t:names.search",
   "settings": [
-    {
-      "type": "select",
-      "id": "alignment",
-      "label": "t:settings.alignment",
-      "options": [
-        {
-          "value": "flex-start",
-          "label": "t:options.left"
-        },
-        {
-          "value": "center",
-          "label": "t:options.center"
-        },
-        {
-          "value": "flex-end",
-          "label": "t:options.right"
-        }
-      ],
-      "default": "flex-start"
-    },
     {
       "type": "color_scheme",
       "id": "color_scheme",
@@ -63,18 +70,18 @@
       "id": "padding-block-start",
       "label": "t:settings.top",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 120,
+      "step": 4,
       "unit": "px",
-      "default": 0
+      "default": 56
     },
     {
       "type": "range",
       "id": "padding-block-end",
       "label": "t:settings.bottom",
       "min": 0,
-      "max": 100,
-      "step": 1,
+      "max": 120,
+      "step": 4,
       "unit": "px",
       "default": 0
     }
