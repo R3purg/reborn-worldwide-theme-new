@@ -1,0 +1,545 @@
+{% liquid
+  assign s = section.settings
+  assign rw_404_words = s.marquee_text | split: ','
+%}
+
+<section class="rw-404 color-{{ s.color_scheme }}">
+  <div class="rw-404__inner">
+    <div class="rw-404__meta">
+      <span>// {{ s.eyebrow | upcase }}</span>
+      <span>{{ s.status_label | upcase }}</span>
+    </div>
+
+    <h1 class="rw-404__numeral{% if s.glitch %} rw-404__numeral--glitch{% endif %}" aria-label="404">
+      4<span class="rw-404__numeral-accent">0</span>4
+    </h1>
+
+    <div class="rw-404__grid">
+      <div class="rw-404__content">
+        <h2 class="rw-404__heading">{{ s.heading }}</h2>
+
+        {%- if s.intro != blank -%}
+          <div class="rw-404__intro">{{ s.intro }}</div>
+        {%- endif -%}
+
+        <form action="{{ routes.search_url }}" method="get" role="search" class="rw-404__search">
+          <label for="rw-404-search-{{ section.id }}" class="visually-hidden">{{ 'content.search_input_label' | t }}</label>
+          <input
+            type="search"
+            name="q"
+            id="rw-404-search-{{ section.id }}"
+            class="rw-404__search-input"
+            placeholder="{{ s.search_placeholder }}"
+            autocomplete="off"
+          >
+          <button type="submit" class="rw-404__search-submit">
+            {{ 'content.search' | t }}
+            <span aria-hidden="true">→</span>
+          </button>
+        </form>
+
+        <a href="{{ routes.root_url }}" class="rw-btn rw-btn--md rw-btn--solid rw-404__home-btn">
+          {{ s.home_label }}
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <div class="rw-404__media">
+        {%- if s.image != blank -%}
+          {{
+            s.image
+            | image_url: width: 1000
+            | image_tag: loading: 'lazy', class: 'rw-404__img', alt: s.image.alt | default: s.heading
+          }}
+        {%- else -%}
+          <div class="rw-404__media-ph">
+            {{ 'lifestyle-1' | placeholder_svg_tag: 'rw-404__ph-svg' }}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if s.show_links and section.blocks.size > 0 -%}
+      <div class="rw-404__links">
+        <div class="rw-404__links-label">// {{ s.links_heading | upcase }}</div>
+        <div class="rw-404__links-grid">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'link_card' -%}
+              <a
+                href="{{ block.settings.url | default: '#' }}"
+                class="rw-404__card"
+                {{ block.shopify_attributes }}
+              >
+                <div>
+                  <div class="rw-404__card-title">{{ block.settings.title }}</div>
+                  {%- if block.settings.description != blank -%}
+                    <p class="rw-404__card-desc">{{ block.settings.description }}</p>
+                  {%- endif -%}
+                </div>
+                <div class="rw-404__card-go">
+                  {{ s.card_cta_label }}
+                  <span aria-hidden="true">→</span>
+                </div>
+              </a>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+
+  {%- if s.show_marquee and rw_404_words.size > 0 -%}
+    <div class="rw-404__marquee" aria-hidden="true">
+      <div class="rw-404__marquee-track">
+        {%- for rep in (1..2) -%}
+          <span class="rw-404__marquee-group">
+            {%- for word in rw_404_words -%}
+              <span class="rw-404__marquee-item">
+                <span class="rw-404__marquee-word">{{ word | strip }}</span>
+                <span class="rw-404__marquee-dot"></span>
+              </span>
+            {%- endfor -%}
+          </span>
+        {%- endfor -%}
+      </div>
+    </div>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+  .rw-404 {
+    overflow: hidden;
+  }
+  .rw-404__inner {
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: clamp(40px, 7vw, 96px) 24px;
+  }
+
+  /* Meta row */
+  .rw-404__meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+  }
+
+  /* Giant numeral */
+  .rw-404__numeral {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(120px, 34vw, 520px);
+    line-height: 0.78;
+    letter-spacing: -0.02em;
+    text-align: center;
+    margin: 0;
+  }
+  .rw-404__numeral-accent {
+    color: rgb(var(--color-button));
+  }
+  .rw-404__numeral--glitch {
+    animation: rw-404-glitch 4s infinite;
+  }
+  @keyframes rw-404-glitch {
+    0%, 92%, 100% { transform: translate(0); }
+    93% { transform: translate(-4px, 2px); }
+    95% { transform: translate(5px, -2px); }
+    97% { transform: translate(-3px, -1px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rw-404__numeral--glitch {
+      animation: none;
+    }
+  }
+
+  /* Sub grid */
+  .rw-404__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-top: 24px;
+  }
+  .rw-404__heading {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: clamp(28px, 3.4vw, 52px);
+    line-height: 0.96;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .rw-404__intro {
+    font-size: 18px;
+    line-height: 1.55;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-top: 18px;
+    max-width: 460px;
+    text-wrap: pretty;
+  }
+  .rw-404__intro p {
+    margin: 0;
+  }
+
+  /* Search */
+  .rw-404__search {
+    display: flex;
+    border: 1px solid var(--color-foreground);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 24px;
+    max-width: 460px;
+  }
+  .rw-404__search-input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    padding: 16px 20px;
+    font-family: var(--font-accent--family);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-foreground);
+  }
+  .rw-404__search-input::placeholder {
+    color: rgba(var(--color-foreground-rgb), 0.5);
+  }
+  .rw-404__search-submit {
+    flex-shrink: 0;
+    border: 0;
+    background: var(--color-foreground);
+    color: var(--color-background);
+    padding: 0 24px;
+    font-family: var(--font-accent--family);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+  }
+
+  .rw-404__home-btn {
+    margin-top: 18px;
+  }
+
+  /* Media */
+  .rw-404__media {
+    aspect-ratio: 4 / 3;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(var(--color-foreground-rgb), 0.18);
+  }
+  .rw-404__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .rw-404__media-ph {
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0 14px, transparent 14px 28px), #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .rw-404__ph-svg {
+    width: 60px;
+    height: 60px;
+    opacity: 0.4;
+  }
+
+  /* Popular links */
+  .rw-404__links {
+    margin-top: 72px;
+  }
+  .rw-404__links-label {
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin-bottom: 20px;
+  }
+  .rw-404__links-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+  .rw-404__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 22px;
+    min-height: 150px;
+    border: 1px solid var(--color-foreground);
+    background: var(--color-background);
+    color: var(--color-foreground);
+    text-decoration: none;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .rw-404__card:hover {
+    transform: translateY(-4px);
+  }
+  .rw-404__card-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .rw-404__card-desc {
+    font-size: 13px;
+    line-height: 1.5;
+    color: rgba(var(--color-foreground-rgb), 0.62);
+    margin: 8px 0 0;
+  }
+  .rw-404__card-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-accent--family);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  /* Marquee */
+  .rw-404__marquee {
+    background: var(--color-foreground);
+    color: var(--color-background);
+    padding: 18px 0;
+    overflow: hidden;
+    border-block: 1px solid var(--color-foreground);
+  }
+  .rw-404__marquee-track {
+    display: flex;
+    width: max-content;
+    animation: rw-404-scroll 32s linear infinite;
+  }
+  .rw-404__marquee-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 48px;
+    padding-inline-end: 48px;
+  }
+  .rw-404__marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 48px;
+  }
+  .rw-404__marquee-word {
+    font-family: var(--font-heading--family);
+    font-weight: var(--font-heading--weight);
+    text-transform: uppercase;
+    font-size: 34px;
+    line-height: 1;
+    white-space: nowrap;
+  }
+  .rw-404__marquee-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: rgb(var(--color-button));
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  @keyframes rw-404-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rw-404__marquee-track {
+      animation: none;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width: 989px) {
+    .rw-404__grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .rw-404__links-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 749px) {
+    .rw-404__inner {
+      padding: 32px 16px;
+    }
+    .rw-404__meta {
+      font-size: 10px;
+    }
+    .rw-404__links-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "RW 404",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Meta"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow label",
+      "default": "Error 404 — page not found"
+    },
+    {
+      "type": "text",
+      "id": "status_label",
+      "label": "Status label",
+      "default": "Status: lost in the swamp"
+    },
+    {
+      "type": "header",
+      "content": "Numeral"
+    },
+    {
+      "type": "checkbox",
+      "id": "glitch",
+      "label": "Glitch animation",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Message"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "This page sold out. Or never existed."
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Intro copy",
+      "default": "<p>Either the link's broken, the drop's gone, or you typed something the swamp doesn't recognise. No restocks on URLs either — let's get you somewhere real.</p>"
+    },
+    {
+      "type": "header",
+      "content": "Search & recovery"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Search placeholder",
+      "default": "Search the worldwide…"
+    },
+    {
+      "type": "text",
+      "id": "home_label",
+      "label": "Home button label",
+      "default": "Back to home"
+    },
+    {
+      "type": "header",
+      "content": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Editorial image"
+    },
+    {
+      "type": "header",
+      "content": "Popular links"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_links",
+      "label": "Show popular links",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "links_heading",
+      "label": "Links label",
+      "default": "or try one of these"
+    },
+    {
+      "type": "text",
+      "id": "card_cta_label",
+      "label": "Card CTA label",
+      "default": "Go"
+    },
+    {
+      "type": "header",
+      "content": "Marquee"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_marquee",
+      "label": "Show marquee",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "label": "Marquee words (comma separated)",
+      "default": "Lost?, So was chapter 01, No restocks on URLs, Follow the swamp home, Reborn.Wxrldwide"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_card",
+      "name": "Link card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "New arrivals"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Description",
+          "default": "The latest chapter, still warm"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "RW 404",
+      "blocks": [
+        { "type": "link_card", "settings": { "title": "New arrivals", "description": "The latest chapter, still warm" } },
+        { "type": "link_card", "settings": { "title": "Collections", "description": "Every chapter, every regular" } },
+        { "type": "link_card", "settings": { "title": "The journal", "description": "Drop stories + studio notes" } },
+        { "type": "link_card", "settings": { "title": "About", "description": "Four people, one stubborn idea" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
