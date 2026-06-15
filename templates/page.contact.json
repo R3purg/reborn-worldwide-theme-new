@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "rw_contact_hero_1": {
@@ -5,22 +14,61 @@
       "settings": {
         "kicker": "// SAY SOMETHING",
         "heading": "GET IN TOUCH",
-        "intro": "<p>Orders, returns, wholesale, or just to tell us the last drop went too fast. A real person in one of three cities will read it — usually within a day.</p>",
+        "intro": "<p>Orders, returns, wholesale, or just to tell us the last drop went too fast.</p>",
         "color_scheme": "scheme-1"
       }
     },
     "rw_contact_form_1": {
       "type": "rw-contact-form",
       "blocks": {
-        "ch_1": { "type": "channel", "settings": { "label": "EMAIL", "value": "hey@reborn.ww", "link": "mailto:hey@reborn.ww" } },
-        "ch_2": { "type": "channel", "settings": { "label": "ORDERS", "value": "orders@reborn.ww", "link": "mailto:orders@reborn.ww" } },
-        "ch_3": { "type": "channel", "settings": { "label": "PRESS", "value": "press@reborn.ww", "link": "mailto:press@reborn.ww" } },
-        "ch_4": { "type": "channel", "settings": { "label": "INSTAGRAM", "value": "@reborn.wxrldwide", "link": "https://instagram.com" } },
-        "st_1": { "type": "studio", "settings": { "city": "KRAKÓW", "role": "Print + HQ", "address": "ul. Mogilska 43, 31-545" } },
-        "st_2": { "type": "studio", "settings": { "city": "BERLIN", "role": "Showroom", "address": "Oranienstraße 12, 10997" } },
-        "st_3": { "type": "studio", "settings": { "city": "LISBON", "role": "Studio", "address": "R. do Século 99, 1200-433" } }
+        "ch_1": {
+          "type": "channel",
+          "settings": {
+            "label": "EMAIL",
+            "value": "hey@reborn.ww",
+            "link": "mailto:hey@reborn.ww"
+          }
+        },
+        "ch_2": {
+          "type": "channel",
+          "settings": {
+            "label": "ORDERS",
+            "value": "orders@reborn.ww",
+            "link": "mailto:orders@reborn.ww"
+          }
+        },
+        "ch_3": {
+          "type": "channel",
+          "settings": {
+            "label": "PRESS",
+            "value": "press@reborn.ww",
+            "link": "mailto:press@reborn.ww"
+          }
+        },
+        "ch_4": {
+          "type": "channel",
+          "settings": {
+            "label": "INSTAGRAM",
+            "value": "@reborn.wxrldwide",
+            "link": "https://instagram.com"
+          }
+        },
+        "st_1": {
+          "type": "studio",
+          "settings": {
+            "city": "KAUNAS",
+            "role": "Print + HQ",
+            "address": ""
+          }
+        }
       },
-      "block_order": ["ch_1", "ch_2", "ch_3", "ch_4", "st_1", "st_2", "st_3"],
+      "block_order": [
+        "ch_1",
+        "ch_2",
+        "ch_3",
+        "ch_4",
+        "st_1"
+      ],
       "settings": {
         "layout": "split",
         "name_placeholder": "Your name",
@@ -28,36 +76,61 @@
         "topics": "General\nOrder / shipping\nReturns\nWholesale\nPress\nJust saying hi",
         "default_topic": "General",
         "order_placeholder": "RW-000000",
-        "phone_placeholder": "+48 …",
+        "phone_placeholder": "+370 …",
         "message_placeholder": "What's on your mind?",
         "form_note": "* required · we reply within 24h",
         "submit_label": "Send message",
         "success_title": "Message sent.",
-        "success_copy": "Thanks — we'll reply within a day. Probably sooner.",
+        "success_copy": "Thanks - we'll reply within a day. Probably sooner.",
         "success_cta_label": "Send another",
         "channels_heading": "// DIRECT LINES",
         "studios_heading": "// STUDIOS",
         "hours_heading": "// SUPPORT HOURS",
-        "weekday_label": "Mon — Fri",
-        "weekday_hours": "09:00 — 18:00 CET",
-        "weekend_label": "Sat — Sun",
+        "weekday_label": "Mon - Fri",
+        "weekday_hours": "09:00 - 18:00 EET",
+        "weekend_label": "Sat - Sun",
         "weekend_hours": "Closed (we're printing)",
-        "hours_note": "Drop days are chaos — replies may lag by a few hours. Worth it.",
+        "hours_note": "Drop days are chaos - replies may lag by a few hours.",
         "color_scheme": "scheme-1"
       }
     },
     "rw_contact_links_1": {
       "type": "rw-contact-links",
       "blocks": {
-        "lk_1": { "type": "link", "settings": { "title": "Shipping & returns", "description": "Tracked worldwide, free over €120, 14-day returns.", "url": "/pages/shipping-returns" } },
-        "lk_2": { "type": "link", "settings": { "title": "Size guide", "description": "Boxy fits run big — full measurements per piece.", "url": "/pages/size-guide" } },
-        "lk_3": { "type": "link", "settings": { "title": "The drop system", "description": "250 pieces, no restocks. How it works.", "url": "/blogs/journal" } }
+        "lk_1": {
+          "type": "link",
+          "settings": {
+            "title": "Refund Policy",
+            "description": "All sales are final, but if we sent the wrong size or a damaged piece, hit us up.",
+            "url": "shopify://policies/refund-policy"
+          }
+        },
+        "lk_2": {
+          "type": "link",
+          "settings": {
+            "title": "Terms of Service",
+            "description": "Our legal boundaries regarding your orders, account safety, and intellectual property.",
+            "url": "shopify://policies/terms-of-service"
+          }
+        },
+        "lk_3": {
+          "type": "link",
+          "settings": {
+            "title": "Privacy Policy",
+            "description": "How we collect, handle, and protect your data.",
+            "url": "shopify://policies/privacy-policy"
+          }
+        }
       },
-      "block_order": ["lk_1", "lk_2", "lk_3"],
+      "block_order": [
+        "lk_1",
+        "lk_2",
+        "lk_3"
+      ],
       "settings": {
         "kicker": "// MAYBE THE ANSWER'S HERE",
         "link_label": "Read",
-        "color_scheme": "scheme-2"
+        "color_scheme": "scheme-4"
       }
     }
   },
