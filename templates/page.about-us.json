@@ -353,14 +353,14 @@
         "stat_1": {
           "type": "stat",
           "settings": {
-            "number": "04",
+            "number": "16",
             "label": "chapters / year"
           }
         },
         "stat_2": {
           "type": "stat",
           "settings": {
-            "number": "250",
+            "number": "1",
             "label": "pieces / chapter"
           }
         },
@@ -374,8 +374,8 @@
         "stat_4": {
           "type": "stat",
           "settings": {
-            "number": "40K",
-            "label": "on the list"
+            "number": "12",
+            "label": "cities shipped"
           }
         }
       },
@@ -387,7 +387,7 @@
       ],
       "settings": {
         "orange_bg": true,
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-4"
       }
     },
     "rw_about_timeline_1": {
@@ -398,23 +398,23 @@
           "settings": {
             "year": "2024",
             "title": "The garage",
-            "body": "Two borrowed screens, a kettle, and a refusal to print logos on blanks. Chapter 01 — My Swamp — sells out in a weekend."
+            "body": "Two borrowed screens, a kettle, and a refusal to print logos on blanks."
           }
         },
         "ms_2": {
           "type": "milestone",
           "settings": {
             "year": "2025",
-            "title": "Three cities",
-            "body": "Berlin showroom opens, Lisbon studio follows. Chapters 02 and 03 evaporate in minutes. The list grows past 40k."
+            "title": "The Static Year",
+            "body": "The hype faded, and the noise stopped. We almost pulled the plug entirely."
           }
         },
         "ms_3": {
           "type": "milestone",
           "settings": {
             "year": "2026",
-            "title": "Vol. 04",
-            "body": "Chapter 04 — Bikini Bling — drops worldwide. Same four people. Same screens. Still no restocks."
+            "title": "Vol. 01",
+            "body": "Chapter 01 - My Swamp - drops worldwide. Same five people. Same screens. Still no restocks."
           }
         }
       },
@@ -426,7 +426,7 @@
       "settings": {
         "kicker": "// THE SHORT HISTORY",
         "heading": "How we got here",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-4"
       }
     },
     "rw_about_team_1": {
@@ -435,6 +435,7 @@
         "mem_1": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/4.png",
             "name": "Marek",
             "role": "Print + production",
             "city": "Kraków"
@@ -443,6 +444,7 @@
         "mem_2": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/5.png",
             "name": "Lena",
             "role": "Design + story",
             "city": "Berlin"
@@ -451,6 +453,7 @@
         "mem_3": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/6.png",
             "name": "Tomas",
             "role": "Photography",
             "city": "Lisbon"
@@ -459,8 +462,18 @@
         "mem_4": {
           "type": "member",
           "settings": {
+            "image": "shopify://shop_images/7_42487f9b-be99-4dcb-aa9a-ff6f51514628.png",
             "name": "Ola",
             "role": "Everything else",
+            "city": "Kraków"
+          }
+        },
+        "member_jJGhFJ": {
+          "type": "member",
+          "settings": {
+            "image": "shopify://shop_images/8_fd213617-522c-497d-9e51-6419a8cee197.png",
+            "name": "Marek",
+            "role": "Print + production",
             "city": "Kraków"
           }
         }
@@ -469,12 +482,13 @@
         "mem_1",
         "mem_2",
         "mem_3",
-        "mem_4"
+        "mem_4",
+        "member_jJGhFJ"
       ],
       "settings": {
-        "heading": "The four of us",
+        "heading": "The five of us",
         "kicker": "// THE WHOLE COMPANY",
-        "color_scheme": "scheme-1"
+        "color_scheme": "scheme-4"
       }
     },
     "rw_about_cta_1": {
@@ -484,8 +498,8 @@
         "heading": "Wear the story.",
         "bg_text": "REBORN WORLDWIDE",
         "cta_primary_label": "Shop the collections",
-        "cta_primary_url": "/collections/all",
-        "cta_secondary_label": "Read the journal",
+        "cta_primary_url": "shopify://collections",
+        "cta_secondary_label": "",
         "cta_secondary_url": "/blogs/journal",
         "color_scheme": "scheme-4"
       }
